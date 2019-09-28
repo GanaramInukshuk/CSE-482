@@ -31,12 +31,17 @@ public class GameLogicTester : MonoBehaviour {
     [SerializeField] [Range(0, 360*52*10)]
     private int _ticks = 69420;
 
-    // Managers to test
-    private ResidentialSimulator _resSim   = new ResidentialSimulator();
-    private CommercialSimulator  _commSim  = new CommercialSimulator ();
-    private WorkforceEvaluator   _workEval = new WorkforceEvaluator  ();
+    // Simulators to test; use this if simulators are regular classes
+    //private ResidentialSimulator _resSim   = new ResidentialSimulator();
+    //private CommercialSimulator  _commSim  = new CommercialSimulator ();
+    //private WorkforceEvaluator   _workEval = new WorkforceEvaluator  ();
 
-    private EducationScripts.SchoolManager _schoolMgr = new EducationScripts.SchoolManager();
+    // Simulators to test; use this if simulators derive from MonoBehaviour
+    private ResidentialSimulator _resSim   ;
+    private CommercialSimulator  _commSim  ;
+    private WorkforceEvaluator   _workEval ;
+
+    //private EducationScripts.SchoolManager _schoolMgr = new EducationScripts.SchoolManager();
 
     private Counter _timeCounter;
 
@@ -45,6 +50,17 @@ public class GameLogicTester : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         _timeCounter = new Counter();
+
+        _resSim   = GetComponent<ResidentialSimulator>();
+        _commSim  = GetComponent<CommercialSimulator >();
+        _workEval = GetComponent<WorkforceEvaluator  >();
+
+        string msg = 
+            "Press SPACE to force GameLogicTester to load and use test data.\n" +
+            "Press K to print debug string without loading test data."
+            ;
+
+        Debug.Log(msg);
     }
 
     // Debug stuff goes here; comment out when not needed
@@ -56,27 +72,29 @@ public class GameLogicTester : MonoBehaviour {
             Debug.Log(DistributionGen.Debug.ProbToString(random));
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftBracket)) {
-            _schoolMgr.IncrementSchools(-1);
-            _schoolMgr.PrintDebugString();
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftBracket)) {
+        //    _schoolMgr.IncrementSchools(-1);
+        //    _schoolMgr.PrintDebugString();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.RightBracket)) {
-            _schoolMgr.IncrementSchools(1);
-            _schoolMgr.PrintDebugString();
-        }
+        //if (Input.GetKeyDown(KeyCode.RightBracket)) {
+        //    _schoolMgr.IncrementSchools(1);
+        //    _schoolMgr.PrintDebugString();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Comma)) {
-            _schoolMgr.IncrementClassrooms(-1);
-            _schoolMgr.PrintDebugString();
-        }
+        //if (Input.GetKeyDown(KeyCode.Comma)) {
+        //    _schoolMgr.IncrementClassrooms(-1);
+        //    _schoolMgr.PrintDebugString();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Period)) {
-            _schoolMgr.IncrementClassrooms(1);
-            _schoolMgr.PrintDebugString();
-        }
+        //if (Input.GetKeyDown(KeyCode.Period)) {
+        //    _schoolMgr.IncrementClassrooms(1);
+        //    _schoolMgr.PrintDebugString();
+        //}
 
         if (Input.GetKeyDown(KeyCode.Space)) {
+            // For debugging, use the 4-param Generate function
+
             _resSim.Generate(_householdAffectors, _housingToTest, _occupancyToTest, 0);
             _resSim.PrintDebugString();
 
@@ -97,14 +115,27 @@ public class GameLogicTester : MonoBehaviour {
             //_clsMgr.PrintDebugString();
         }
 
-        if (Input.GetKeyDown(KeyCode.T)) {
-            //for (int i = 0; i < 300; i++) {
-            //    _testMgr.Generate(i + 1, ResidentialScripts.Constants.DefaultPopulationWeights);
-            //    _testMgr.PrintDebugString();
-            //}
-            _testMgr.Generate(10000, ResidentialScripts.Constants.DefaultPopulationWeights);
-            _testMgr.PrintDebugString();
+        if (Input.GetKeyDown(KeyCode.K)) {
+            // For general gameplay, use the 2-param Generate function if using affectors; otherwise,
+            // use the 1-param Generate function, using the corresponding evaluator's increment amount
+
+            _resSim.PrintDebugString();
+
+            _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);
+            _workEval.PrintDebugString();
+
+            _commSim.Generate(_workEval.CommercialIncrement);
+            _commSim.PrintDebugString();
         }
+
+        //if (Input.GetKeyDown(KeyCode.T)) {
+        //    //for (int i = 0; i < 300; i++) {
+        //    //    _testMgr.Generate(i + 1, ResidentialScripts.Constants.DefaultPopulationWeights);
+        //    //    _testMgr.PrintDebugString();
+        //    //}
+        //    _testMgr.Generate(10000, ResidentialScripts.Constants.DefaultPopulationWeights);
+        //    _testMgr.PrintDebugString();
+        //}
 
         // To test out saves
         if (Input.GetKeyDown(KeyCode.M)) {

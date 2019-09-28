@@ -45,7 +45,7 @@ using CommercialScripts;
 // 2. _occCtr.Count is passed into the generate function for _empMgr
 // 3. _empMgr generates a breakdown of employment specializations for use with other simulators/managers
 
-public class CommercialSimulator {
+public class CommercialSimulator : MonoBehaviour {
     // This is a helper class that takes affectors (really, proportions) and generates a probability array for the EmploymentManager
     // This is not as complex compared to the ResidentialSimulator's affector class
     private static class WeightAffector {
@@ -82,14 +82,14 @@ public class CommercialSimulator {
         };
     }
 
-    // Constructors
-    public CommercialSimulator() { }
-    public CommercialSimulator(int[][] savedata) { DataVector = savedata; }
+    //// Constructors
+    //public CommercialSimulator() { }
+    //public CommercialSimulator(int[][] savedata) { DataVector = savedata; }
 
     // A 4-param Generate function; sets bldg count, uses affectors, sets unit count, and increments unit count
     // For debugging
     // Order of operations:
-    // - If applicable, set the building count
+    // - If applicable, set the building count; this is the number of buildings available, by type, organized in an array
     // - If applicable, set the unit count; if this is -1, set this to the max; any other negative zeros it out
     // - If applicable, increment the unit count
     // - Call the ManagerGenerate function

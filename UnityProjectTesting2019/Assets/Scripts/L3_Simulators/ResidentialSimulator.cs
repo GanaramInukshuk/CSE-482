@@ -36,7 +36,7 @@ using ResidentialScripts;       // Namespace for organizing classes
 //  4. _occMgr.Population goes into _popMgr to calculate a population
 //  5. _popMgr generates a population breakdown for use with other simulators/managers
 
-public class ResidentialSimulator {
+public class ResidentialSimulator : MonoBehaviour {
     // This is a helper class that takes the affectors and generates probability arrays for each of the managers
     private static class WeightAffector {
         // Notes on household types and averages:
@@ -160,11 +160,11 @@ public class ResidentialSimulator {
     }
 
     // Managers and counters
-    private readonly HousingCounter    _hsgCtr = new HousingCounter   ();
-    private readonly Counter           _occCtr = new Counter          ();
-    private readonly HouseholdManager  _hhdMgr = new HouseholdManager ();
-    private readonly OccupancyManager  _occMgr = new OccupancyManager ();
-    private readonly PopulationManager _popMgr = new PopulationManager();
+    private readonly HousingCounter    _hsgCtr = new HousingCounter   ( );
+    private readonly Counter           _occCtr = new Counter          (0);      // This ensures the Counter.Max starts at zero and not int.MaxValue
+    private readonly HouseholdManager  _hhdMgr = new HouseholdManager ( );
+    private readonly OccupancyManager  _occMgr = new OccupancyManager ( );
+    private readonly PopulationManager _popMgr = new PopulationManager( );
 
     // Interface-related getters
     // These return an interface-implementing object
@@ -197,10 +197,17 @@ public class ResidentialSimulator {
             _popMgr.DataVector
         };
     }
-    
-    // Constructors
-    public ResidentialSimulator() { }
-    public ResidentialSimulator(int[][] savedata) { DataVector = savedata; }
+
+    //// Constructors
+    //public ResidentialSimulator() { }
+    //public ResidentialSimulator(int[][] savedata) { DataVector = savedata; }
+
+    // If using this as a component, the start function is needed
+    // This ensures all the counts start at zero
+    public void Start() {
+        //_occCtr.Max   = _hsgCtr.MaxOccupancy;       // Total number of available living units
+        //_occCtr.Count = _hhdMgr.TotalHouseholds;    // Total number of occupied living units
+    }
 
     //// Indexer for the housing counter?
     //public int this[HOUSINGSIZE h] => _hsgCtr[(int)h];

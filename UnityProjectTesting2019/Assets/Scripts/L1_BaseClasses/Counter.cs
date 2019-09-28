@@ -54,5 +54,5 @@ public class Counter {
 
     // Additional functions for zeroing or maxing out the counter
     public void ZeroOutCount() { Count = 0;   }
-    public void MaxOutCount()  { Count = Max; }
+    public void MaxOutCount () { Count = Max; }
 }

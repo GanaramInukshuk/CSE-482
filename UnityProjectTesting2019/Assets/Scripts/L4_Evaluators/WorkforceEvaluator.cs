@@ -13,12 +13,13 @@ using UnityEngine;
 // Currently, the workforce is 58% of an entire city's population (assuming default affectors), so for
 // really small populations, 1/2 the population (regardless of demographics) is assigned to the workforce
 
-public class WorkforceEvaluator {
+public class WorkforceEvaluator : MonoBehaviour {
 
     public int CommercialLabor     { private set; get; } = 0;       // Commercial labor in commercial labor units
     public int CommercialIncrement { private set; get; } = 0;       // Increment amount in commercial labor units
    
     public void GenerateWorkforce(ResidentialScripts.IPopulation popBreakdown) {
+        // Calculate the total workforce here
         int workforceTotal = 0;
         if (popBreakdown.TotalPopulation < 256) {
             workforceTotal = popBreakdown.TotalPopulation / 2;
@@ -28,10 +29,23 @@ public class WorkforceEvaluator {
             int subpop3 = Mathf.FloorToInt(0.025f * popBreakdown.Teen2Population);
             workforceTotal = subpop1 + subpop2 + subpop3;
         }
+
         // If more than one employment type existed, then the workforce would be divided between the different types,
         // but at this point, the entire workforce goes towards commercial labor; additionally, labor is measured by
         // each workforce type's respective labor unit
         CommercialLabor = Mathf.RoundToInt(workforceTotal / CommercialScripts.Constants.LaborUnit);
+    }
+
+    // To calculate an increment, the previous labor force count is needed; this is obtained from CommercialSimulator.UnitCount
+    // There are several situations that can happen:
+    // - The prev and current labor amounts are the same or close to it, resulting in no change
+    // - The new labor amount is larger than the previous amount, resulting in a positive increment
+    // - The new labor amount is smaller than the previous amount, resulting in a negative increment
+    // Increments should be proportional to how big the delta between the two amounts are
+    // This logic should apply for when there is more than one type of workforce (IE Industry and Office)
+    public void GenerateIncrement(int prevCommercialLabor) {
+        // TODO: Populate this
+        CommercialIncrement = 4;
     }
 
     // Debug functions
