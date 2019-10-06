@@ -56,7 +56,7 @@ public class GameLogicTester : MonoBehaviour {
         _workEval = GetComponent<WorkforceEvaluator  >();
 
         string msg = 
-            "Press SPACE to force GameLogicTester to load and use test data.\n" +
+            "Press ENTER to force GameLogicTester to load and use test data.\n" +
             "Press K to print debug string without loading test data."
             ;
 
@@ -92,7 +92,7 @@ public class GameLogicTester : MonoBehaviour {
         //    _schoolMgr.PrintDebugString();
         //}
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Return)) {
             // For debugging, use the 4-param Generate function
 
             _resSim.Generate(_householdAffectors, _housingToTest, _occupancyToTest, 0);
@@ -119,6 +119,7 @@ public class GameLogicTester : MonoBehaviour {
             // For general gameplay, use the 2-param Generate function if using affectors; otherwise,
             // use the 1-param Generate function, using the corresponding evaluator's increment amount
 
+            _resSim.Generate();
             _resSim.PrintDebugString();
 
             _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);

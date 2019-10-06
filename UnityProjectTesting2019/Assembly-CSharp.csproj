@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\L2_DerivedClasses\CommercialScripts\StoreCounter.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\EducationScripts\EducationConstants.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\EducationScripts\SchoolManager.cs" />
+    <Compile Include="Assets\Scripts\L2_DerivedClasses\GeneralScripts.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\ResidentialScripts\HouseholdManager.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\ResidentialScripts\HousingCounter.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\ResidentialScripts\OccupancyManager.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Assets\Scripts\L3_Simulators\CommercialSimulator.cs" />
     <Compile Include="Assets\Scripts\L3_Simulators\ResidentialSimulator.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\WorkforceEvaluator.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\CommercialControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\ResidentialControls.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

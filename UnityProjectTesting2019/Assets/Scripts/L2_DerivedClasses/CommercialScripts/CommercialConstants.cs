@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// For reference:
+// The powers of 2, starting at 1:                      { 1, 2, 4, 8, 16, 32, 64, 128, ... }
+// The powers of 2, starting at 1, but multiplied by 3: { 3, 6, 12, 24, 48, 96, 192, ... }
+// The previous two sets combined into one: { 1, 2, 3, 4, 6, 8, 12, 24, 32, 48, 64, 96, 128, 192, ... }
+
 namespace CommercialScripts {
 
     public static class Constants {
         // Employment goes by discrete units of 8 employees per unit of labor
-        public static readonly int LaborUnit = 8;
+        public static readonly int LaborUnit = 32;
 
         // An array of employment sizes; each store size supports a different size employment capacity
         // Employment is by labor units
-        public static int[] EmploymentSizes => new int[] { 1, 2, 4, 8, 16, 32 };
+        // If using a LaborUnit size of 16 and powers of 2 mixed with PO2's times 3, these are the effective capacities:
+        // { 32, 48, 64, 96, 128, 192 }
+        public static int[] EmploymentSizes => new int[] { 1, 2, 3, 4, 6, 8 };
 
         // An enum for the different types of commercial specializations
         // I am counting commercial offices to be a distinct type (like with C:S)

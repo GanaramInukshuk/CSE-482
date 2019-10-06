@@ -7,6 +7,10 @@ using UnityEngine;
 
 // This also includes counts necssary for functionality of very important counters
 
+// Note: if any of the managers needed for calculation ever spit out a zero vector, that may be due
+// to a weight vector size mismatch, IE, using the wrong default weights for a manager (EG, using
+// the default pop weights for the occupancy manager)
+
 namespace ResidentialScripts {
 
     public static class Constants {
@@ -16,7 +20,7 @@ namespace ResidentialScripts {
 
         // Array of housing sizes; these correspond to simplexes, duplex, triplexes, and fourplexes
         // For use with the housing counter
-        public static int[] HousingSizes => new int[] { 1, 2, 3, 4, 6 /*8, 10, 12*/ };
+        public static int[] HousingSizes => new int[] { 1, 2, 3, 4, 6, 8 };
 
         // The percentage of households by type 
         // Source: https://www.census.gov/prod/cen2010/briefs/c2010br-14.pdf (table 4, first row)

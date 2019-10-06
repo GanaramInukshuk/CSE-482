@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CommercialScripts;
+using GeneralScripts;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -45,7 +46,7 @@ using CommercialScripts;
 // 2. _occCtr.Count is passed into the generate function for _empMgr
 // 3. _empMgr generates a breakdown of employment specializations for use with other simulators/managers
 
-public class CommercialSimulator : MonoBehaviour {
+public class CommercialSimulator {
     // This is a helper class that takes affectors (really, proportions) and generates a probability array for the EmploymentManager
     // This is not as complex compared to the ResidentialSimulator's affector class
     private static class WeightAffector {
@@ -60,8 +61,8 @@ public class CommercialSimulator : MonoBehaviour {
     private readonly EmploymentManager _empMgr   = new EmploymentManager();
 
     // Interface-related getters
-    public IStore      StoreBreakdown      => _storeCtr;
-    public IEmployment EmploymentBreakdown => _empMgr;
+    public IZonableBuilding ZoningBreakdown     => _storeCtr;
+    public IEmployment      EmploymentBreakdown => _empMgr;
 
     // One labor unit translates to 8 employees
     public int UnitCount => _laborCtr.Count;
@@ -73,7 +74,7 @@ public class CommercialSimulator : MonoBehaviour {
             int[][] tempVector   = SavedataHelper.LoadMismatchedVector(value, Constants.ExpectedVectorLengths);
             _storeCtr.Count      = tempVector[0];
             _empMgr  .DataVector = tempVector[1];
-            _laborCtr.Max   = _storeCtr.MaxLaborUnits;      // Maximum employment capacity
+            _laborCtr.Max   = _storeCtr.MaxZoningUnits;     // Maximum employment capacity
             _laborCtr.Count = _empMgr  .TotalEmployment;    // Employment count
         }
         get => new int[][] {
@@ -82,9 +83,9 @@ public class CommercialSimulator : MonoBehaviour {
         };
     }
 
-    //// Constructors
-    //public CommercialSimulator() { }
-    //public CommercialSimulator(int[][] savedata) { DataVector = savedata; }
+    // Constructors
+    public CommercialSimulator() { }
+    public CommercialSimulator(int[][] savedata) { DataVector = savedata; }
 
     // A 4-param Generate function; sets bldg count, uses affectors, sets unit count, and increments unit count
     // For debugging
@@ -95,8 +96,8 @@ public class CommercialSimulator : MonoBehaviour {
     // - Call the ManagerGenerate function
     public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt) {
         _storeCtr.Count = bldgs;
-        _laborCtr.Max   = _storeCtr.MaxLaborUnits;
-        _laborCtr.Count = (units == -1) ? _storeCtr.MaxLaborUnits : units;
+        _laborCtr.Max   = _storeCtr.MaxZoningUnits;
+        _laborCtr.Count = (units == -1) ? _storeCtr.MaxZoningUnits : units;
         _laborCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
     }
@@ -147,7 +148,7 @@ public class CommercialSimulator : MonoBehaviour {
 
     public string GetDebugString() {
         return "[CommercialSimulator]: Bldgs: "
-            + _storeCtr.TotalStores      + ", Labor: "
+            + _storeCtr.TotalBuildings   + ", Labor: "
             + _laborCtr.Count            + " out of "
             + _laborCtr.Max              + ", Emp: "
             + _empMgr.TotalEmployment    + "\n"

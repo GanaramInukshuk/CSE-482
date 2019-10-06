@@ -57,7 +57,7 @@ namespace ResidentialScripts {
 
         // Extra Generate() function uses default weights
         public void Generate(int n) {
-            Generate(n, Constants.DefaultPopulationWeights);
+            Generate(n, Constants.DefaultOccupancyWeights);
         }
 
         // Overridden debug function

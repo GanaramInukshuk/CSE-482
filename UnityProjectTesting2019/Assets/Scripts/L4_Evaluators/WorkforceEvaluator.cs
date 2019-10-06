@@ -13,7 +13,7 @@ using UnityEngine;
 // Currently, the workforce is 58% of an entire city's population (assuming default affectors), so for
 // really small populations, 1/2 the population (regardless of demographics) is assigned to the workforce
 
-public class WorkforceEvaluator : MonoBehaviour {
+public class WorkforceEvaluator {
 
     public int CommercialLabor     { private set; get; } = 0;       // Commercial labor in commercial labor units
     public int CommercialIncrement { private set; get; } = 0;       // Increment amount in commercial labor units

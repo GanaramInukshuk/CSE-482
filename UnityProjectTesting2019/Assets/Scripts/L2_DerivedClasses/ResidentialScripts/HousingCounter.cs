@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GeneralScripts;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -17,16 +18,10 @@ using UnityEngine;
 
 namespace ResidentialScripts {
 
-    public interface IHousing {
-        int this[int i]  { get; }
-        int TotalHousing { get; }
-        int MaxOccupancy { get; }
-    }
-
-    public sealed class HousingCounter : ArrayCounter, IHousing {
+    public sealed class HousingCounter : ArrayCounter, IZonableBuilding {
         // Getters for housing; lines up with interface's members
-        public int TotalHousing => DistributionGen.Histogram.SumOfElements(Count);
-        public int MaxOccupancy => ExtraMath.Linear.DotProduct(Count, Constants.HousingSizes);
+        public int TotalBuildings => DistributionGen.Histogram.SumOfElements(Count);
+        public int MaxZoningUnits => ExtraMath.Linear.DotProduct(Count, Constants.HousingSizes);
 
         // Constructor
         public HousingCounter() : base(Constants.HousingVectorLength) { }

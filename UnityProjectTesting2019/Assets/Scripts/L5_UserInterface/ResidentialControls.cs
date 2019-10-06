@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using ResidentialScripts;
+using GeneralScripts;
 
 // This script should inherit from MonoBehaviour and therefore should be attached to a UI object
 // Attach this to the relevant UI panel and have this script be composed of its relevant simulator and evaluator
@@ -12,80 +12,94 @@ namespace PlayerControls {
     [System.Serializable]
     public class ResidentialControls : MonoBehaviour {
 
-        [Header("Main Labels")]
+        // Main UI objects
+        [Header("Main UI Objects")]
+        [SerializeField] private Button   _buttonIncrement;
+        [SerializeField] private Button[] _buttonDecrement;
+        [SerializeField] private Image    _image;
+        [SerializeField] private Slider   _incrementSlider;
+        [SerializeField] private Text     _textTotal;
+        [SerializeField] private Text     _textIncrementAmount;
+        //[SerializeField] private GameObject _objectWithSimulator;
 
-        // Text label to display total housing
-        [SerializeField]
-        private Text _labelTotalHousing;
+        // Aesthetic properties
+        [Header("A E S T H E T I C  P R O P S")]
+        [SerializeField] private Color _color;
 
-        // Text array to display housing by type; the code's the same for each type, so an array is used
-        // so it can be looped; this also helps if additional housing sizes are added
-        [SerializeField]
-        private Text[] _labelHousingType;
+        // Test items
+        [Header("Test Items, if any")]
 
-        [Header("References to Other Controls")]
-
-        // For testing purposes?
-        // By doing this, this script can directly control the ResidentialSimulator, wherever it's attached
-        [SerializeField]
-        private GameObject _objectWithResidentialSimulator;
-
-        [Header("Test Items")]
-
-        // Text label for testing purposes
-        [SerializeField]
-        private Text _textToTest;
-
-        // Manager and evaluator
-        private ResidentialSimulator _resSim;
+        // Other private members
+        private ResidentialSimulator _simulator;
+        private int _incrementAmount = 1;
 
         // Start is called before the first frame update
         void Start() {
-            _resSim = _objectWithResidentialSimulator.GetComponent<ResidentialSimulator>();
-            GenerateTextLabels();
+            // Set up main stuff
+            _simulator = new ResidentialSimulator();
+            _image.color = _color;
+            UpdateTextLabels();
+
+            // Set up increment button functionality
+            _buttonIncrement.GetComponentInChildren<Text>().text = "Increment residential";
+            _buttonIncrement.onClick.AddListener(Increment);
+
+            // Set up decrement button functionality
+            // https://forum.unity.com/threads/how-to-addlistener-featuring-an-argument.266934/
+            for (int i = 0; i < _buttonDecrement.Length; i++) {
+                int j = i;
+                _buttonDecrement[i].GetComponent<Button>().onClick.AddListener(() => Decrement(j));
+            }
+
+            // Set up slider
+            _incrementSlider.minValue = 1;
+            _incrementSlider.maxValue = 64;
+            _incrementSlider.wholeNumbers = true;
+            _incrementSlider.onValueChanged.AddListener(UpdateIncrementAmount);
         }
 
-        // Clicking this button adds housing to the city; currently, this adds a single house
-        // but should add an nplex instead depending on the population; think of how Minecraft's
-        // fortune mechanic works here
-        public void ResidentialIncrement() {
-            Debug.Log("[ResidentialControls]: Increment button pressed.");
-
-            if (_resSim != null && _textToTest != null) {
-                _resSim.IncrementBldgs(1, 0);
-                GenerateTextLabels();
-
-                _resSim.PrintDebugString();
-            } else Debug.Log("[ResidentialControls]: Could not find ResidentialSimulator or text label(s).");
+        // Clicking this button adds commercial buildings to the city wherein the size of the building
+        // is dependeng on the total population of the city (EG, a size-8 bldg won't be built if the
+        // population is too small to support it)
+        private void Increment() {
+            // Pick a random number; this will be used as the building size index
+            // Indices 0-5 correspond to sizes 1, 2, 3, 4, 6, 8
+            // Later on, this should be replaced with weighted probabilities where, in general,
+            // larger occupancies (not building count) increase the probability of building a
+            // higher capacity building
+            int randomNumber = UnityEngine.Random.Range(0, _buttonDecrement.Length);
+            _simulator.IncrementBldgs(_incrementAmount, randomNumber);
+            UpdateTextLabels();
         }
 
         // Clicking this button decrements housing from the city; increments are basically random
         // but decrements are not, so the user has full control over what structures can be demolished;
-        // this function therefore requires a parameter so the ResSim knows which housing type to demolish
-        public void ResidentialDecrement(int type) {
-            Debug.Log($"[ResidentialControls]: Decrement button pressed for housing type {(Constants.HOUSINGSIZE)type}.");
-
-            if (_resSim != null) {
-                _resSim.IncrementBldgs(-1, 0);
-                GenerateTextLabels();
-
-                _resSim.PrintDebugString();
-            } else Debug.Log("[ResidentialControls]: Could not find ResidentialSimulator or text label(s).");
+        // this function therefore requires a parameter so the simulator knows which housing type to demolish
+        private void Decrement(int type) {
+            _simulator.IncrementBldgs(-_incrementAmount, type);
+            UpdateTextLabels();
         }
 
-        // Private helper classes
-        private void GenerateTextLabels() {
-            IHousing hsgBreakdown = _resSim.HousingBreakdown;
+        // This is used for the slider to change the increment amount
+        // The parameter is the updated value of the slider itself, which is then used for the label
+        private void UpdateIncrementAmount(float updatedValue) {
+            _incrementAmount = (int)updatedValue;
+            _textIncrementAmount.text = "Increment: " + updatedValue;
+        }
 
-            // There should be a label for each level of housing, but for testing
-            // purposes, there's just one label
-            string newText = 
-                "Total housing: " + hsgBreakdown.TotalHousing +
-                ", Single houses: " + hsgBreakdown[0] +
-                ", Duplexes: "      + hsgBreakdown[1] +
-                ", Triplexes: "     + hsgBreakdown[2] + 
-                ", Fourplexes: "    + hsgBreakdown[3];
-            _textToTest.text = newText;
+        // This is used to update the rest of the text labels
+        private void UpdateTextLabels() {
+            IZonableBuilding zoningBreakdown = _simulator.ZoningBreakdown;
+
+            // Total text
+            string totalText = "RESIDENTIAL ZONING: " + zoningBreakdown.MaxZoningUnits + " total living units spread over " + zoningBreakdown.TotalBuildings + " residential buildings.";
+            _textTotal.text = totalText;
+
+            // Breakdown text
+            // These labels show the number of buildings by size and are displayed on the decrement buttons
+            for (int i = 0; i < _buttonDecrement.Length; i++) {
+                _buttonDecrement[i].GetComponentInChildren<Text>().text = zoningBreakdown[i].ToString();
+            }
         }
     }
 }
