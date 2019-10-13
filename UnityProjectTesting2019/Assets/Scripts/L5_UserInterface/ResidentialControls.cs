@@ -13,14 +13,17 @@ namespace PlayerControls {
     public class ResidentialControls : MonoBehaviour {
 
         // Main UI objects
-        [Header("Main UI Objects")]
+        [Header("Main UI Objects and Parameters")]
         [SerializeField] private Button   _buttonIncrement;
         [SerializeField] private Button[] _buttonDecrement;
         [SerializeField] private Image    _image;
-        [SerializeField] private Slider   _incrementSlider;
+        //[SerializeField] private Slider   _incrementSlider;
         [SerializeField] private Text     _textTotal;
         [SerializeField] private Text     _textIncrementAmount;
         //[SerializeField] private GameObject _objectWithSimulator;
+
+        [Header("Secondary UI Objects and Parameters")]
+        [SerializeField] private Image _sliderPanel;
 
         // Aesthetic properties
         [Header("A E S T H E T I C  P R O P S")]
@@ -31,13 +34,14 @@ namespace PlayerControls {
 
         // Other private members
         private ResidentialSimulator _simulator;
-        private int _incrementAmount = 1;
+        private IncrementSliderControls _sliderCtrl;
 
         // Start is called before the first frame update
         void Start() {
             // Set up main stuff
-            _simulator = new ResidentialSimulator();
+            _simulator   = new ResidentialSimulator();
             _image.color = _color;
+            _sliderCtrl  = _sliderPanel.GetComponent<IncrementSliderControls>();
             UpdateTextLabels();
 
             // Set up increment button functionality
@@ -51,11 +55,11 @@ namespace PlayerControls {
                 _buttonDecrement[i].GetComponent<Button>().onClick.AddListener(() => Decrement(j));
             }
 
-            // Set up slider
-            _incrementSlider.minValue = 1;
-            _incrementSlider.maxValue = 64;
-            _incrementSlider.wholeNumbers = true;
-            _incrementSlider.onValueChanged.AddListener(UpdateIncrementAmount);
+            //// Set up slider
+            //_incrementSlider.minValue = 1;
+            //_incrementSlider.maxValue = 64;
+            //_incrementSlider.wholeNumbers = true;
+            //_incrementSlider.onValueChanged.AddListener(UpdateIncrementAmount);
         }
 
         // Clicking this button adds commercial buildings to the city wherein the size of the building
@@ -67,8 +71,9 @@ namespace PlayerControls {
             // Later on, this should be replaced with weighted probabilities where, in general,
             // larger occupancies (not building count) increase the probability of building a
             // higher capacity building
-            int randomNumber = UnityEngine.Random.Range(0, _buttonDecrement.Length);
-            _simulator.IncrementBldgs(_incrementAmount, randomNumber);
+            int randomNumber    = UnityEngine.Random.Range(0, _buttonDecrement.Length);
+            int incrementAmount = _sliderCtrl.IncrementAmount;
+            _simulator.IncrementBldgs(incrementAmount, randomNumber);
             UpdateTextLabels();
         }
 
@@ -76,16 +81,18 @@ namespace PlayerControls {
         // but decrements are not, so the user has full control over what structures can be demolished;
         // this function therefore requires a parameter so the simulator knows which housing type to demolish
         private void Decrement(int type) {
-            _simulator.IncrementBldgs(-_incrementAmount, type);
+            //Debug.Log("[CommercialControls]: Attempting to decrement " + _incrementAmount + " bldgs from index " + type);
+            int incrementAmount = _sliderCtrl.IncrementAmount;
+            _simulator.IncrementBldgs(-incrementAmount, type);
             UpdateTextLabels();
         }
 
-        // This is used for the slider to change the increment amount
-        // The parameter is the updated value of the slider itself, which is then used for the label
-        private void UpdateIncrementAmount(float updatedValue) {
-            _incrementAmount = (int)updatedValue;
-            _textIncrementAmount.text = "Increment: " + updatedValue;
-        }
+        //// This is used for the slider to change the increment amount
+        //// The parameter is the updated value of the slider itself, which is then used for the label
+        //private void UpdateIncrementAmount(float updatedValue) {
+        //    _incrementAmount = (int)updatedValue;
+        //    _textIncrementAmount.text = "Increment: " + updatedValue;
+        //}
 
         // This is used to update the rest of the text labels
         private void UpdateTextLabels() {

@@ -104,7 +104,9 @@
     <Compile Include="Assets\Scripts\L3_Simulators\ResidentialSimulator.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\WorkforceEvaluator.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\CommercialControls.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\IncrementSliderControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\ResidentialControls.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\TimeControls.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
