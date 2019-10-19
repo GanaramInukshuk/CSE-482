@@ -15,21 +15,13 @@ namespace PlayerControls {
         [Header("Main UI Objects and Parameters")]
         [SerializeField] private Button   _buttonIncrement;
         [SerializeField] private Button[] _buttonDecrement;
-        [SerializeField] private Image    _image;
-        //[SerializeField] private Slider   _incrementSlider;
         [SerializeField] private Text     _textTotal;
         [SerializeField] private Text     _textIncrementAmount;
         //[SerializeField] private GameObject _objectWithSimulator;
 
         [Header("Secondary UI Objects and Parameters")]
-        [SerializeField] private Image _sliderPanel;
-
-        // Aesthetic properties
-        [Header("A E S T H E T I C  P R O P S")]
-        [SerializeField] private Color _color;
-
-        // Test items
-        [Header("Test Items, if any")]
+        [SerializeField] private Image       _sliderPanel;
+        [SerializeField] private ProgressBar _progressBar;
 
         // Other private members
         private CommercialSimulator _simulator;
@@ -40,7 +32,6 @@ namespace PlayerControls {
         void Start() {
             // Set up main stuff
             _simulator   = new CommercialSimulator();
-            _image.color = _color;
             _sliderCtrl  = _sliderPanel.GetComponent<IncrementSliderControls>();
             UpdateTextLabels();
 
@@ -54,12 +45,14 @@ namespace PlayerControls {
                 int j = i;
                 _buttonDecrement[i].GetComponent<Button>().onClick.AddListener(() => Decrement(j));
             }
+        }
 
-            //// Set up slider
-            //_incrementSlider.minValue = 1;
-            //_incrementSlider.maxValue = 64;
-            //_incrementSlider.wholeNumbers = true;
-            //_incrementSlider.onValueChanged.AddListener(UpdateIncrementAmount);
+        // For debugging
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                _simulator.IncrementUnits(UnityEngine.Random.Range(1, 16));
+                UpdateTextLabels();
+            }
         }
 
         // Clicking this button adds commercial buildings to the city wherein the size of the building
@@ -99,7 +92,7 @@ namespace PlayerControls {
             IZonableBuilding zoningBreakdown = _simulator.ZoningBreakdown;
 
             // Total text
-            string totalText = "COMMERCIAL ZONING: " + zoningBreakdown.MaxZoningUnits + " total labor units spread over " + zoningBreakdown.TotalBuildings + " commercial buildings.";
+            string totalText = "COMMERCIAL: " + _simulator.UnitCount + " out of " + _simulator.UnitMax + " max labor units spread over " + zoningBreakdown.TotalBuildings + " buildings.";
             _textTotal.text = totalText;
 
             // Breakdown text
@@ -107,6 +100,9 @@ namespace PlayerControls {
             for (int i = 0; i < _buttonDecrement.Length; i++) {
                 _buttonDecrement[i].GetComponentInChildren<Text>().text = zoningBreakdown[i].ToString();
             }
+            
+            // Progress bar
+            _progressBar.UpdateFill(0, _simulator.UnitMax, _simulator.UnitCount);
         }
     }
 }

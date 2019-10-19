@@ -254,9 +254,20 @@ public class ResidentialSimulator {
     // Incrementers; incrementing by a negative value counts as decrementing
     // IncrementBldgs() should be called (indirectly) by the player and represents construction (or demolition) of residential bldgs
     // IncrementUnits() may be called by a random event system that adds or removes occupancy units
-    public void IncrementBldgs(int[] amt           ) { _hsgCtr.IncrementCount(amt       ); }        // Increments by multiple values at once
-    public void IncrementBldgs(int   amt, int index) { _hsgCtr.IncrementCount(amt, index); }        // Increments by one value at a time
-    public void IncrementUnits(int   amt           ) { _occCtr.IncrementCount(amt       ); }
+    // Incrementing buildings updates the counts
+    public void IncrementBldgs(int[] amt) { 
+        _hsgCtr.IncrementCount(amt);
+        _occCtr.Max = _hsgCtr.MaxZoningUnits;
+    }
+
+    public void IncrementBldgs(int amt, int index) {
+        _hsgCtr.IncrementCount(amt, index);
+        _occCtr.Max = _hsgCtr.MaxZoningUnits;
+    }
+
+    public void IncrementUnits(int amt) {
+        _occCtr.IncrementCount(amt);
+    }
 
     // Private helper function; generates weights using affectors and calls the individual Generate functions 
     private void ManagerGenerate(float[] affectors) {

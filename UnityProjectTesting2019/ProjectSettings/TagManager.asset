@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - UI-RESIDENTIAL
+  - UI-COMMERCIAL
+  - UI-PANEL
+  - UI-GENERAL
   layers:
   - Default
   - TransparentFX

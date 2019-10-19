@@ -54,15 +54,16 @@ public static class Timekeeper {
     //}
 
     // Constants
-    // I recommend a highly composite number for ticksPerWeek, such as 120 or 360; the divisors of 360 are:
-    // 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360
-    public  static readonly int _ticksPerWeek    = 360;
-    private static readonly int _weeksPerQuarter = 13;
-    private static readonly int _quartersPerYear = 4;
+    // Unity's FixedUpdate is called once every 1/50 of a second (20 milliseconds) for an effective tickrate of
+    // 50 ticks per second; 60 ticks per day translates to one day per 1.2 seconds
+    public static readonly int _ticksPerDay     = 60;
+    public static readonly int _daysPerWeek     = 7;
+    public static readonly int _ticksPerWeek    = _ticksPerDay * _daysPerWeek;
+    public static readonly int _weeksPerQuarter = 13;
+    public static readonly int _quartersPerYear = 4;
 
     // Constants of lesser importance
     // These don't affect actual timekeeping and instead help show the passage of time using smaller time units
-    private static readonly int _daysPerWeek    = 7;
     private static readonly int _hoursPerDay    = 24;
     private static readonly int _minutesPerHour = 60;
 
@@ -71,13 +72,12 @@ public static class Timekeeper {
     private static readonly int _weeksPerEpisodicDay = 4;
 
     // Other constants derived from existing constants; for conversions
-    public  static readonly int   _ticksPerQuarter      = _ticksPerWeek * _weeksPerQuarter;
-    public  static readonly int   _ticksPerYear         = _ticksPerWeek * _weeksPerQuarter * _quartersPerYear;
-    public  static readonly int   _ticksPerEpisodicDay  = _ticksPerWeek * _weeksPerEpisodicDay;
-    private static readonly int   _episodicDaysPerYear  = _ticksPerYear / _ticksPerEpisodicDay;
-    public  static readonly float _ticksPerDay          = (float)_ticksPerWeek        / _daysPerWeek;
-    private static readonly float _ticksPerEpisodicHour = (float)_ticksPerEpisodicDay / _hoursPerDay;
-    private static readonly float _ticksPerEpisodicMin  = _ticksPerEpisodicHour       / _minutesPerHour;
+    public static readonly int   _ticksPerQuarter      = _ticksPerWeek * _weeksPerQuarter;
+    public static readonly int   _ticksPerYear         = _ticksPerWeek * _weeksPerQuarter * _quartersPerYear;
+    public static readonly int   _ticksPerEpisodicDay  = _ticksPerWeek * _weeksPerEpisodicDay;
+    public static readonly int   _episodicDaysPerYear  = _ticksPerYear / _ticksPerEpisodicDay;
+    public static readonly float _ticksPerEpisodicHour = (float)_ticksPerEpisodicDay / _hoursPerDay;
+    public static readonly float _ticksPerEpisodicMin  = _ticksPerEpisodicHour       / _minutesPerHour;
 
     // Integer-divide the tickCount by the number of ticks per year to get the year
     // Use the remainder from aforementioned division to get all other information
@@ -102,8 +102,12 @@ public static class Timekeeper {
         return hour.ToString("00") + ":" + mins.ToString("00");
     }
 
-    public static int EpisodicDay(int tickCount) {
+    public static int EpisodicDayOutOfYear(int tickCount) {
         return (tickCount / _ticksPerEpisodicDay) % _episodicDaysPerYear;
+    }
+
+    public static int EpisodicDay(int tickCount) {
+        return tickCount / _ticksPerEpisodicDay;
     }
 
     public static string DetailedDate(int tickCount) {

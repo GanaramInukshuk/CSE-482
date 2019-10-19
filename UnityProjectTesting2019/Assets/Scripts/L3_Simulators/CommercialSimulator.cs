@@ -56,9 +56,9 @@ public class CommercialSimulator {
     }
 
     // Managers and counters
-    private readonly StoreCounter      _storeCtr = new StoreCounter     ();
-    private readonly Counter           _laborCtr = new Counter          ();
-    private readonly EmploymentManager _empMgr   = new EmploymentManager();
+    private readonly StoreCounter      _storeCtr = new StoreCounter     ( );
+    private readonly Counter           _laborCtr = new Counter          (0);
+    private readonly EmploymentManager _empMgr   = new EmploymentManager( );
 
     // Interface-related getters
     public IZonableBuilding ZoningBreakdown     => _storeCtr;
@@ -123,11 +123,22 @@ public class CommercialSimulator {
     }
 
     // Incrementers; incrementing by a negative value counts as decrementing
-    // IncrementBldgs() should be called (indirectly) by the player and represents construction (or demolition) of commercial bldgs
-    // IncrementUnits() may be called by a random event system that adds or removes employees
-    public void IncrementBldgs(int[] amt           ) { _storeCtr.IncrementCount(amt       ); }    // Increments by multiple values at once
-    public void IncrementBldgs(int   amt, int index) { _storeCtr.IncrementCount(amt, index); }    // Increments by one value at a time
-    public void IncrementUnits(int   amt           ) { _laborCtr.IncrementCount(amt       ); }
+    // IncrementBldgs() should be called (indirectly) by the player and represents construction (or demolition) of residential bldgs
+    // IncrementUnits() may be called by a random event system that adds or removes occupancy units
+    // Incrementing buildings updates the counts
+    public void IncrementBldgs(int[] amt) { 
+        _storeCtr.IncrementCount(amt);
+        _laborCtr.Max = _storeCtr.MaxZoningUnits;
+    }
+
+    public void IncrementBldgs(int amt, int index) {
+        _storeCtr.IncrementCount(amt, index);
+        _laborCtr.Max = _storeCtr.MaxZoningUnits;
+    }
+
+    public void IncrementUnits(int amt) {
+        _laborCtr.IncrementCount(amt);
+    }
 
     // Private helper function; generates weights using affectors and calls the individual Generate functions 
     private void ManagerGenerate(float[] affectors) {

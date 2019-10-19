@@ -16,15 +16,6 @@ namespace PlayerControls {
         [SerializeField] private Text   _textIncrementAmount;
         [SerializeField] private int    _sliderMaxValue = 64;
 
-        // Aesthetic properties
-        [Header("A E S T H E T I C  P R O P S")]
-        [SerializeField] private Color _color;
-        [SerializeField] private Color _textColor;
-
-        // Test items
-        //[Header("Test Items, if any")]
-
-
         // Other members
         public int IncrementAmount { private set; get; } = 1;
 
@@ -34,9 +25,6 @@ namespace PlayerControls {
             _incrementSlider.wholeNumbers = true;
             _incrementSlider.onValueChanged.AddListener(UpdateIncrementAmount);
             _textIncrementAmount.text = "Increment Amt: 1";
-
-            _image.color = _color;
-            _textIncrementAmount.color = _textColor;
         }
 
         // This is used for the slider to change the increment amount
