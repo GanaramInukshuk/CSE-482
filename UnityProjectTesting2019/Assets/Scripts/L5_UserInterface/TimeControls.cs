@@ -12,21 +12,17 @@ namespace PlayerControls {
     [System.Serializable]
     public class TimeControls : MonoBehaviour {
 
-        // Some private contsants
-        float _defaultTimeBetweenTicks = 1f / 20;
-
         // Main UI objects
         [Header("Main UI Objects")]
-        [SerializeField] private Button _buttonPause;
-        [SerializeField] private Button _buttonDate;
-        [SerializeField] private Image  _image;
-        [SerializeField] private Slider _sliderSpeed;
+        [SerializeField] private Button      _buttonPause;
+        [SerializeField] private Button      _buttonDate;
+        [SerializeField] private Image       _image;
+        [SerializeField] private Slider      _sliderSpeed;
         [SerializeField] private ProgressBar _progressBar;
 
         [Header("Main Parameters")]
-        [SerializeField] private int    _tickCount;
-        [SerializeField] private bool   _timeActive;     // For pausing/unpausing time
-        [SerializeField] private bool   _altTimeFormat;
+        [SerializeField] private int  _tickCount;
+        [SerializeField] private int  _yearOffset = 2000;      // So that the counter can start at, say, year 2000
 
         // Aesthetic properties
         [Header("A E S T H E T I C  P R O P S")]
@@ -34,20 +30,29 @@ namespace PlayerControls {
         [SerializeField] private Font  _defaultFont;
         [SerializeField] private Font  _altFont;
 
+        [Header("Other Parameters")]
+        [SerializeField] private int    _fineIncrements = 100;      // Subdivisions; EG, if the slider goes from 1 to 5 and the slider goes by increments of 0.01
+        [SerializeField] private float  _textBlinkDuration = 1.0f;  // Blink period
+        [SerializeField] private bool   _timePaused;                // For pausing/unpausing time
+        [SerializeField] private bool   _altTimeFormat;
+        [SerializeField] private string _timeFormat = "00.00";      // Time format
+
         // Test items
         [Header("Debug")]
         //[SerializeField] private float  _secondsPerTick = 1f / 30;      // For debugging
 
-        private int  _lastRecordedSliderSetting;
-        private Text _textButtonPause;
-        private Text _textButtonDate;
+        private float  _lastRecordedTimeScale;
+        private Text   _textButtonPause;
+        private Text   _textButtonDate;
+        private string _pauseText = "PAUSED";       // The text for the pause button to show when the game is paused
+        
 
         // Start is called before the first frame update
         void Start() {
             // Set important member values
-            _timeActive = true;
+            _timePaused = false;
             _altTimeFormat = false;
-            _lastRecordedSliderSetting = 0;
+            _lastRecordedTimeScale = 1;
 
             // Cache references to other UI objects
             _textButtonPause = _buttonPause.GetComponentInChildren<Text>();
@@ -55,10 +60,10 @@ namespace PlayerControls {
 
             // Set UI parameters here
             _sliderSpeed.minValue = 0;
-            _sliderSpeed.maxValue = 5;
+            _sliderSpeed.maxValue = 5 * _fineIncrements;
             _sliderSpeed.value = _sliderSpeed.minValue;
             _sliderSpeed.wholeNumbers = true;
-            _textButtonPause.text = "SPEED: " + 1;
+            _textButtonPause.text = "SPEED: 1.00";
 
             // Add event listeners here
             _sliderSpeed.onValueChanged.AddListener(UpdateTimeScale);
@@ -77,8 +82,11 @@ namespace PlayerControls {
         // a phantom 29 or 36 occurring for a brief moment (EG, 36 FEB or JAN 29 when it should be
         // 01 MAR or 01 FEB)
         private void FixedUpdate() {
-            _textButtonDate.text = (_altTimeFormat) ? ("Day: " + (Timekeeper.EpisodicDay(_tickCount) + 1) + " (" + Timekeeper.EpisodicTime(_tickCount) + ":" + UnityEngine.Random.Range(0, 59).ToString("00") + ")") : ("Date: " + Timekeeper.SimpleDate(_tickCount));
+            // Update date/time text
+            _textButtonDate.text = (_altTimeFormat) ? ("Day: " + (Timekeeper.EpisodicDay(_tickCount) + 1) + " (" + Timekeeper.EpisodicTime(_tickCount) + ":" + UnityEngine.Random.Range(0, 59).ToString("00") + ")") : ("Date: " + Timekeeper.SimpleDate(_tickCount, _yearOffset));
             _tickCount++;
+
+            // Update progress bar
             int tickProgress = _tickCount % Timekeeper._ticksPerEpisodicDay;
             _progressBar.UpdateFill(tickProgress);
         }
@@ -95,27 +103,27 @@ namespace PlayerControls {
 
         // For adjusting the time scale in the game (which effectively adjusts the speed of time)
         // Note that the time slider can be adjusted while the game is paused
+        // Also note that the slider has a max of 500, which should result in increments of 0.01;
+        // the variable _lastRecordedSliderSetting takes the updated slider value and divides it
+        // by 100; when the timescale needs to be changed, it can simply be used directly
+        // Also note that the scale is logarithmic; instead of the scale going from 1-5, it goes
+        // from 2^0 to 2^5, so it basically goes faster exponentially the higher the slider value
         private void UpdateTimeScale(float updatedValue) {
-            if (_timeActive) {
-                Time.timeScale = Mathf.Pow(2, updatedValue);
-                _textButtonPause.text = "SPEED: " + Time.timeScale;
-            } else {
-                _lastRecordedSliderSetting = (int)_sliderSpeed.value;
-            }
+            _lastRecordedTimeScale = Mathf.Pow(2, updatedValue / _fineIncrements);
+            if (!_timePaused) Time.timeScale = _lastRecordedTimeScale;
+            if (_textButtonPause.text != _pauseText) _textButtonPause.text = "SPEED: " + _lastRecordedTimeScale.ToString(_timeFormat);
         }
 
         // Toggle button for pausing the game
         private void TogglePause() {
-            // Clicking to pause the game
-            if (_timeActive) {
+            if (!_timePaused) {
+                _timePaused = !_timePaused;
+                StartCoroutine(AlternatePauseText());
                 Time.timeScale = 0;
-                _textButtonPause.text = "PAUSED";
-                _timeActive = false;
-                _lastRecordedSliderSetting = (int)_sliderSpeed.value;
             } else {
-                Time.timeScale = Mathf.Pow(2, _lastRecordedSliderSetting);
-                _textButtonPause.text = "SPEED: " + Time.timeScale;
-                _timeActive = true;
+                _timePaused = !_timePaused;
+                Time.timeScale = _lastRecordedTimeScale;
+                _textButtonPause.text = "SPEED: " + _lastRecordedTimeScale.ToString(_timeFormat);
             }
         }
 
@@ -124,8 +132,21 @@ namespace PlayerControls {
         // - SYM454 calendar (without leap year calculations)
         // - "Episodic Time"
         private void ToggleTimeFormat() {
-            if (_altTimeFormat) _altTimeFormat = false;
-            else _altTimeFormat = true;
+            //if (_altTimeFormat) _altTimeFormat = !_altTimeFormat;
+            /*else*/ _altTimeFormat = !_altTimeFormat;
+        }
+
+        // Coroutine to alternate between PAUSED and time speed when the game is paused
+        // Since the coroutine needs to run while timescale is zero (the game is paused),
+        // use WaitForSecondsRealtime instead
+        private IEnumerator AlternatePauseText() {
+            WaitForSecondsRealtime wfs = new WaitForSecondsRealtime(_textBlinkDuration);
+            while (_timePaused) {
+                _textButtonPause.text = _pauseText;
+                yield return wfs;
+                _textButtonPause.text = "SPEED: " + _lastRecordedTimeScale.ToString(_timeFormat);
+                yield return wfs;
+            }
         }
     }
 }

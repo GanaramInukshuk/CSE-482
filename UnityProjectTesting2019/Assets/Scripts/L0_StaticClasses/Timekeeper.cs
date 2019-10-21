@@ -94,6 +94,11 @@ public static class Timekeeper {
         return (DAY)(day % _daysPerWeek) + ", " + (dayOfMonth + 1).ToString("00") + " " + (MONTH)month + " " + year.ToString("0000");
     }
 
+    // Overloaded function from above that takes a year offset
+    public static string SimpleDate(int tickCount, int yearOffset) {
+        return SimpleDate(tickCount + yearOffset * _ticksPerYear);
+    }
+
     // Find the episodic time-of-day (think day-night cycle)
     public static string EpisodicTime(int tickCount) {
         int tickRemainder = tickCount % _ticksPerEpisodicDay;
