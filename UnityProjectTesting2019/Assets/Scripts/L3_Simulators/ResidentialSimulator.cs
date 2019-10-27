@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ResidentialScripts;       // Namespace for organizing classes
-using GeneralScripts;
+using SimulatorInterfaces;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -37,7 +37,7 @@ using GeneralScripts;
 //  4. _occMgr.Population goes into _popMgr to calculate a population
 //  5. _popMgr generates a population breakdown for use with other simulators/managers
 
-public class ResidentialSimulator {
+public class ResidentialSimulator : IZoningSimulator {
     // This is a helper class that takes the affectors and generates probability arrays for each of the managers
     private static class WeightAffector {
         // Notes on household types and averages:
@@ -75,6 +75,14 @@ public class ResidentialSimulator {
         // the original percentages; if affectors are to be used, the prescribed ratio should be 2:1:2:3:1:1, which translates
         // to a 20:10:20:30:10:10 percent ratio between each hh type; in comparison, using a ratio of 1:1:1:1:1:1 should 
         // produce a hh composition of equal parts of each type (16.67% of each hh type)
+
+        // An older implementation of this was basically a prelude to Bayes' Theorem, wherein P(A|B) = (P(B|A) * P(A)) / P(B)
+        // Each row of this jagged array corresponds to one of the six household types there are, and each age bucket WITHIN
+        // each row corresponds to how much each household type contributes to each population bucket; basically, the end goal
+        // is to have P(population_bucket[i] INTERSECT household_type[j]), for every population bucket and household type,
+        // add up to 100%; since I changed this to preemptively divide by the population pyramid's default weights...
+
+        // If I have to, I'll rewrite this thing, but since it's being left unused for now...
         private static float[][] HouseholdContributorWeights => new float[][] {
             new float[] {  0.000f,  0.000f,  0.000f,  0.000f,  2.000f,  1.778f,  1.556f,  1.333f,  1.111f,  0.889f,  0.667f,  0.444f,  0.222f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  },
             new float[] {  0.000f,  0.000f,  0.000f,  0.000f,  2.000f,  1.778f,  1.556f,  1.333f,  1.111f,  0.889f,  0.667f,  0.444f,  0.222f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  0.000f,  },
@@ -169,14 +177,21 @@ public class ResidentialSimulator {
 
     // Interface-related getters
     // These return an interface-implementing object
-    public IZonableBuilding ZoningBreakdown     => _hsgCtr;
-    public IHousehold       HouseholdBreakdown  => _hhdMgr;
-    public IOccupancy       OccupancyBreakdown  => _occMgr;
-    public IPopulation      PopulationBreakdown => _popMgr;
+    public IHousehold  HouseholdBreakdown  => _hhdMgr;
+    public IOccupancy  OccupancyBreakdown  => _occMgr;
+    public IPopulation PopulationBreakdown => _popMgr;
+
+    // Getters related to IZonableBuilding
+    public int this[int i]    => _hsgCtr[i];       // Indexer for bldg count by bldg size
+    public int TotalBuildings => _hsgCtr.TotalBuildings;
 
     // One unit of occupancy translates to 2.5 units of population on average (assuming default affectors)
-    public int UnitCount => _occCtr.Count;
-    public int UnitMax   => _occCtr.Max;
+    // These are required by the IZoningSimulator interface
+    public int OccupantCount => _occCtr.Count;
+    public int OccupantMax   => _occCtr.Max;        // Equivalent to _hsgCtr.OccupantMax and required by IZonableBuilding
+
+    // For easily accessing bldg data
+    public int[] BldgVector { get => _hsgCtr.Count; }
 
     // For use with savedata
     // Note that this populates the occupancy counter using the values from the housing counter (for
@@ -188,7 +203,7 @@ public class ResidentialSimulator {
             _hhdMgr.DataVector = tempVector[1];
             _occMgr.DataVector = tempVector[2];
             _popMgr.DataVector = tempVector[3];
-            _occCtr.Max   = _hsgCtr.MaxZoningUnits;       // Total number of available living units
+            _occCtr.Max   = _hsgCtr.OccupantMax;       // Total number of available living units
             _occCtr.Count = _hhdMgr.TotalHouseholds;    // Total number of occupied living units
         }
         get => new int[][] {
@@ -220,10 +235,10 @@ public class ResidentialSimulator {
     // - If applicable, set the unit count; if this is -1, set this to the max; any other negative zeros it out
     // - If applicable, increment the unit count
     // - Call the ManagerGenerate function
-    public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt) {
+    public void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt) {
         _hsgCtr.Count = bldgs;
-        _occCtr.Max   = _hsgCtr.MaxZoningUnits;
-        _occCtr.Count = (units == -1) ? _hsgCtr.MaxZoningUnits : units;
+        _occCtr.Max   = _hsgCtr.OccupantMax;
+        _occCtr.Count = (occupants == -1) ? _hsgCtr.OccupantMax : occupants;
         _occCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
     }
@@ -231,7 +246,7 @@ public class ResidentialSimulator {
     // A 2-param Generate function; uses affectors and increments unit count
     // This should be typical of in-depth gameplay
     public void Generate(float[] affectors, int incrementAmt) {
-        _occCtr.Max   = _hsgCtr.MaxZoningUnits;
+        _occCtr.Max = _hsgCtr.OccupantMax;
         _occCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
     }
@@ -239,7 +254,7 @@ public class ResidentialSimulator {
     // A 1-param Generate function; only increments unit count
     // This can be used instead of the 2-param version if in-depth simulation (IE, demographics) isn't needed
     public void Generate(int incrementAmt) {
-        _occCtr.Max   = _hsgCtr.MaxZoningUnits;
+        _occCtr.Max = _hsgCtr.OccupantMax;
         _occCtr.IncrementCount(incrementAmt);
         ManagerGenerate();
     }
@@ -247,7 +262,7 @@ public class ResidentialSimulator {
     // A 0-param Generate function; only calls the Generate function
     // Also for testing purposes
     public void Generate() {
-        _occCtr.Max   = _hsgCtr.MaxZoningUnits;
+        _occCtr.Max = _hsgCtr.OccupantMax;
         ManagerGenerate();
     }
 
@@ -257,15 +272,15 @@ public class ResidentialSimulator {
     // Incrementing buildings updates the counts
     public void IncrementBldgs(int[] amt) { 
         _hsgCtr.IncrementCount(amt);
-        _occCtr.Max = _hsgCtr.MaxZoningUnits;
+        _occCtr.Max = _hsgCtr.OccupantMax;
     }
 
     public void IncrementBldgs(int amt, int index) {
         _hsgCtr.IncrementCount(amt, index);
-        _occCtr.Max = _hsgCtr.MaxZoningUnits;
+        _occCtr.Max = _hsgCtr.OccupantMax;
     }
 
-    public void IncrementUnits(int amt) {
+    public void IncrementOccupants(int amt) {
         _occCtr.IncrementCount(amt);
     }
 
@@ -282,7 +297,7 @@ public class ResidentialSimulator {
     // Private helper function; calls the individual Generate functions 
     private void ManagerGenerate() {
         _hhdMgr.Generate(_occCtr.Count          );
-        Debug.Log("_hhdMgr.TotalHouseholds = " + _hhdMgr.TotalHouseholds);
+        //Debug.Log("_hhdMgr.TotalHouseholds = " + _hhdMgr.TotalHouseholds);
         _occMgr.Generate(_hhdMgr.TotalHouseholds);
         _popMgr.Generate(_occMgr.Population     );
     } 

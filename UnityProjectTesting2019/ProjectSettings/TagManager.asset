@@ -8,6 +8,7 @@ TagManager:
   - UI-COMMERCIAL
   - UI-PANEL
   - UI-GENERAL
+  - UI-CIVIC
   layers:
   - Default
   - TransparentFX

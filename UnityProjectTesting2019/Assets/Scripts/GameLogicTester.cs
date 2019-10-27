@@ -92,42 +92,42 @@ public class GameLogicTester : MonoBehaviour {
         //    _schoolMgr.PrintDebugString();
         //}
 
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            // For debugging, use the 4-param Generate function
+        //if (Input.GetKeyDown(KeyCode.Return)) {
+        //    // For debugging, use the 4-param Generate function
 
-            _resSim.Generate(_householdAffectors, _housingToTest, _occupancyToTest, 0);
-            _resSim.PrintDebugString();
+        //    _resSim.Generate(_householdAffectors, _housingToTest, _occupancyToTest, 0);
+        //    _resSim.PrintDebugString();
 
-            _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);
-            _workEval.PrintDebugString();
+        //    _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);
+        //    _workEval.PrintDebugString();
 
-            _commSim.Generate(_commerceAffectors, _storesToTest, _workEval.CommercialLabor, 0);
-            _commSim.PrintDebugString();
+        //    _commSim.Generate(_commerceAffectors, _storesToTest, _workEval.CommercialLabor, 0);
+        //    _commSim.PrintDebugString();
 
-            //int[] students = SimulatorAssistant.Education.K14Students(_resSim.PopulationBreakdown);
-            //_eduSim.GenerateEducation(students, _schoolCount, _classroomSize);
-            //_eduSim.PrintDebugString();
+        //    //int[] students = SimulatorAssistant.Education.K14Students(_resSim.PopulationBreakdown);
+        //    //_eduSim.GenerateEducation(students, _schoolCount, _classroomSize);
+        //    //_eduSim.PrintDebugString();
 
-            //_clsMgr.Classrooms = 30;
-            //_clsMgr.ClassroomSize = 24;
-            //int students = _resSim.PopulationBreakdown.childPopulation;
-            //_clsMgr.Generate(students);
-            //_clsMgr.PrintDebugString();
-        }
+        //    //_clsMgr.Classrooms = 30;
+        //    //_clsMgr.ClassroomSize = 24;
+        //    //int students = _resSim.PopulationBreakdown.childPopulation;
+        //    //_clsMgr.Generate(students);
+        //    //_clsMgr.PrintDebugString();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.K)) {
-            // For general gameplay, use the 2-param Generate function if using affectors; otherwise,
-            // use the 1-param Generate function, using the corresponding evaluator's increment amount
+        //if (Input.GetKeyDown(KeyCode.K)) {
+        //    // For general gameplay, use the 2-param Generate function if using affectors; otherwise,
+        //    // use the 1-param Generate function, using the corresponding evaluator's increment amount
 
-            _resSim.Generate();
-            _resSim.PrintDebugString();
+        //    _resSim.Generate();
+        //    _resSim.PrintDebugString();
 
-            _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);
-            _workEval.PrintDebugString();
+        //    _workEval.GenerateWorkforce(_resSim.PopulationBreakdown);
+        //    _workEval.PrintDebugString();
 
-            _commSim.Generate(_workEval.CommercialIncrement);
-            _commSim.PrintDebugString();
-        }
+        //    _commSim.Generate(_workEval.CommercialIncrement);
+        //    _commSim.PrintDebugString();
+        //}
 
         //if (Input.GetKeyDown(KeyCode.T)) {
         //    //for (int i = 0; i < 300; i++) {

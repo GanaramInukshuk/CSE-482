@@ -254,6 +254,7 @@ MonoBehaviour:
   _min: 0
   _max: 100
   _currValue: 10
+  _loadBackwards: 0
   _progressBarBackground: {fileID: 1707620649240092276}
   _progressBarMask: {fileID: 1707620648257254216}
   _progressBarFill: {fileID: 1707620647801221652}

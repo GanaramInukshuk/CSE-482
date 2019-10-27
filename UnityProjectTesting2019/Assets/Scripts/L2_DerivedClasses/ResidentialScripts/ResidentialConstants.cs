@@ -16,11 +16,11 @@ namespace ResidentialScripts {
     public static class Constants {
         // Enum for housing sizes
         // May include 6plex, 8plex, 10plex, 12plex later on
-        public enum HOUSINGSIZE { SIMPLEX, DUPLEX, TRIPLEX, FOURPLEX, SIXPLEX, /*EIGHTPLEX, TENPLEX, TWELVEPLEX*/ };
+        public enum HOUSINGSIZE { SIMPLEX, DUPLEX, FOURPLEX, SIXPLEX, EIGHTPLEX, TWELVEPLEX };
 
         // Array of housing sizes; these correspond to simplexes, duplex, triplexes, and fourplexes
         // For use with the housing counter
-        public static int[] HousingSizes => new int[] { 1, 2, 3, 4, 6, 8 };
+        public static int[] HousingSizes => new int[] { 1, 2, 4, 6, 8, 12 };
 
         // The percentage of households by type 
         // Source: https://www.census.gov/prod/cen2010/briefs/c2010br-14.pdf (table 4, first row)

@@ -8,9 +8,6 @@ using UnityEngine;
 // Functionality:
 // - The EmploymentManager takes in a count of employees and a distribution of specializations and
 //   generates a histogram for use with other managers
-// - The parameter n passed into the Generate function is the number of employment units; this needs
-//   to be converted into a raw employment count afterwards, and all numbers handled by this manager
-//   is in employee count, not in employment units
 
 namespace CommercialScripts {
 
@@ -40,7 +37,7 @@ namespace CommercialScripts {
         // an employment unit
         public new void Generate(int n, float[] weights) {
             base.Generate(n, weights);
-            DataVector = ExtraMath.Linear.ScalarVectorMult(Constants.LaborUnit, DataVector);
+            //DataVector = ExtraMath.Linear.ScalarVectorMult(Constants.LaborUnit, DataVector);
         }
 
         // Extra Generate() function uses default weights

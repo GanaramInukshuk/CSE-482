@@ -10,9 +10,10 @@ public class ProgressBar : MonoBehaviour {
 
     // Values
     [Header("Main Parameters")]
-    [SerializeField] private int _min;         // In case the progress bar has a starting value that isn't zero; otherwise it's zero
-    [SerializeField] private int _max;         // Self explanatory...
-    [SerializeField] private int _currValue;
+    [SerializeField] private int  _min;         // In case the progress bar has a starting value that isn't zero; otherwise it's zero
+    [SerializeField] private int  _max;         // Self explanatory...
+    [SerializeField] private int  _currValue;
+    [SerializeField] private bool _loadBackwards;       // Makes the progress bar load right-to-left
 
     // Aesthetic properties
     [Header("Aesthetic Properties")]
@@ -24,6 +25,10 @@ public class ProgressBar : MonoBehaviour {
 
     // Start function; sets the 
     private void Start() {
+        // For loading the progress bar left-to-right or right-to-left
+        // The defualt is LTR; set this property in the inspector
+        if (_loadBackwards) _progressBarMask.fillOrigin = 1;
+
         _progressBarBackground.color = _emptyBarColor;
         _progressBarFill.color = _filledBarColor;
     }
@@ -34,6 +39,16 @@ public class ProgressBar : MonoBehaviour {
         float maxOffset  = _max - _min;
         float fillAmount = (maxOffset != 0) ? currOffset / maxOffset : 0;   // Divide by zero safeguard
         _progressBarMask.fillAmount = fillAmount;
+    }
+
+    public void FillForward() {
+        _loadBackwards = false;
+        _progressBarMask.fillOrigin = 0;
+    }
+
+    public void FillBackward() {
+        _loadBackwards = true;
+        _progressBarMask.fillOrigin = 1;
     }
 
     // Updates the size of the progress bar mask and all values

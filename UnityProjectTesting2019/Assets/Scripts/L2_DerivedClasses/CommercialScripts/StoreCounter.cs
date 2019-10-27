@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GeneralScripts;
+using SimulatorInterfaces;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -16,7 +16,7 @@ namespace CommercialScripts {
     public class StoreCounter : ArrayCounter, IZonableBuilding {
         // Getters
         public int TotalBuildings => DistributionGen.Histogram.SumOfElements(Count);
-        public int MaxZoningUnits => ExtraMath.Linear.DotProduct(Count, Constants.EmploymentSizes);
+        public int OccupantMax    => ExtraMath.Linear.DotProduct(Count, Constants.EmploymentSizes);
 
         // Constructor
         public StoreCounter() : base(Constants.StoreVectorLength) { }

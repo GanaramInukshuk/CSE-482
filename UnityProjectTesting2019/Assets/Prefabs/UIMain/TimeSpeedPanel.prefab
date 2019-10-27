@@ -101,7 +101,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 08af3d4836d21354b832d7338a9d1be2, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -147,7 +147,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -10}
-  m_SizeDelta: {x: 420, y: 20}
+  m_SizeDelta: {x: 380, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1648827470295942146
 MonoBehaviour:
@@ -237,8 +237,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -69.999954, y: 15}
-  m_SizeDelta: {x: 280, y: 30}
+  m_AnchoredPosition: {x: -65.00001, y: 15}
+  m_SizeDelta: {x: 250, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2868926824126658023
 CanvasRenderer:
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: 17e3b6479545a3649b3da580d0337728, type: 3}
     m_FontSize: 24
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
@@ -400,7 +400,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Time: DD MMM YYYY'
+  m_Text: DD MMM YYYY
 --- !u!1 &2868926824979266005
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,8 +437,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140.00005, y: 15}
-  m_SizeDelta: {x: 140, y: 30}
+  m_AnchoredPosition: {x: 125.000046, y: 15}
+  m_SizeDelta: {x: 130, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2868926824979266001
 CanvasRenderer:
@@ -468,7 +468,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: b2ff55c4817e7114a98f3e3829c2af85, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -600,7 +600,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PAUSED
+  m_Text: 'SPEED: XX.XX'
 --- !u!1 &2868926825576796302
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +671,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 4b9021787f7e50a4c9e522d74d6f56bb, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -699,6 +699,7 @@ MonoBehaviour:
   _progressBar: {fileID: 6821661215946430832}
   _tickCount: 0
   _yearOffset: 2000
+  _tickRate: 60
   _color: {r: 0, g: 0, b: 0, a: 0}
   _defaultFont: {fileID: 12800000, guid: 17e3b6479545a3649b3da580d0337728, type: 3}
   _altFont: {fileID: 12800000, guid: 5e96b44e713438141bbf6365b27b2032, type: 3}
@@ -772,7 +773,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 1c2cbf71fb8485a4bae0273b8a1a1bb6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -882,8 +883,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 001e97f0f72d7dc48a126ebc87107b4e, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -966,12 +967,12 @@ PrefabInstance:
     - target: {fileID: 1707620649240092275, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -30.2
+      value: -32
       objectReference: {fileID: 0}
     - target: {fileID: 1707620649240092275, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 420
+      value: 380
       objectReference: {fileID: 0}
     - target: {fileID: 1707620649240092275, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}

@@ -66,6 +66,7 @@ public static class Timekeeper {
     // These don't affect actual timekeeping and instead help show the passage of time using smaller time units
     private static readonly int _hoursPerDay    = 24;
     private static readonly int _minutesPerHour = 60;
+    private static readonly int _secondsPerMinute = 60;
 
     // The concept of an episodic day is explained in the doobly-doo up top
     // If FOURTeen NIGHTs = fortnight, can twentyEIGHT NIGHTs = eightnight/octnight?
@@ -78,6 +79,7 @@ public static class Timekeeper {
     public static readonly int   _episodicDaysPerYear  = _ticksPerYear / _ticksPerEpisodicDay;
     public static readonly float _ticksPerEpisodicHour = (float)_ticksPerEpisodicDay / _hoursPerDay;
     public static readonly float _ticksPerEpisodicMin  = _ticksPerEpisodicHour       / _minutesPerHour;
+    public static readonly float _ticksPerEpisodicSec  = _ticksPerEpisodicMin        / _secondsPerMinute;
 
     // Integer-divide the tickCount by the number of ticks per year to get the year
     // Use the remainder from aforementioned division to get all other information
@@ -87,7 +89,7 @@ public static class Timekeeper {
         int year          = tickCount     / _ticksPerYear;
         int tickRemainder = tickCount     % _ticksPerYear;
         int week          = tickRemainder / _ticksPerWeek;
-        int day           = Mathf.RoundToInt(tickRemainder / _ticksPerDay);  
+        int day           = tickRemainder / _ticksPerDay;  
         int month         = MonthFromWeek(week);
         int dayOfMonth    = DayOfMonth(month, day);
 
@@ -100,11 +102,14 @@ public static class Timekeeper {
     }
 
     // Find the episodic time-of-day (think day-night cycle)
+    // Note: Use FloorToInt to prevent a phantom 24:xx:xx timestamp
     public static string EpisodicTime(int tickCount) {
+        //Debug.Log(_ticksPerEpisodicDay);
         int tickRemainder = tickCount % _ticksPerEpisodicDay;
-        int hour = Mathf.RoundToInt(tickRemainder / _ticksPerEpisodicHour);
-        int mins = Mathf.RoundToInt(tickRemainder % _ticksPerEpisodicHour / _ticksPerEpisodicMin);
-        return hour.ToString("00") + ":" + mins.ToString("00");
+        int hour = Mathf.FloorToInt(tickRemainder / _ticksPerEpisodicHour);
+        int mins = Mathf.FloorToInt(tickRemainder % _ticksPerEpisodicHour / _ticksPerEpisodicMin);
+        int secs = Mathf.FloorToInt(tickRemainder % _ticksPerEpisodicHour % _ticksPerEpisodicMin / _ticksPerEpisodicSec);
+        return hour.ToString("00") + ":" + mins.ToString("00") + ":" + secs.ToString("00");
     }
 
     public static int EpisodicDayOutOfYear(int tickCount) {

@@ -7,17 +7,28 @@ using UnityEngine;
 // The powers of 2, starting at 1, but multiplied by 3: { 3, 6, 12, 24, 48, 96, 192, ... }
 // The previous two sets combined into one: { 1, 2, 3, 4, 6, 8, 12, 24, 32, 48, 64, 96, 128, 192, ... }
 
+// An altered version of the set above, but 3 is excluded:
+// { 1, 2, 4, 8, 12, 26, 24, 32, 48, 64, ... }
+
 namespace CommercialScripts {
 
     public static class Constants {
-        // Employment goes by discrete units of 8 employees per unit of labor
-        public static readonly int LaborUnit = 32;
+        // Employment sizes (IE, employment capacity for a commercial building) are more or less
+        // one of the sequences described above, multiplied by a labor unit size described here
+        public static readonly int LaborUnit = 24;
 
         // An array of employment sizes; each store size supports a different size employment capacity
         // Employment is by labor units
         // If using a LaborUnit size of 16 and powers of 2 mixed with PO2's times 3, these are the effective capacities:
         // { 32, 48, 64, 96, 128, 192 }
-        public static int[] EmploymentSizes => new int[] { 1, 2, 3, 4, 6, 8 };
+        public static int[] EmploymentSizes => new int[] {
+            1  * LaborUnit,
+            2  * LaborUnit,
+            4  * LaborUnit,
+            6  * LaborUnit,
+            8  * LaborUnit,
+            12 * LaborUnit,
+        };
 
         // An enum for the different types of commercial specializations
         // I am counting commercial offices to be a distinct type (like with C:S)
@@ -25,7 +36,7 @@ namespace CommercialScripts {
         // - Grocery: grocery stores (self-explanatory)
         // - Retail: retail stores (clothing, furniture, etc)
         // - Food: restaurants, including fast food
-        // - Service: other commercial services
+        // - Service: other commercial services, such as door-to-door services
         // - Automotive: gas stations and auto shops (and if EVs/alt-fuels become a thing, charging/refueling stations)
         // Possible specializations for future implementation:
         // - Tourism: gift shops and related services (not hotels, but maybe inns)

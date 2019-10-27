@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Because I'm lazy and I don't wanna have to set aesthetic properties eah time
+// Because I'm lazy and I don't wanna have to set aesthetic properties each time
+// This class can be made to be a generalized aesthetics toggling class; basically it can
+// change the aesthetics of the UI between 2 or more presets
 
-namespace PlayerControns {
+namespace PlayerControls {
 
     public class FontControls : MonoBehaviour {
 
@@ -32,7 +34,9 @@ namespace PlayerControns {
             _altFontEnabled = false;
 
             // If this script is directly attached to the UI canvas, then all of the UI
-            // panels are children of the canvas
+            // panels are children of the canvas; also, GetComponentsInChildren is recursive
+            // so it also gets the children of the children and so on (basically everything
+            // in the UI of a particular UI element type)
             gameObject.GetComponentsInChildren(_uiText);
             _uiPanels = GetUIPanels();
 

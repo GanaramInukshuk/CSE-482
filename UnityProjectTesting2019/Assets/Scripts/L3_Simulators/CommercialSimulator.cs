@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CommercialScripts;
-using GeneralScripts;
+using SimulatorInterfaces;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -46,7 +46,7 @@ using GeneralScripts;
 // 2. _occCtr.Count is passed into the generate function for _empMgr
 // 3. _empMgr generates a breakdown of employment specializations for use with other simulators/managers
 
-public class CommercialSimulator {
+public class CommercialSimulator : IZoningSimulator {
     // This is a helper class that takes affectors (really, proportions) and generates a probability array for the EmploymentManager
     // This is not as complex compared to the ResidentialSimulator's affector class
     private static class WeightAffector {
@@ -61,12 +61,18 @@ public class CommercialSimulator {
     private readonly EmploymentManager _empMgr   = new EmploymentManager( );
 
     // Interface-related getters
-    public IZonableBuilding ZoningBreakdown     => _storeCtr;
-    public IEmployment      EmploymentBreakdown => _empMgr;
+    public IEmployment EmploymentBreakdown => _empMgr;
 
-    // One labor unit translates to 8 employees
-    public int UnitCount => _laborCtr.Count;
-    public int UnitMax   => _laborCtr.Max;
+    // Getters related to IZonableBuilding
+    public int this[int i]    => _storeCtr[i];       // Indexer for bldg count by bldg size
+    public int TotalBuildings => _storeCtr.TotalBuildings;
+
+    // One unit of occupancy translates to 8 units of employment
+    public int OccupantCount => _laborCtr.Count;
+    public int OccupantMax   => _laborCtr.Max;        // Equivalent to _laborCtr.OccupantMax and required by IZonableBuilding
+
+    // Bldg data getter
+    public int[] BldgVector { get => _storeCtr.Count; }
 
     // Savedata setter-getter
     public int[][] DataVector {
@@ -74,7 +80,7 @@ public class CommercialSimulator {
             int[][] tempVector   = SavedataHelper.LoadMismatchedVector(value, Constants.ExpectedVectorLengths);
             _storeCtr.Count      = tempVector[0];
             _empMgr  .DataVector = tempVector[1];
-            _laborCtr.Max   = _storeCtr.MaxZoningUnits;     // Maximum employment capacity
+            _laborCtr.Max   = _storeCtr.OccupantMax;     // Maximum employment capacity
             _laborCtr.Count = _empMgr  .TotalEmployment;    // Employment count
         }
         get => new int[][] {
@@ -96,8 +102,8 @@ public class CommercialSimulator {
     // - Call the ManagerGenerate function
     public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt) {
         _storeCtr.Count = bldgs;
-        _laborCtr.Max   = _storeCtr.MaxZoningUnits;
-        _laborCtr.Count = (units == -1) ? _storeCtr.MaxZoningUnits : units;
+        _laborCtr.Max   = _storeCtr.OccupantMax;
+        _laborCtr.Count = (units == -1) ? _storeCtr.OccupantMax : units;
         _laborCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
     }
@@ -128,15 +134,15 @@ public class CommercialSimulator {
     // Incrementing buildings updates the counts
     public void IncrementBldgs(int[] amt) { 
         _storeCtr.IncrementCount(amt);
-        _laborCtr.Max = _storeCtr.MaxZoningUnits;
+        _laborCtr.Max = _storeCtr.OccupantMax;
     }
 
     public void IncrementBldgs(int amt, int index) {
         _storeCtr.IncrementCount(amt, index);
-        _laborCtr.Max = _storeCtr.MaxZoningUnits;
+        _laborCtr.Max = _storeCtr.OccupantMax;
     }
 
-    public void IncrementUnits(int amt) {
+    public void IncrementOccupants(int amt) {
         _laborCtr.IncrementCount(amt);
     }
 

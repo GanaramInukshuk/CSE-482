@@ -10,7 +10,7 @@ public static class ExtraRandom {
     // http://keyonvafa.com/box-muller-transform/
     // Returning bmt as-is results in returning a value corresponding to a mean of 0 and
     // stddev of 1, or a raw Z-score
-    public static float RandomGauss() {
+    public static float RandomGauss() { 
         float r1 = UnityEngine.Random.value;
         float r2 = UnityEngine.Random.value;
         float bmt = Mathf.Sqrt(-2 * Mathf.Log(r1)) * Mathf.Cos(ExtraMath.Constants.TAU * r2);
