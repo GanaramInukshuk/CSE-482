@@ -99,7 +99,7 @@
     <Compile Include="Assets\Scripts\L2_DerivedClasses\ResidentialScripts\PopulationManager.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\ResidentialScripts\ResidentialConstants.cs" />
     <Compile Include="Assets\Scripts\L2_DerivedClasses\SimulatorInterfaces.cs" />
-    <Compile Include="Assets\Scripts\L3_Simulators\CommercialSimulator.cs" />
+    <Compile Include="Assets\Scripts\L3_Simulators\CommercialSimulator1.cs" />
     <Compile Include="Assets\Scripts\L3_Simulators\ResidentialSimulator.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\WorkforceEvaluator.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\CommercialControls.cs" />

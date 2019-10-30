@@ -17,64 +17,91 @@ using UnityEngine;
 // (again) in favor of doing a proper headcount; in other words, the CommSim counts employees individually instead
 // of discrete groups of X amount of people and so will this (this decision also results in far easier calculations)
 
-public class WorkforceEvaluator {
+// Labor units don't come into play here, only with the commercial controls
 
-    public int CommercialMax       { private set; get; } = 0;       // Commercial labor
-    public int CommercialIncrement { private set; get; } = 0;       // Increment amount
+namespace DemandEvaluators {
+
+    public class WorkforceEvaluator {
+
+        public int EmployableMax { private set; get; } = 0;    // Cumulative workforce maximum across all job types
+
+        public int CommercialMax       { private set; get; } = 0;       // Maximum commercial employment
+        public int CommercialIncrement { private set; get; } = 0;       // Increment amount
    
-    public void GenerateWorkforce(ResidentialScripts.IPopulation popBreakdown, CommercialScripts.IEmployment commEmpBreakdown) {
-        // Calculate the total workforce here
-        int cumulativeWorkforce = 0;
-        if (popBreakdown.TotalPopulation < 256) {
-            cumulativeWorkforce = Mathf.FloorToInt(0.6f * popBreakdown.TotalPopulation);
-        } else {
-            int subpop1 = Mathf.FloorToInt(0.900f * (popBreakdown.YoungAdultPopulation + popBreakdown.AdultPopulation + popBreakdown.MiddleAgePopulation));
-            int subpop2 = Mathf.FloorToInt(0.025f * popBreakdown.SeniorPopulation);
-            int subpop3 = Mathf.FloorToInt(0.025f * popBreakdown.Teen2Population);
-            cumulativeWorkforce = subpop1 + subpop2 + subpop3;
+        public void GenerateWorkforce(ResidentialScripts.IPopulation popBreakdown, CommercialScripts.IEmployment commEmpBreakdown) {
+            // Calculate the total workforce here
+            if (popBreakdown.TotalPopulation < 256) {
+                EmployableMax = Mathf.RoundToInt(0.5f * popBreakdown.TotalPopulation);
+            } else {
+                // Working population cosists of portions of the YoungAdult, Adult, and MiddleAge populations,
+                // plus a small portion of the Senior and Teen2 populations
+                float subpop1 = 0.800f * (popBreakdown.YoungAdultPopulation + popBreakdown.AdultPopulation + popBreakdown.MiddleAgePopulation);
+                float subpop2 = 0.025f * popBreakdown.SeniorPopulation;
+                float subpop3 = 0.025f * popBreakdown.Teen2Population;
+                EmployableMax = Mathf.RoundToInt(subpop1 + subpop2 + subpop3);
+            }
+
+            // If more than one employment type existed, then the workforce would be divided between the different types,
+            // but at this point, the entire workforce goes towards commercial labor; additionally, labor is measured by
+            // each workforce type's respective labor unit
+            int CommercialMax = EmployableMax;
+
+            // Generate commercial increment
+            // The final increment amount is the delta, divided by 6, fed into the GenerateDemand function
+            // The "delta" is the amount of employment capacity left over
+            int prevCommercialEmployment = commEmpBreakdown.TotalEmployment;            // Get the previous commercial employment
+            int prevCommercialOpenings = CommercialMax - prevCommercialEmployment;      // Get the employment openings left over based off of previous employment
+            CommercialIncrement = GenerateIncrement(prevCommercialOpenings);               // Generate the increment
+
+            //if (Mathf.Abs(prevCommercialOpenings) == 1) CommercialIncrement = prevCommercialOpenings > 0 ? 1 : -1;
         }
 
-        // If more than one employment type existed, then the workforce would be divided between the different types,
-        // but at this point, the entire workforce goes towards commercial labor; additionally, labor is measured by
-        // each workforce type's respective labor unit
-        int commercialWorkforce = cumulativeWorkforce;
+        //// To calculate an increment, the previous labor force count is needed; this is obtained from CommercialSimulator.UnitCount
+        //// There are several situations that can happen:
+        //// - The prev and current labor amounts are the same or close to it, resulting in no change
+        //// - The new labor amount is larger than the previous amount, resulting in a positive increment
+        //// - The new labor amount is smaller than the previous amount, resulting in a negative increment
+        //// Increments should be proportional to how big the delta between the two amounts are
+        //// This logic should apply for when there is more than one type of workforce (IE Industry and Office)
+        //public int GenerateIncrement(int prevCommercialLabor) {
+        //}
 
-        // Generate commercial increment
-        // The final increment amount is the delta, divided by 6, fed into the GenerateDemand function
-        int prevCommercialLabor = commEmpBreakdown.TotalEmployment;
-        int commercialLaborDelta = commercialWorkforce - prevCommercialLabor;
-        CommercialIncrement = Mathf.RoundToInt(GenerateDemand(commercialLaborDelta / 6));
-    }
+        // Debug functions
+        public void PrintDebugString() {
+            string outputString = GetDebugString();
+            Debug.Log(outputString);
+        }
 
-    //// To calculate an increment, the previous labor force count is needed; this is obtained from CommercialSimulator.UnitCount
-    //// There are several situations that can happen:
-    //// - The prev and current labor amounts are the same or close to it, resulting in no change
-    //// - The new labor amount is larger than the previous amount, resulting in a positive increment
-    //// - The new labor amount is smaller than the previous amount, resulting in a negative increment
-    //// Increments should be proportional to how big the delta between the two amounts are
-    //// This logic should apply for when there is more than one type of workforce (IE Industry and Office)
-    //public int GenerateIncrement(int prevCommercialLabor) {
-    //}
+        public string GetDebugString() {
+            return "[WorkforceEvaluator]: Max commercial labor units: " + CommercialMax;
+        }
 
-    // Debug functions
-    public void PrintDebugString() {
-        string outputString = GetDebugString();
-        Debug.Log(outputString);
-    }
+        // Private function that generates demand
+        // This system will result in an employment that approaches the commercial max, but does not quite
+        // reach it(IE, it's off by a little bit)
+        // TODO: fix the issue described by incrementing by 1 until the demand is satisfied
+        //private int GenerateIncrement(int demand) {
+        //    int mean = Mathf.CeilToInt(demand / 10f);
+        //    float stddev = Mathf.Abs(mean) / 2f;
+        //    float increment = ExtraRandom.RandomGaussWithClamp(mean, stddev, -3, 3);
+        //    return increment > 0 ? Mathf.CeilToInt(increment) : Mathf.FloorToInt(increment);
+        //}
 
-    public string GetDebugString() {
-        return "[WorkforceEvaluator]: Max commercial labor units: " + CommercialMax;
-    }
+        // Until further notice, I'm gonna use this as my increment generator
+        private int GenerateIncrement(int demand) {
+            int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
+            int increment = Random.Range(0, bound + 1);
+            return Mathf.Sign(demand) == 1 ? increment : -increment;
+        }
 
-    // Private function that generates demand using a RandomGauss RNG
-    // This is similar to the function used to generate residential demand
-    // What this function means:
-    // - Generally for a large enough mean, (say, 100), this function will
-    //   return a value within the range [50, 150] about 68% of the time with other values
-    //   (such as 250 and -50) occuring around <1% of the time
-    private float GenerateDemand(int mean) {
-        float stddev = 1 + (float)mean / 2;
-        float demand = ExtraRandom.RandomGauss(mean, stddev);
-        return demand;
+        ////// New function that should prevent overshooting
+        //private int GenerateDemand(int demand) {
+        //    float openingsFraction = demand > 0 ? Mathf.CeilToInt((float)demand / 8) : Mathf.FloorToInt((float)demand / 8);
+        //    return Mathf.RoundToInt(openingsFraction * Random.Range(-0.125f, 0.875f));
+
+
+        //    //float random
+        //    //return demand > 0 ? Mathf.RoundToInt(demand * 0.125f)
+        //}
     }
 }

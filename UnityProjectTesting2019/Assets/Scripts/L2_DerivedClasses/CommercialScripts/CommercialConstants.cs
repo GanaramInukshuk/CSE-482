@@ -15,20 +15,14 @@ namespace CommercialScripts {
     public static class Constants {
         // Employment sizes (IE, employment capacity for a commercial building) are more or less
         // one of the sequences described above, multiplied by a labor unit size described here
-        public static readonly int LaborUnit = 24;
+        public static readonly int LaborUnit = 16;
 
         // An array of employment sizes; each store size supports a different size employment capacity
         // Employment is by labor units
         // If using a LaborUnit size of 16 and powers of 2 mixed with PO2's times 3, these are the effective capacities:
         // { 32, 48, 64, 96, 128, 192 }
-        public static int[] EmploymentSizes => new int[] {
-            1  * LaborUnit,
-            2  * LaborUnit,
-            4  * LaborUnit,
-            6  * LaborUnit,
-            8  * LaborUnit,
-            12 * LaborUnit,
-        };
+        public static int[] LaborUnitCounts => new int[] { 1, 2, 4, 6, 8, 12 };
+        public static int[] EmploymentSizes => ExtraMath.Linear.ScalarVectorMult(LaborUnit, LaborUnitCounts);
 
         // An enum for the different types of commercial specializations
         // I am counting commercial offices to be a distinct type (like with C:S)

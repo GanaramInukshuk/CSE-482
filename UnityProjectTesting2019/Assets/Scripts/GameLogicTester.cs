@@ -39,7 +39,7 @@ public class GameLogicTester : MonoBehaviour {
     // Simulators to test; use this if simulators derive from MonoBehaviour
     private ResidentialSimulator _resSim   ;
     private CommercialSimulator  _commSim  ;
-    private WorkforceEvaluator   _workEval ;
+    //private WorkforceEvaluator   _workEval ;
 
     //private EducationScripts.SchoolManager _schoolMgr = new EducationScripts.SchoolManager();
 
@@ -53,7 +53,7 @@ public class GameLogicTester : MonoBehaviour {
 
         _resSim   = GetComponent<ResidentialSimulator>();
         _commSim  = GetComponent<CommercialSimulator >();
-        _workEval = GetComponent<WorkforceEvaluator  >();
+        //_workEval = GetComponent<WorkforceEvaluator  >();
 
         string msg = 
             "Press ENTER to force GameLogicTester to load and use test data.\n" +

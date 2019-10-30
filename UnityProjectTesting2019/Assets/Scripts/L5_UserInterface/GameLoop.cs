@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DemandEvaluators;
 using PlayerControls;
 
 // This class is in charge of all of the game's calculations and requires references
@@ -28,7 +29,8 @@ public class GameLoop : MonoBehaviour {
     private WorkforceEvaluator _workforceEval = new WorkforceEvaluator();
 
     private void Start() {
-        
+        _textPopulation.text = "Population: 0";
+        _textEmployment.text = "Employment: 0 out of 0";
     }
 
     // In general:
@@ -71,9 +73,12 @@ public class GameLoop : MonoBehaviour {
             // Generate base residential demand
             // TODO: Transfer this into its own evaluator
             //float baseDemandMean = (_resCtrl.ZoningBreakdown.OccupantCount < 256) ? 0.75f : 0f;
-            float baseDemandMean = 0.75f;
-            int baseDemand = Mathf.RoundToInt(GenerateDemand(baseDemandMean));
-            _resCtrl.IncrementOccupants(baseDemand);
+            //int baseDemand = GenerateDemand(0.5f);
+            //_resCtrl.IncrementOccupants(baseDemand);
+
+            int baseDemand = 256;
+            int prevResidentialOpenings = baseDemand - _resCtrl.ZoningBreakdown.OccupantCount;
+            _resCtrl.IncrementOccupants(GenerateIncrement(prevResidentialOpenings));
 
             // Generate commercial demand; this is based off of the residential population
             _workforceEval.GenerateWorkforce(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
@@ -87,11 +92,8 @@ public class GameLoop : MonoBehaviour {
             _resCtrl.Generate();
             _commCtrl.Generate();
 
-
-            int updatedPop = _resCtrl.PopulationBreakdown.TotalPopulation;
-            int updatedLabor = _commCtrl.EmploymentBreakdown.TotalEmployment;
-            _textPopulation.text = "Population: " + updatedPop.ToString();
-            _textEmployment.text = "Employment: " + updatedLabor.ToString();
+            _textPopulation.text = "Population: " + _resCtrl.PopulationBreakdown.TotalPopulation.ToString();
+            _textEmployment.text = "Employment: " + _commCtrl.EmploymentBreakdown.TotalEmployment.ToString() + " out of " + _workforceEval.EmployableMax.ToString();
         }
 
 
@@ -104,12 +106,36 @@ public class GameLoop : MonoBehaviour {
     
     }
 
-    // General function for generating demand
-    // This returns a RandomGauss number where the mean is passed in as it is and
-    // the stddev is half the (absolute value of the) mean, plus 1
-    private float GenerateDemand(float mean) {
-        float stddev = 1 + mean / 2;
-        float demand = Mathf.RoundToInt(ExtraRandom.RandomGauss(mean, stddev));
-        return demand;
+    //// General function for generating demand
+    //// This returns a RandomGauss number where the mean is passed in as it is and
+    //// the stddev is half the (absolute value of the) mean, plus 1
+    //private int GenerateDemand(int demand) {
+    //    float mean = demand / 10f;
+    //    float stddev = mean / 2f;
+    //    float increment = Mathf.RoundToInt(ExtraRandom.RandomGaussWithClamp(mean, stddev, -3, 3));
+    //    return Mathf.RoundToInt(increment);
+    //}
+
+    // Until further notice, I'm gonna use this as my increment generator
+    private int GenerateIncrement(int demand) {
+        int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
+        int increment = Random.Range(0, bound + 1);
+        return Mathf.Sign(demand) == 1 ? increment : -increment;
     }
+
+    //private int GenerateDemand(int demand) {
+    //    int bound = Mathf.CeilToInt(demand / 16f);
+    //    Debug.Log(bound);
+    //    int increment = Random.Range(0, bound + 1);
+    //    Debug.Log(increment);
+    //    return increment;
+    //}
+
+    //private int GenerateIncrement(int demand) {
+    //    float mean = (float)demand / 16;
+    //    float stddev = mean / 8;
+    //    float zScore = Mathf.Clamp(ExtraRandom.RandomGauss(), -3, 3);
+    //    float increment = zScore * stddev + mean;
+    //    return increment > 0 ? Mathf.CeilToInt(increment) : Mathf.FloorToInt(increment);
+    //}
 }

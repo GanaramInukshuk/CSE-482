@@ -22,6 +22,18 @@ public static class ExtraRandom {
         return mean + stddev * RandomGauss();
     }
 
+    // Same functions as above but with a clamped stddev; the generated z-score is clamped within a
+    // range specified by the two additional parameters
+    public static float RandomGaussWithClamp(float zLower, float zUpper) {
+        return Mathf.Clamp(RandomGauss(), zLower, zUpper);
+    }
+
+    public static float RandomGaussWithClamp(float mean, float stddev, float zLower, float zUpper) {
+        return mean + stddev * RandomGaussWithClamp(zLower, zUpper);
+    }
+
+
+
     // Generates an integer array with random numbers within the range [min, max]
     public static int[] RandomArray(int length, int min, int max) {
         int[] randArray = new int[length];

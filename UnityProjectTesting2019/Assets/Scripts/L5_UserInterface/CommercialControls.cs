@@ -118,14 +118,14 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Capacity: " + Constants.EmploymentSizes[(int)updatedValue];
+            _textBldgSize.text = "Capacity: " + Constants.LaborUnitCounts[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels
         // This also updates the progress bar
         private void UpdateTextLabels() {
             // Total text
-            string breakdownText = "COMMERCIAL: " + _simulator.OccupantCount + " out of " + _simulator.OccupantMax + " max employees spread over " + _simulator.TotalBuildings + " buildings.";
+            string breakdownText = "COMMERCIAL: " + _simulator.LaborUnitCount + " out of " + _simulator.LaborUnitMax + " max labor units spread over " + _simulator.TotalBuildings + " buildings.";
             _textTotal.text = breakdownText;
 
             // Breakdown text
@@ -135,7 +135,7 @@ namespace PlayerControls {
             }
 
             // Progress bar
-            _progressBar.UpdateFill(0, _simulator.OccupantMax, _simulator.OccupantCount);
+            _progressBar.UpdateFill(0, _simulator.LaborUnitMax, _simulator.LaborUnitCount);
         }
     }
 }

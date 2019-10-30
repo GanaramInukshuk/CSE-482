@@ -42,6 +42,17 @@ namespace SimulatorInterfaces {
         int OccupantMax    { get; }     // Total/max number of "zoning" units
     }
 
+    // For use with the job-generating simulators
+    public interface ILaborUnits {
+        int LaborUnitCount { get; }
+        int LaborUnitMax   { get; }
+    }
+
+    public interface IEmployable {
+        int EmploymentCount { get; }
+        int EmploymentMax   { get; }
+    }
+
     // For providing how much utilities a simulator uses per week
     // Utilities would be provided by utility companies (power plant, water pump, etc)
     public interface IUtilities {
@@ -69,9 +80,9 @@ namespace SimulatorInterfaces {
         int UpkeepCost { get; }
     }
 
-    // For any facilities that provide additional employment outside of commerce and industry
-    // Think school jobs, hospital jobs, police jobs, etc
-    public interface IEmployable {
-        int EmploymentNeeded { get; }
-    }
+    //// For any facilities that provide additional employment outside of commerce and industry
+    //// Think school jobs, hospital jobs, police jobs, etc
+    //public interface IEmployable {
+    //    int EmploymentNeeded { get; }
+    //}
 }
