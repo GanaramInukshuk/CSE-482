@@ -131,7 +131,7 @@ namespace PlayerControls {
             // Breakdown text
             // These labels show the number of buildings by size and are displayed
             for (int i = 0; i < _textBldgCount.Length; i++) {
-                _textBldgCount[i].text = _simulator.BldgVector.ToString();
+                _textBldgCount[i].text = _simulator.BldgVector[i].ToString();
             }
 
             // Progress bar

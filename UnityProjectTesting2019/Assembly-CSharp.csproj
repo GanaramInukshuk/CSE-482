@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\_OLD\Bicounter.cs" />
+    <Compile Include="Assets\Scripts\_OLD\CommercialSimulator1.cs" />
     <Compile Include="Assets\Scripts\_OLD\EducationScripts\ClassroomManager.cs" />
     <Compile Include="Assets\Scripts\_OLD\EducationScripts\ClassroomSizeCounter.cs" />
     <Compile Include="Assets\Scripts\_OLD\EducationScripts\EducationConstants.cs" />
