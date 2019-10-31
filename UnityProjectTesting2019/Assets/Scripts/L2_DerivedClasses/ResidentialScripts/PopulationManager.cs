@@ -17,10 +17,14 @@ using UnityEngine;
 //   fall sharply; this closely mimics a populaton pyramid for a stable population (such as the US for
 //   around the 2010s)
 
+// Note that this thing has TWO interfaces
+// - The first one is for the population pyramid and its other age-based subpopulations
+// - The second one is for demographics; for example, the workforce
+
 namespace ResidentialScripts {
 
     public interface IPopulation {
-        int this[int i]          { get; }
+        //int this[int i]          { get; }
         int TotalPopulation      { get; }
         int InfantPopulation     { get; }
         int ChildPopulation      { get; }
@@ -30,9 +34,19 @@ namespace ResidentialScripts {
         int AdultPopulation      { get; }
         int MiddleAgePopulation  { get; }
         int SeniorPopulation     { get; }
+        int[] PopulationVector   { get; }
     }
 
-    public sealed class PopulationManager : BasicManager, IPopulation {
+    public interface IDemographic {
+        int ElemSchoolDemographic { get; }
+        int MiddSchoolDemographic { get; }
+        int HighSchoolDemographic { get; }
+        int K12SchoolDemographic  { get; }
+        int EmployableDemographic { get; }
+        int RetiredDemographic    { get; }
+    }
+
+    public sealed class PopulationManager : BasicManager, IPopulation, IDemographic {
         // Constructor
         // Note that this manager (and its sister managers) use constants defined in the constants
         // helper class; as long as all the contents of the namespace are intact, the managers may
@@ -58,6 +72,27 @@ namespace ResidentialScripts {
         public int MiddleAgePopulation  => DistributionGen.Histogram.SumOfElements(DataVector,  9, 12);
         public int SeniorPopulation     => DistributionGen.Histogram.SumOfElements(DataVector, 13, 19);
         public int TotalPopulation      => DistributionGen.Histogram.SumOfElements(DataVector);
+        public int[] PopulationVector   => DataVector;
+
+        // Getters for K12 demographics
+        public int ElemSchoolDemographic => Mathf.RoundToInt(ChildPopulation * 0.95f);
+        public int MiddSchoolDemographic => Mathf.RoundToInt(Teen1Population * 0.95f);
+        public int HighSchoolDemographic => Mathf.RoundToInt(Teen2Population * 0.95f);
+        public int K12SchoolDemographic  => ElemSchoolDemographic + MiddSchoolDemographic + HighSchoolDemographic;
+        
+        // Getter for workforce
+        // Note that if secondary education is ever added, it's certainly possible for a college student to have a job
+        public int EmployableDemographic => Mathf.RoundToInt(
+            0.025f * Teen2Population      +
+            0.850f * YoungAdultPopulation +
+            0.850f * AdultPopulation      +
+            0.850f * MiddleAgePopulation  +
+            0.025f * SeniorPopulation
+        );
+
+        // Retired population consists mainly of the non-working seniors
+        public int RetiredDemographic => Mathf.RoundToInt(SeniorPopulation * 0.975f);
+
 
         //Overridden Generate() function adds randomness; randomness starts at a population of 1000
         public override void Generate(int n, float[] weights) {

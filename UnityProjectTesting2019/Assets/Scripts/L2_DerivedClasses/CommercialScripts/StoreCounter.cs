@@ -17,6 +17,7 @@ namespace CommercialScripts {
         // Getters
         public int TotalBuildings => DistributionGen.Histogram.SumOfElements(Count);
         public int OccupantMax    => ExtraMath.Linear.DotProduct(Count, Constants.EmploymentSizes);
+        public int[] BldgVector   => Count;
 
         // Constructor
         public StoreCounter() : base(Constants.StoreVectorLength) { }

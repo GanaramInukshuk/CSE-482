@@ -28,18 +28,20 @@ namespace DemandEvaluators {
         public int CommercialMax       { private set; get; } = 0;       // Maximum commercial employment
         public int CommercialIncrement { private set; get; } = 0;       // Increment amount
    
-        public void GenerateWorkforce(ResidentialScripts.IPopulation popBreakdown, CommercialScripts.IEmployment commEmpBreakdown) {
-            // Calculate the total workforce here
-            if (popBreakdown.TotalPopulation < 256) {
-                EmployableMax = Mathf.RoundToInt(0.5f * popBreakdown.TotalPopulation);
-            } else {
-                // Working population cosists of portions of the YoungAdult, Adult, and MiddleAge populations,
-                // plus a small portion of the Senior and Teen2 populations
-                float subpop1 = 0.800f * (popBreakdown.YoungAdultPopulation + popBreakdown.AdultPopulation + popBreakdown.MiddleAgePopulation);
-                float subpop2 = 0.025f * popBreakdown.SeniorPopulation;
-                float subpop3 = 0.025f * popBreakdown.Teen2Population;
-                EmployableMax = Mathf.RoundToInt(subpop1 + subpop2 + subpop3);
-            }
+        public void GenerateDemand(ResidentialScripts.IDemographic demographicBreakdown, CommercialScripts.IEmployment commEmpBreakdown) {
+            //// Calculate the total workforce here
+            //// TODO: migrate this calculation to the ResSim itself
+            //if (popBreakdown.TotalPopulation < 256) {
+            //    EmployableMax = Mathf.RoundToInt(0.5f * popBreakdown.TotalPopulation);
+            //} else {
+            //    // Working population cosists of portions of the YoungAdult, Adult, and MiddleAge populations,
+            //    // plus a small portion of the Senior and Teen2 populations
+            //    float subpop1 = 0.900f * (popBreakdown.YoungAdultPopulation + popBreakdown.AdultPopulation + popBreakdown.MiddleAgePopulation);
+            //    float subpop2 = 0.025f * popBreakdown.SeniorPopulation;
+            //    float subpop3 = 0.025f * popBreakdown.Teen2Population;
+            //    EmployableMax = Mathf.RoundToInt(subpop1 + subpop2 + subpop3);
+            //}
+            EmployableMax = demographicBreakdown.EmployableDemographic;
 
             // If more than one employment type existed, then the workforce would be divided between the different types,
             // but at this point, the entire workforce goes towards commercial labor; additionally, labor is measured by
@@ -51,7 +53,7 @@ namespace DemandEvaluators {
             // The "delta" is the amount of employment capacity left over
             int prevCommercialEmployment = commEmpBreakdown.TotalEmployment;            // Get the previous commercial employment
             int prevCommercialOpenings = CommercialMax - prevCommercialEmployment;      // Get the employment openings left over based off of previous employment
-            CommercialIncrement = GenerateIncrement(prevCommercialOpenings);               // Generate the increment
+            CommercialIncrement = General.GenerateIncrement(prevCommercialOpenings);               // Generate the increment
 
             //if (Mathf.Abs(prevCommercialOpenings) == 1) CommercialIncrement = prevCommercialOpenings > 0 ? 1 : -1;
         }
@@ -87,12 +89,12 @@ namespace DemandEvaluators {
         //    return increment > 0 ? Mathf.CeilToInt(increment) : Mathf.FloorToInt(increment);
         //}
 
-        // Until further notice, I'm gonna use this as my increment generator
-        private int GenerateIncrement(int demand) {
-            int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
-            int increment = Random.Range(0, bound + 1);
-            return Mathf.Sign(demand) == 1 ? increment : -increment;
-        }
+        //// Until further notice, I'm gonna use this as my increment generator
+        //private int GenerateIncrement(int demand) {
+        //    int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
+        //    int increment = Random.Range(0, bound + 1);
+        //    return Mathf.Sign(demand) == 1 ? increment : -increment;
+        //}
 
         ////// New function that should prevent overshooting
         //private int GenerateDemand(int demand) {

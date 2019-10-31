@@ -78,10 +78,11 @@ public class GameLoop : MonoBehaviour {
 
             int baseDemand = 256;
             int prevResidentialOpenings = baseDemand - _resCtrl.ZoningBreakdown.OccupantCount;
-            _resCtrl.IncrementOccupants(GenerateIncrement(prevResidentialOpenings));
+            _resCtrl.IncrementOccupants(General.GenerateIncrement(prevResidentialOpenings));
 
             // Generate commercial demand; this is based off of the residential population
-            _workforceEval.GenerateWorkforce(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
+            //_workforceEval.GenerateDemand(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
+            _workforceEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.EmploymentBreakdown);
             int commercialIncrement = _workforceEval.CommercialIncrement;
             _commCtrl.IncrementOccupants(commercialIncrement);
         }
@@ -116,12 +117,12 @@ public class GameLoop : MonoBehaviour {
     //    return Mathf.RoundToInt(increment);
     //}
 
-    // Until further notice, I'm gonna use this as my increment generator
-    private int GenerateIncrement(int demand) {
-        int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
-        int increment = Random.Range(0, bound + 1);
-        return Mathf.Sign(demand) == 1 ? increment : -increment;
-    }
+    //// Until further notice, I'm gonna use this as my increment generator
+    //private int GenerateIncrement(int demand) {
+    //    int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
+    //    int increment = Random.Range(0, bound + 1);
+    //    return Mathf.Sign(demand) == 1 ? increment : -increment;
+    //}
 
     //private int GenerateDemand(int demand) {
     //    int bound = Mathf.CeilToInt(demand / 16f);

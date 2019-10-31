@@ -23,7 +23,7 @@ using UnityEngine;
 namespace ResidentialScripts {
 
     public interface IHousehold {
-        int this[int i]        { get; }
+        //int this[int i]        { get; }
         int SingleHouseholds   { get; }
         int CohabHouseholds    { get; }
         int CoupleHouseholds   { get; }
@@ -31,6 +31,7 @@ namespace ResidentialScripts {
         int ExtendedHouseholds { get; }
         int SeniorHouseholds   { get; }
         int TotalHouseholds    { get; }
+        int[] HouseholdVector  { get; }
     }
 
     public sealed class HouseholdManager : BasicManager, IHousehold {
@@ -42,6 +43,7 @@ namespace ResidentialScripts {
         public int ExtendedHouseholds => DataVector[4];
         public int SeniorHouseholds   => DataVector[5];
         public int TotalHouseholds    => DistributionGen.Histogram.SumOfElements(DataVector);
+        public int[] HouseholdVector  => DataVector;
 
         // Constructor
         public HouseholdManager() : base(Constants.HouseholdVectorLength) { }

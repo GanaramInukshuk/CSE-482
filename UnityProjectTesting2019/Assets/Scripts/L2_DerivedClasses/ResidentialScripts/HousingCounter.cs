@@ -20,8 +20,9 @@ namespace ResidentialScripts {
 
     public sealed class HousingCounter : ArrayCounter, IZonableBuilding {
         // Getters for housing; lines up with interface's members
-        public int TotalBuildings => DistributionGen.Histogram.SumOfElements(Count);
-        public int OccupantMax    => ExtraMath.Linear.DotProduct(Count, Constants.HousingSizes);
+        public int   TotalBuildings => DistributionGen.Histogram.SumOfElements(Count);
+        public int   OccupantMax    => ExtraMath.Linear.DotProduct(Count, Constants.HousingSizes);
+        public int[] BldgVector     => Count;
 
         // Constructor
         public HousingCounter() : base(Constants.HousingVectorLength) { }

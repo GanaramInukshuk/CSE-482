@@ -34,10 +34,11 @@ namespace PlayerControls {
 
         // References to the simulator's interfaces; these are needed by other simulators
         // As of right now, building counts aren't needed by other simulators
-        public IZoningSimulator ZoningBreakdown     { get => _simulator                    ; } 
-        public IPopulation      PopulationBreakdown { get => _simulator.PopulationBreakdown; }
-        public IHousehold       HouseholdBreakdown  { get => _simulator.HouseholdBreakdown ; }
-        public IOccupancy       OccupancyBreakdown  { get => _simulator.OccupancyBreakdown ; }
+        public IZoningSimulator ZoningBreakdown      { get => _simulator; } 
+        public IPopulation      PopulationBreakdown  { get => _simulator; }
+        public IHousehold       HouseholdBreakdown   { get => _simulator; }
+        public IOccupancy       OccupancyBreakdown   { get => _simulator; }
+        public IDemographic     DemographicBreakdown { get => _simulator; }
 
         // Start is called before the first frame update
         void Start() {
@@ -133,7 +134,7 @@ namespace PlayerControls {
             // Breakdown text
             // These labels show the number of buildings by size and are displayed
             for (int i = 0; i < _textBldgCount.Length; i++) {
-                _textBldgCount[i].text = _simulator[i].ToString();
+                _textBldgCount[i].text = _simulator.BldgVector[i].ToString();
             }
 
             // Progress bar

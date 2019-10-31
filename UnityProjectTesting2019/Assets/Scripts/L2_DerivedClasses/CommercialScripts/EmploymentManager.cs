@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimulatorInterfaces;
 
 // Don't attach to a regular old GameObject; instead have it be a member of a larger class 
 // that's attached to a UI or empty GameObject
@@ -12,13 +13,14 @@ using UnityEngine;
 namespace CommercialScripts {
 
     public interface IEmployment {
-        int this[int i]          { get; }
+        //int this[int i]          { get; }
         int TotalEmployment      { get; }
         int GroceryEmployment    { get; }
         int RetailEmployment     { get; }
         int FoodEmployment       { get; }
         int ServiceEmployment    { get; }
         int AutomotiveEmployment { get; }
+        int[] EmploymentVector   { get; }
     }
 
     public sealed class EmploymentManager : BasicManager, IEmployment {
@@ -29,6 +31,7 @@ namespace CommercialScripts {
         public int FoodEmployment       => DataVector[2];
         public int ServiceEmployment    => DataVector[3];
         public int AutomotiveEmployment => DataVector[4];
+        public int[] EmploymentVector   => DataVector;
 
         // Constructor
         public EmploymentManager() : base(Constants.EmploymentVectorLength) { }

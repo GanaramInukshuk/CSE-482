@@ -37,7 +37,7 @@ using SimulatorInterfaces;
 //  4. _occMgr.Population goes into _popMgr to calculate a population
 //  5. _popMgr generates a population breakdown for use with other simulators/managers
 
-public class ResidentialSimulator : IZoningSimulator {
+public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IPopulation, IDemographic {
     // This is a helper class that takes the affectors and generates probability arrays for each of the managers
     private static class WeightAffector {
         // Notes on household types and averages:
@@ -175,23 +175,52 @@ public class ResidentialSimulator : IZoningSimulator {
     private readonly OccupancyManager  _occMgr = new OccupancyManager ( );
     private readonly PopulationManager _popMgr = new PopulationManager( );
 
-    // Interface-related getters
-    // These return an interface-implementing object
-    public IHousehold  HouseholdBreakdown  => _hhdMgr;
-    public IOccupancy  OccupancyBreakdown  => _occMgr;
-    public IPopulation PopulationBreakdown => _popMgr;
+    //// Interface-related getters
+    //// These return an interface-implementing object
+    //public IHousehold HouseholdBreakdown => _hhdMgr;
+    //public IOccupancy OccupancyBreakdown => _occMgr;
+    //public IPopulation PopulationBreakdown => _popMgr;
+    //public IDemographic DemographicBreakdown => _popMgr;
 
-    // Getters related to IZonableBuilding
-    public int this[int i]    => _hsgCtr[i];       // Indexer for bldg count by bldg size
-    public int TotalBuildings => _hsgCtr.TotalBuildings;
-
+    // Getters related to IZoningSimulator (and IZonableBuilding)
     // One unit of occupancy translates to 2.5 units of population on average (assuming default affectors)
-    // These are required by the IZoningSimulator interface
-    public int OccupantCount => _occCtr.Count;
-    public int OccupantMax   => _occCtr.Max;        // Equivalent to _hsgCtr.OccupantMax and required by IZonableBuilding
+    public int OccupantCount  => _occCtr.Count;
+    public int OccupantMax    => _occCtr.Max;        // Equivalent to _hsgCtr.OccupantMax
+    public int TotalBuildings => _hsgCtr.TotalBuildings;
+    public int[] BldgVector   => _hsgCtr.BldgVector; 
 
-    // For easily accessing bldg data
-    public int[] BldgVector { get => _hsgCtr.Count; }
+    // Getters for IHousehold
+    public int   SingleHouseholds   => _hhdMgr.SingleHouseholds  ;
+    public int   CohabHouseholds    => _hhdMgr.CohabHouseholds   ;
+    public int   CoupleHouseholds   => _hhdMgr.CoupleHouseholds  ;
+    public int   FamilyHouseholds   => _hhdMgr.FamilyHouseholds  ;
+    public int   ExtendedHouseholds => _hhdMgr.ExtendedHouseholds;
+    public int   SeniorHouseholds   => _hhdMgr.SeniorHouseholds  ;
+    public int   TotalHouseholds    => _hhdMgr.TotalHouseholds   ;
+    public int[] HouseholdVector    => _hhdMgr.HouseholdVector   ;
+
+    // Getters for occupancy
+    public int[] OccupancyVector => _occMgr.OccupancyVector;
+
+    // Getters for IPopulation
+    public int   TotalPopulation      => _popMgr.TotalPopulation     ;
+    public int   InfantPopulation     => _popMgr.InfantPopulation    ;
+    public int   ChildPopulation      => _popMgr.ChildPopulation     ;
+    public int   Teen1Population      => _popMgr.Teen1Population     ;
+    public int   Teen2Population      => _popMgr.Teen2Population     ;
+    public int   YoungAdultPopulation => _popMgr.YoungAdultPopulation;
+    public int   AdultPopulation      => _popMgr.AdultPopulation     ;
+    public int   MiddleAgePopulation  => _popMgr.MiddleAgePopulation ;
+    public int   SeniorPopulation     => _popMgr.SeniorPopulation    ;
+    public int[] PopulationVector     => _popMgr.PopulationVector    ;
+
+    // Getters for IDemographic
+    public int ElemSchoolDemographic => _popMgr.ElemSchoolDemographic;
+    public int MiddSchoolDemographic => _popMgr.MiddSchoolDemographic;
+    public int HighSchoolDemographic => _popMgr.HighSchoolDemographic;
+    public int K12SchoolDemographic  => _popMgr.K12SchoolDemographic ;
+    public int EmployableDemographic => _popMgr.EmployableDemographic;
+    public int RetiredDemographic    => _popMgr.RetiredDemographic   ;
 
     // For use with savedata
     // Note that this populates the occupancy counter using the values from the housing counter (for

@@ -22,7 +22,8 @@ using UnityEngine;
 namespace ResidentialScripts {
     // Note: this does not require a total occupancy since that's equivalent to HouseholdManager.TotalHouseholds
     public interface IOccupancy {
-        int this[int i] { get; }
+        //int this[int i] { get; }
+        int[] OccupancyVector { get; }
     }
 
     public sealed class OccupancyManager : BasicManager, IOccupancy {
@@ -37,6 +38,8 @@ namespace ResidentialScripts {
                 return populationTotal;
             }
         }
+
+        public int[] OccupancyVector => DataVector;
 
         // Constructor
         public OccupancyManager() : base(Constants.OccupancyVectorLength) { }

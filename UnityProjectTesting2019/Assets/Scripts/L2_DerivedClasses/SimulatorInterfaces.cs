@@ -22,9 +22,9 @@ namespace SimulatorInterfaces {
     // Simulators may need to return additional interfaces but this is handled at a case-by-case basis
     // Note: A simulator's constituent classes inherit from different interfaces unique to that zoning type
     public interface IZoningSimulator : IZonableBuilding {
-        int     OccupantCount { get; }
-        int[]   BldgVector    { get; }
-        int[][] DataVector    { set; get; }
+        int  OccupantCount { get; }
+        int[][] DataVector { set; get; }
+
         void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt);
         void Generate(float[] affectors, int incrementAmt);
         void Generate(int incrementAmt);
@@ -37,9 +37,10 @@ namespace SimulatorInterfaces {
     // For use with the multicounters used for a zoning simulator (multicounters record the number
     // of buildings across all sizes) and actual zoning simulators
     public interface IZonableBuilding {
-        int this[int i]    { get; }     // Indexer
-        int TotalBuildings { get; }     // Total number of buildings
+        //int this[int i]    { get; }     // Indexer
         int OccupantMax    { get; }     // Total/max number of "zoning" units
+        int TotalBuildings { get; }     // Total number of buildings
+        int[] BldgVector   { get; }
     }
 
     // For use with the job-generating simulators
