@@ -37,7 +37,7 @@ using SimulatorInterfaces;
 //  4. _occMgr.Population goes into _popMgr to calculate a population
 //  5. _popMgr generates a population breakdown for use with other simulators/managers
 
-public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IPopulation, IDemographic {
+public class ResidentialSimulator : IZoningData, IHousehold/*, IOccupancy, IPopulation, IDemographic*/ {
     // This is a helper class that takes the affectors and generates probability arrays for each of the managers
     private static class WeightAffector {
         // Notes on household types and averages:
@@ -175,19 +175,12 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
     private readonly OccupancyManager  _occMgr = new OccupancyManager ( );
     private readonly PopulationManager _popMgr = new PopulationManager( );
 
-    //// Interface-related getters
-    //// These return an interface-implementing object
-    //public IHousehold HouseholdBreakdown => _hhdMgr;
-    //public IOccupancy OccupancyBreakdown => _occMgr;
-    //public IPopulation PopulationBreakdown => _popMgr;
-    //public IDemographic DemographicBreakdown => _popMgr;
-
     // Getters related to IZoningSimulator (and IZonableBuilding)
     // One unit of occupancy translates to 2.5 units of population on average (assuming default affectors)
-    public int OccupantCount  => _occCtr.Count;
-    public int OccupantMax    => _occCtr.Max;        // Equivalent to _hsgCtr.OccupantMax
-    public int TotalBuildings => _hsgCtr.TotalBuildings;
-    public int[] BldgVector   => _hsgCtr.BldgVector; 
+    public int   OccupantCount  => _occCtr.Count;
+    public int   OccupantMax    => _occCtr.Max;        // Equivalent to _hsgCtr.OccupantMax
+    public int   TotalBuildings => _hsgCtr.TotalBuildings;
+    public int[] BldgVector     => _hsgCtr.BldgVector; 
 
     // Getters for IHousehold
     public int   SingleHouseholds   => _hhdMgr.SingleHouseholds  ;
@@ -199,28 +192,28 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
     public int   TotalHouseholds    => _hhdMgr.TotalHouseholds   ;
     public int[] HouseholdVector    => _hhdMgr.HouseholdVector   ;
 
-    // Getters for occupancy
-    public int[] OccupancyVector => _occMgr.OccupancyVector;
+    //// Getters for occupancy
+    //public int[] OccupancyVector => _occMgr.OccupancyVector;
 
-    // Getters for IPopulation
-    public int   TotalPopulation      => _popMgr.TotalPopulation     ;
-    public int   InfantPopulation     => _popMgr.InfantPopulation    ;
-    public int   ChildPopulation      => _popMgr.ChildPopulation     ;
-    public int   Teen1Population      => _popMgr.Teen1Population     ;
-    public int   Teen2Population      => _popMgr.Teen2Population     ;
-    public int   YoungAdultPopulation => _popMgr.YoungAdultPopulation;
-    public int   AdultPopulation      => _popMgr.AdultPopulation     ;
-    public int   MiddleAgePopulation  => _popMgr.MiddleAgePopulation ;
-    public int   SeniorPopulation     => _popMgr.SeniorPopulation    ;
-    public int[] PopulationVector     => _popMgr.PopulationVector    ;
+    //// Getters for IPopulation
+    //public int   TotalPopulation      => _popMgr.TotalPopulation     ;
+    //public int   InfantPopulation     => _popMgr.InfantPopulation    ;
+    //public int   ChildPopulation      => _popMgr.ChildPopulation     ;
+    //public int   Teen1Population      => _popMgr.Teen1Population     ;
+    //public int   Teen2Population      => _popMgr.Teen2Population     ;
+    //public int   YoungAdultPopulation => _popMgr.YoungAdultPopulation;
+    //public int   AdultPopulation      => _popMgr.AdultPopulation     ;
+    //public int   MiddleAgePopulation  => _popMgr.MiddleAgePopulation ;
+    //public int   SeniorPopulation     => _popMgr.SeniorPopulation    ;
+    //public int[] PopulationVector     => _popMgr.PopulationVector    ;
 
-    // Getters for IDemographic
-    public int ElemSchoolDemographic => _popMgr.ElemSchoolDemographic;
-    public int MiddSchoolDemographic => _popMgr.MiddSchoolDemographic;
-    public int HighSchoolDemographic => _popMgr.HighSchoolDemographic;
-    public int K12SchoolDemographic  => _popMgr.K12SchoolDemographic ;
-    public int EmployableDemographic => _popMgr.EmployableDemographic;
-    public int RetiredDemographic    => _popMgr.RetiredDemographic   ;
+    //// Getters for IDemographic
+    //public int ElemSchoolDemographic => _popMgr.ElemSchoolDemographic;
+    //public int MiddSchoolDemographic => _popMgr.MiddSchoolDemographic;
+    //public int HighSchoolDemographic => _popMgr.HighSchoolDemographic;
+    //public int K12SchoolDemographic  => _popMgr.K12SchoolDemographic ;
+    //public int EmployableDemographic => _popMgr.EmployableDemographic;
+    //public int RetiredDemographic    => _popMgr.RetiredDemographic   ;
 
     // For use with savedata
     // Note that this populates the occupancy counter using the values from the housing counter (for
@@ -243,19 +236,9 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
         };
     }
 
-    //// Constructors
+    // Constructors
     public ResidentialSimulator() { }
     public ResidentialSimulator(int[][] savedata) { DataVector = savedata; }
-
-    //// If using this as a component, the start function is needed
-    //// This ensures all the counts start at zero
-    //public void Start() {
-    //    //_occCtr.Max   = _hsgCtr.MaxOccupancy;       // Total number of available living units
-    //    //_occCtr.Count = _hhdMgr.TotalHouseholds;    // Total number of occupied living units
-    //}
-
-    //// Indexer for the housing counter?
-    //public int this[HOUSINGSIZE h] => _hsgCtr[(int)h];
 
     // A 4-param Generate function; sets bldg count, uses affectors, sets unit count, and increments unit count
     // For debugging
@@ -264,17 +247,17 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
     // - If applicable, set the unit count; if this is -1, set this to the max; any other negative zeros it out
     // - If applicable, increment the unit count
     // - Call the ManagerGenerate function
-    public void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt) {
-        _hsgCtr.Count = bldgs;
-        _occCtr.Max   = _hsgCtr.OccupantMax;
-        _occCtr.Count = (occupants == -1) ? _hsgCtr.OccupantMax : occupants;
-        _occCtr.IncrementCount(incrementAmt);
-        ManagerGenerate(affectors);
-    }
+    //public void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt = 0) {
+    //    _hsgCtr.Count = bldgs;
+    //    _occCtr.Max   = _hsgCtr.OccupantMax;
+    //    _occCtr.Count = (occupants == -1) ? _hsgCtr.OccupantMax : occupants;
+    //    _occCtr.IncrementCount(incrementAmt);
+    //    ManagerGenerate(affectors);
+    //}
 
     // A 2-param Generate function; uses affectors and increments unit count
     // This should be typical of in-depth gameplay
-    public void Generate(float[] affectors, int incrementAmt) {
+    public void Generate(float[] affectors, int incrementAmt = 0) {
         _occCtr.Max = _hsgCtr.OccupantMax;
         _occCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
@@ -282,7 +265,7 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
 
     // A 1-param Generate function; only increments unit count
     // This can be used instead of the 2-param version if in-depth simulation (IE, demographics) isn't needed
-    public void Generate(int incrementAmt) {
+    public void Generate(int incrementAmt = 0) {
         _occCtr.Max = _hsgCtr.OccupantMax;
         _occCtr.IncrementCount(incrementAmt);
         ManagerGenerate();
@@ -316,11 +299,11 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
     // Private helper function; generates weights using affectors and calls the individual Generate functions 
     private void ManagerGenerate(float[] affectors) {
         float[] householdWeights  = WeightAffector.GenerateHouseholdWeights (affectors);
-        float[] occupancyWeights  = WeightAffector.GenerateOccupancyWeights (affectors);
-        float[] populationWeights = WeightAffector.GeneratePopulationWeights(affectors);
+        //float[] occupancyWeights  = WeightAffector.GenerateOccupancyWeights (affectors);
+        //float[] populationWeights = WeightAffector.GeneratePopulationWeights(affectors);
         _hhdMgr.Generate(_occCtr.Count          , householdWeights );
-        _occMgr.Generate(_hhdMgr.TotalHouseholds, occupancyWeights );
-        _popMgr.Generate(_occMgr.Population     , populationWeights);
+        //_occMgr.Generate(_hhdMgr.TotalHouseholds, occupancyWeights );
+        //_popMgr.Generate(_occMgr.Population     , populationWeights);
     }
 
     // Private helper function; calls the individual Generate functions 
@@ -344,8 +327,8 @@ public class ResidentialSimulator : IZoningSimulator, IHousehold, IOccupancy, IP
             + _occCtr.Max              + ", Pop: "
             + _popMgr.TotalPopulation  + "\n"
             + _hsgCtr.GetDebugString() + "\n"
-            + _hhdMgr.GetDebugString() + "\n"
-            + _occMgr.GetDebugString() + "\n"
-            + _popMgr.GetDebugString();
+            + _hhdMgr.GetDebugString() /*+ "\n"*/
+            //+ _occMgr.GetDebugString() + "\n"
+            /*+ _popMgr.GetDebugString()*/;
     }
 }

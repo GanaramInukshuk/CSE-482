@@ -12,26 +12,36 @@ using UnityEngine;
 // - CivicSimulators may inherit from IUpkeep
 
 namespace SimulatorInterfaces {
-    // A general interface for zoning-related simulators; such interfaces require:
-    // - A running total of all occupants across all buildings
-    // - A setter/getter for the datavector
-    // - A generate function that generates occupants using statistical models and input parameters
-    // - Increment functions for adding/removing buildings
-    // - An additional increment function for adding/removing occupants outside of the generate function
-    // - Everything specified in the IZonableBuilding interface
-    // Simulators may need to return additional interfaces but this is handled at a case-by-case basis
-    // Note: A simulator's constituent classes inherit from different interfaces unique to that zoning type
-    public interface IZoningSimulator : IZonableBuilding {
-        int  OccupantCount { get; }
-        int[][] DataVector { set; get; }
-
-        void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt);
-        void Generate(float[] affectors, int incrementAmt);
-        void Generate(int incrementAmt);
-        void Generate();
-        void IncrementBldgs(int[] amt);
-        void IncrementBldgs(int amt, int index);
-        void IncrementOccupants(int amt);
+    //// A general interface for zoning-related simulators; such interfaces require:
+    //// - A running total of all occupants across all buildings
+    //// - A setter/getter for the datavector
+    //// - A generate function that generates occupants using statistical models and input parameters
+    //// - Increment functions for adding/removing buildings
+    //// - An additional increment function for adding/removing occupants outside of the generate function
+    //// - Everything specified in the IZonableBuilding interface
+    //// Simulators may need to return additional interfaces but this is handled at a case-by-case basis
+    //// Note: A simulator's constituent classes inherit from different interfaces unique to that zoning type
+    //// or may also inherit from interfaces that are commonly shared; either way, the minimum number of
+    //// interfaces needed by a zoning simulator is IZoningSimulator (for the common functions needed for
+    //// a zoning simulator) and IZoningData (for information about the buildings and the number of occupants)
+    //// Note: when implementing this for a class, the incrementAmt parameter should have a default value of 0; this
+    //// effectively makes the parameter optional
+    //public interface IZoningSimulator {
+    //    int[][] DataVector { set; get; }
+    //    //void Generate(float[] affectors, int[] bldgs, int occupants, int incrementAmt);
+    //    void Generate(int[] households, float[] affectors, int incrementAmt);
+    //    void Generate(float[] affectors, int incrementAmt);
+    //    void Generate(int incrementAmt);
+    //    void Generate();
+    //    void IncrementBldgs(int[] amt);
+    //    void IncrementBldgs(int amt, int index);
+    //    void IncrementOccupants(int amt);
+    //}
+    
+    // This interface, plus IZonableBuilding, provides basic zoning information (the number of buildings,
+    // the number of occupants, and the max occupancy)
+    public interface IZoningData : IZonableBuilding {
+        int OccupantCount { get; }
     }
 
     // For use with the multicounters used for a zoning simulator (multicounters record the number
@@ -49,6 +59,7 @@ namespace SimulatorInterfaces {
         int LaborUnitMax   { get; }
     }
 
+    // I'm not sure whether I need to use this...
     public interface IEmployable {
         int EmploymentCount { get; }
         int EmploymentMax   { get; }

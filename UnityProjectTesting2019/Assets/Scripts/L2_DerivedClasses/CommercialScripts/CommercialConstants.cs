@@ -15,7 +15,7 @@ namespace CommercialScripts {
     public static class Constants {
         // Employment sizes (IE, employment capacity for a commercial building) are more or less
         // one of the sequences described above, multiplied by a labor unit size described here
-        public static readonly int LaborUnit = 16;
+        public static readonly int LaborUnit = 8;
 
         // An array of employment sizes; each store size supports a different size employment capacity
         // Employment is by labor units

@@ -32,10 +32,11 @@ namespace PlayerControls {
         private CommercialSimulator _simulator;
         private int _bldgSize;
 
-        // References to the simulator's interfaces; these are needed by other simulators
-        // As of right now, building counts aren't needed by other simulators
-        public IZoningSimulator ZoningBreakdown     => _simulator; 
-        public IEmployment      EmploymentBreakdown => _simulator;
+        //// References to the simulator's interfaces; these are needed by other simulators
+        //// As of right now, building counts aren't needed by other simulators
+        //public IZoningData ZoningBreakdown     => _simulator; 
+        //public IEmployment EmploymentBreakdown => _simulator;
+        public CommercialSimulator Simulator => _simulator;
 
         // Start is called before the first frame update
         void Start() {
@@ -65,7 +66,7 @@ namespace PlayerControls {
             _sliderBldgSize.maxValue = _textBldgCount.Length - 1;
             _sliderBldgSize.wholeNumbers = true;
 
-            _textBldgSize.text = "Capacity: 1";
+            _textBldgSize.text = "Capacity: " + Constants.EmploymentSizes[0];
         }
 
         // Some other notes:
@@ -118,14 +119,14 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Capacity: " + Constants.LaborUnitCounts[(int)updatedValue];
+            _textBldgSize.text = "Capacity: " + Constants.EmploymentSizes[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels
         // This also updates the progress bar
         private void UpdateTextLabels() {
             // Total text
-            string breakdownText = "COMMERCIAL: " + _simulator.LaborUnitCount + " out of " + _simulator.LaborUnitMax + " max labor units spread over " + _simulator.TotalBuildings + " buildings.";
+            string breakdownText = "COMMERCIAL: " + _simulator.OccupantCount + " out of " + _simulator.OccupantMax + " max employment spread over " + _simulator.TotalBuildings + " buildings.";
             _textTotal.text = breakdownText;
 
             // Breakdown text
@@ -135,7 +136,7 @@ namespace PlayerControls {
             }
 
             // Progress bar
-            _progressBar.UpdateFill(0, _simulator.LaborUnitMax, _simulator.LaborUnitCount);
+            _progressBar.UpdateFill(0, _simulator.OccupantMax, _simulator.OccupantCount);
         }
     }
 }

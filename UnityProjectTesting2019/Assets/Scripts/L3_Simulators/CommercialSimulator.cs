@@ -46,7 +46,7 @@ using SimulatorInterfaces;
 // 2. _occCtr.Count is passed into the generate function for _empMgr
 // 3. _empMgr generates a breakdown of employment specializations for use with other simulators/managers
 
-public class CommercialSimulator : IZoningSimulator, IEmployment, ILaborUnits {
+public class CommercialSimulator : IZoningData, IEmployment/*, ILaborUnits*/ {
     // This is a helper class that takes affectors (really, proportions) and generates a probability array for the EmploymentManager
     // This is not as complex compared to the ResidentialSimulator's affector class
     private static class WeightAffector {
@@ -60,12 +60,8 @@ public class CommercialSimulator : IZoningSimulator, IEmployment, ILaborUnits {
     private readonly Counter           _empCtr   = new Counter          (0);        // Counter for employees
     private readonly EmploymentManager _empMgr   = new EmploymentManager( );
 
-    // Interface-related getters
-    //public IEmployment EmploymentBreakdown => _empMgr;
-    //public ILaborUnits LaborUnitBreakdown  => this;
-
     // Getters related to IZoningSimulator (and IZonableBuilding)
-    // One unit of occupancy translates to one employee (this is a one-to-one translation)
+    // One unit of occupancy translates one house's worth of employment being fulfilled
     public int   OccupantCount  => _empCtr.Count;
     public int   OccupantMax    => _empCtr.Max;        // Equivalent to _laborCtr.OccupantMax
     public int   TotalBuildings => _storeCtr.TotalBuildings;
@@ -80,9 +76,9 @@ public class CommercialSimulator : IZoningSimulator, IEmployment, ILaborUnits {
     public int   AutomotiveEmployment => _empMgr.AutomotiveEmployment;
     public int[] EmploymentVector     => _empMgr.EmploymentVector    ;
 
-    // Since this is a job-generating simulator, this needs to inherit from ILaborUnits
-    public int LaborUnitCount { get => Mathf.CeilToInt((float)OccupantCount / Constants.LaborUnit); }
-    public int LaborUnitMax   { get => OccupantMax / Constants.LaborUnit; }
+    //// Since this is a job-generating simulator, this needs to inherit from ILaborUnits
+    //public int LaborUnitCount { get => Mathf.CeilToInt((float)OccupantCount / Constants.LaborUnit); }
+    //public int LaborUnitMax   { get => OccupantMax / Constants.LaborUnit; }
 
     // Savedata setter-getter
     // Placed last because this getter is quite complicated
@@ -111,24 +107,24 @@ public class CommercialSimulator : IZoningSimulator, IEmployment, ILaborUnits {
     // - If applicable, set the unit count; if this is -1, set this to the max; any other negative zeros it out
     // - If applicable, increment the unit count
     // - Call the ManagerGenerate function
-    public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt) {
-        _storeCtr.Count = bldgs;
-        _empCtr.Max   = _storeCtr.OccupantMax;
-        _empCtr.Count = (units == -1) ? _storeCtr.OccupantMax : units;
-        _empCtr.IncrementCount(incrementAmt);
-        ManagerGenerate(affectors);
-    }
+    //public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt = 0) {
+    //    _storeCtr.Count = bldgs;
+    //    _empCtr.Max   = _storeCtr.OccupantMax;
+    //    _empCtr.Count = (units == -1) ? _storeCtr.OccupantMax : units;
+    //    _empCtr.IncrementCount(incrementAmt);
+    //    ManagerGenerate(affectors);
+    //}
 
     // A 2-param Generate function; uses affectors and increments unit count
     // This should be typical of in-depth gameplay
-    public void Generate(float[] affectors, int incrementAmt) {
+    public void Generate(float[] affectors, int incrementAmt = 0) {
         _empCtr.IncrementCount(incrementAmt);
         ManagerGenerate(affectors);
     }
 
     // A 1-param Generate function; only increments unit count
     // This can be used instead of the 2-param version if in-depth simulation (IE, specialization) isn't needed
-    public void Generate(int incrementAmt) {
+    public void Generate(int incrementAmt = 0) {
         _empCtr.IncrementCount(incrementAmt);
         ManagerGenerate();
     }

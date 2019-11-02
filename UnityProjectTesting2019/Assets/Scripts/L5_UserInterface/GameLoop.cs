@@ -26,11 +26,12 @@ public class GameLoop : MonoBehaviour {
     [SerializeField] private Text _textEmployment;
 
     // Private objects
-    private WorkforceEvaluator _workforceEval = new WorkforceEvaluator();
+    private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
+    private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
 
     private void Start() {
         _textPopulation.text = "Population: 0";
-        _textEmployment.text = "Employment: 0 out of 0";
+        _textEmployment.text = "Employment: 0";
     }
 
     // In general:
@@ -70,21 +71,25 @@ public class GameLoop : MonoBehaviour {
             //   68, 27, and 4.7% of the time
             // Base demand is based off of a RandomGauss with a mean of 1 and effective stddev of 1.5
 
-            // Generate base residential demand
-            // TODO: Transfer this into its own evaluator
-            //float baseDemandMean = (_resCtrl.ZoningBreakdown.OccupantCount < 256) ? 0.75f : 0f;
-            //int baseDemand = GenerateDemand(0.5f);
-            //_resCtrl.IncrementOccupants(baseDemand);
 
-            int baseDemand = 256;
-            int prevResidentialOpenings = baseDemand - _resCtrl.ZoningBreakdown.OccupantCount;
-            _resCtrl.IncrementOccupants(General.GenerateIncrement(prevResidentialOpenings));
+            //int baseDemand = 256;
+            //int prevResidentialOpenings = baseDemand - _resCtrl.ZoningBreakdown.OccupantCount;
+            //_resCtrl.IncrementOccupants(General.GenerateIncrement(prevResidentialOpenings));
 
-            // Generate commercial demand; this is based off of the residential population
-            //_workforceEval.GenerateDemand(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
-            _workforceEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.EmploymentBreakdown);
-            int commercialIncrement = _workforceEval.CommercialIncrement;
-            _commCtrl.IncrementOccupants(commercialIncrement);
+            //// Generate commercial demand; this is based off of the residential population
+            ////_workforceEval.GenerateDemand(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
+            //_workforceEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.EmploymentBreakdown);
+            //int commercialIncrement = _workforceEval.CommercialIncrement;
+            //_commCtrl.IncrementOccupants(commercialIncrement);
+
+            //_resEval.GenerateDemand(_commCtrl.ZoningBreakdown, _resCtrl.ZoningBreakdown, _resCtrl.DemographicBreakdown);
+            //_workEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.ZoningBreakdown, _resCtrl.ZoningBreakdown);
+
+            _resEval.GenerateDemand(_resCtrl.Simulator, _commCtrl.Simulator);
+            _workEval.GenerateDemand(_commCtrl.Simulator, _resCtrl.Simulator);
+
+            _resCtrl.IncrementOccupants(_resEval.ResidentialIncrement);
+            _commCtrl.IncrementOccupants(_workEval.CommercialIncrement);
         }
 
         // Actions to perform every in-game week
@@ -93,8 +98,9 @@ public class GameLoop : MonoBehaviour {
             _resCtrl.Generate();
             _commCtrl.Generate();
 
-            _textPopulation.text = "Population: " + _resCtrl.PopulationBreakdown.TotalPopulation.ToString();
-            _textEmployment.text = "Employment: " + _commCtrl.EmploymentBreakdown.TotalEmployment.ToString() + " out of " + _workforceEval.EmployableMax.ToString();
+            // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
+            _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.TotalHouseholds * 2.5f).ToString();
+            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.TotalEmployment * 1.95f).ToString();
         }
 
 
@@ -106,37 +112,4 @@ public class GameLoop : MonoBehaviour {
 
     
     }
-
-    //// General function for generating demand
-    //// This returns a RandomGauss number where the mean is passed in as it is and
-    //// the stddev is half the (absolute value of the) mean, plus 1
-    //private int GenerateDemand(int demand) {
-    //    float mean = demand / 10f;
-    //    float stddev = mean / 2f;
-    //    float increment = Mathf.RoundToInt(ExtraRandom.RandomGaussWithClamp(mean, stddev, -3, 3));
-    //    return Mathf.RoundToInt(increment);
-    //}
-
-    //// Until further notice, I'm gonna use this as my increment generator
-    //private int GenerateIncrement(int demand) {
-    //    int bound = Mathf.CeilToInt(Mathf.Abs(demand) / 16f);
-    //    int increment = Random.Range(0, bound + 1);
-    //    return Mathf.Sign(demand) == 1 ? increment : -increment;
-    //}
-
-    //private int GenerateDemand(int demand) {
-    //    int bound = Mathf.CeilToInt(demand / 16f);
-    //    Debug.Log(bound);
-    //    int increment = Random.Range(0, bound + 1);
-    //    Debug.Log(increment);
-    //    return increment;
-    //}
-
-    //private int GenerateIncrement(int demand) {
-    //    float mean = (float)demand / 16;
-    //    float stddev = mean / 8;
-    //    float zScore = Mathf.Clamp(ExtraRandom.RandomGauss(), -3, 3);
-    //    float increment = zScore * stddev + mean;
-    //    return increment > 0 ? Mathf.CeilToInt(increment) : Mathf.FloorToInt(increment);
-    //}
 }
