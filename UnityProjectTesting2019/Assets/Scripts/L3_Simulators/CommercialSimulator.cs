@@ -1,184 +1,62 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CommercialScripts;
 using SimulatorInterfaces;
 
-// Don't attach to a regular old GameObject; instead have it be a member of a larger class 
-// that's attached to a UI or empty GameObject
+// This is a refined version of the CommercialSimulator; basically the constituent classes are grouped into a
+// base simulator that this class inherits from and a static class of constants is included within; this setup
+// eliminates the overly complicated feature of having each constituent class be standalone. Additionally, this
+// simulator coes bundled with all the constants and interfaces it requires, apart from the general interfaces.
 
-// Functionality:
-// - This combines the functionality of the following managers and counters: StoreCounter and EmploymentManager (an
-//   additional counter is utilized and comes between the two in the dataflow)
-// - This class holds a count for the number of commercial buildings in a city (which collectively produce a maximum
-//   employment capacity) and a count of the number of able workers in the city
+public interface IEmployment {
+    int GroceryEmployment    { get; }
+    int RetailEmployment     { get; }
+    int FoodEmployment       { get; }
+    int ServiceEmployment    { get; }
+    int AutomotiveEmployment { get; }
+    int TotalEmployment      { get; }
+}
 
-// Dataflow between counters and managers (new one this time)
-// 0. The Generate function is called periodically and the counters may be incremented/decremented in between callings
-// 1. _storeCounter.MaxEmployment is used the max for _laborCtr (_laborCtr.Max) and represents the maximum labor units available
-// 2. _laborCtr.Count is passed into the generate function for _empMgr
-// 3. _empMgr generates a breakdown of employment specializations; this also converts labor units into an employment count
+/// <summary>
+/// A specialized version of the ZoningSimulator designed to simulate commercial zoning.
+/// </summary>
+public class CommercialSimulator : ZoningSimulator, IZoningData, IEmployment {
 
-// As for an evaluator, I've considered having that built-in, but it can be a standalone class with the proposed functionaltiy:
-// - A single workforce evaluator can handle more than one job category (IE, commercial, industrial, office); it can tabulate
-//   the total employment capacity of all three fields, generate a probability distribution, and use the dist with the
-//   total number of able workers to divvy up the working population into three subpopulations (AND WITH A BasicManager, TOO!!);
-//   other factors apart from employment capacity may come into play, such as job desirability by field (EG, high education
-//   yields office jobs and trade schools yield industrial jobs; commercial jobs may be worked by anyone)
-// - If I'm still in the business of assigning fun names to things, then I'd propose "COIL" - Commercial, Office, and Industrial Labor
-// - In the example of commercial jobs, the commercial subpopulation goes through the usual dataflow as outlined above; the
-//   other two subpops would go through similar dataflows with their respective simulators
-// - If demand allows for such, the evaulator can generate a new number for employment, more or less than the previous
-//   amount depending on whether there is enough demand and unused commercial space OR there is too much demand; recall the
-//   fact that the generate function takes in employment as a parameter
+    public static class Constants {
 
-// Dataflow between counters and managers (also old)
-// 0. The Generate function is called periodically and the counters may be incremented/decremented in between callings
-// 1. _storeCtr.MaxEmploymentUnits is used as the max of a bicounter (_empBtr); the first count of the bicounter is the
-//    number of available employment units and the second count is the number of able workers (passed in by the Generate
-//    function); the ratio of the bicounter is the number of employees per employment unit, so one unit in the first count
-//    translates to 8 units of the second count's max
-// 2. _empBtr.Count2 is passed into the EmploymentManager to generate a breakdown of specializations
+        // Enum for occupant types
+        // Make sure the enums line up with the occupant weights listed below
+        public enum OccupantType { GROCERY, RETAIL, FOOD, SERVICE, AUTO };
 
-// Dataflow between counters and managers (old)
-// 0. The Generate function is called periodically and the counters may be incremented/decremented in between callings
-// 1. _storeCtr.MaxEmploymentUnits is used as the maximum for _occCtr (_occCtr.Max) and represents the maximum number of employment units
-// 2. _occCtr.Count is passed into the generate function for _empMgr
-// 3. _empMgr generates a breakdown of employment specializations for use with other simulators/managers
+        // Occupant weights
+        // In the context of commercial zoning, these represent the percentages at which a unit of employment
+        // is of one of the following types:
+        // - Grocery - Self-explanatory
+        // - Retail - Retail stores (clothing, furniture, etc)
+        // - Food - restaurants, including fast food
+        // - Service - other commercial services, such as door-to-door services
+        // - Automotive - gas stations and auto shops
+        public static float[] OccWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
 
-public class CommercialSimulator : IZoningData, IEmployment/*, ILaborUnits*/ {
-    // This is a helper class that takes affectors (really, proportions) and generates a probability array for the EmploymentManager
-    // This is not as complex compared to the ResidentialSimulator's affector class
-    private static class WeightAffector {
-        public static float[] GenerateEmploymentWeights(float[] commercialAffectors) {
-            return DistributionGen.Probability.Reconcile(commercialAffectors);
-        }
+        // Building sizes
+        // Basically, units of employment are one-to-one with households, and each household contains at least
+        // one employable person, so depending on household averages, one household should have more than one
+        // employable person; if we take the optimistic average of 2 employable persons per household (which is
+        // almost certainly the case with certain demographics), the smallest building size will employ 8 people
+        // (that is, unless I change the first parameter in the ScalarVectorMult function)
+        public static int[] BldgSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 3, 4, 6, 8 });
     }
 
-    // Managers and counters
-    private readonly StoreCounter      _storeCtr = new StoreCounter     ( );
-    private readonly Counter           _empCtr   = new Counter          (0);        // Counter for employees
-    private readonly EmploymentManager _empMgr   = new EmploymentManager( );
+    // Getters for the interfaces
+    public int GroceryEmployment    => OccupantVector[0];
+    public int RetailEmployment     => OccupantVector[1];
+    public int FoodEmployment       => OccupantVector[2];
+    public int ServiceEmployment    => OccupantVector[3];
+    public int AutomotiveEmployment => OccupantVector[4];
+    public int TotalEmployment      => OccupantCount;
 
-    // Getters related to IZoningSimulator (and IZonableBuilding)
-    // One unit of occupancy translates one house's worth of employment being fulfilled
-    public int   OccupantCount  => _empCtr.Count;
-    public int   OccupantMax    => _empCtr.Max;        // Equivalent to _laborCtr.OccupantMax
-    public int   TotalBuildings => _storeCtr.TotalBuildings;
-    public int[] BldgVector     => _storeCtr.Count;
+    // Constructor
+    public CommercialSimulator() : base(Constants.BldgSizes, Constants.OccWeights, 1 , "Commercial") { }
 
-    // Getters for IEmployment
-    public int   TotalEmployment      => _empMgr.TotalEmployment     ;
-    public int   GroceryEmployment    => _empMgr.GroceryEmployment   ;
-    public int   RetailEmployment     => _empMgr.RetailEmployment    ;
-    public int   FoodEmployment       => _empMgr.FoodEmployment      ;
-    public int   ServiceEmployment    => _empMgr.ServiceEmployment   ;
-    public int   AutomotiveEmployment => _empMgr.AutomotiveEmployment;
-    public int[] EmploymentVector     => _empMgr.EmploymentVector    ;
-
-    //// Since this is a job-generating simulator, this needs to inherit from ILaborUnits
-    //public int LaborUnitCount { get => Mathf.CeilToInt((float)OccupantCount / Constants.LaborUnit); }
-    //public int LaborUnitMax   { get => OccupantMax / Constants.LaborUnit; }
-
-    // Savedata setter-getter
-    // Placed last because this getter is quite complicated
-    public int[][] DataVector {
-        set {
-            int[][] tempVector = SavedataHelper.LoadMismatchedVector(value, Constants.ExpectedVectorLengths);
-            _storeCtr.Count    = tempVector[0];
-            _empMgr.DataVector = tempVector[1];
-            _empCtr.Max   = _storeCtr.OccupantMax;          // Maximum employment capacity
-            _empCtr.Count = _empMgr  .TotalEmployment;      // Employment count
-        }
-        get => new int[][] {
-            _storeCtr.Count     ,
-            _empMgr  .DataVector,
-        };
-    }
-
-    // Constructors
-    public CommercialSimulator() { }
-    public CommercialSimulator(int[][] savedata) { DataVector = savedata; }
-
-    // A 4-param Generate function; sets bldg count, uses affectors, sets unit count, and increments unit count
-    // For debugging
-    // Order of operations:
-    // - If applicable, set the building count; this is the number of buildings available, by type, organized in an array
-    // - If applicable, set the unit count; if this is -1, set this to the max; any other negative zeros it out
-    // - If applicable, increment the unit count
-    // - Call the ManagerGenerate function
-    //public void Generate(float[] affectors, int[] bldgs, int units, int incrementAmt = 0) {
-    //    _storeCtr.Count = bldgs;
-    //    _empCtr.Max   = _storeCtr.OccupantMax;
-    //    _empCtr.Count = (units == -1) ? _storeCtr.OccupantMax : units;
-    //    _empCtr.IncrementCount(incrementAmt);
-    //    ManagerGenerate(affectors);
-    //}
-
-    // A 2-param Generate function; uses affectors and increments unit count
-    // This should be typical of in-depth gameplay
-    public void Generate(float[] affectors, int incrementAmt = 0) {
-        _empCtr.IncrementCount(incrementAmt);
-        ManagerGenerate(affectors);
-    }
-
-    // A 1-param Generate function; only increments unit count
-    // This can be used instead of the 2-param version if in-depth simulation (IE, specialization) isn't needed
-    public void Generate(int incrementAmt = 0) {
-        _empCtr.IncrementCount(incrementAmt);
-        ManagerGenerate();
-    }
-
-    // A 0-param Generate function; only calls the Generate function
-    // Also for testing purposes
-    public void Generate() {
-        ManagerGenerate();
-    }
-
-    // Incrementers; incrementing by a negative value counts as decrementing
-    // IncrementBldgs() should be called (indirectly) by the player and represents construction (or demolition) of residential bldgs
-    // IncrementUnits() may be called by a random event system that adds or removes occupancy units
-    // Incrementing buildings updates the counts
-    public void IncrementBldgs(int[] amt) { 
-        _storeCtr.IncrementCount(amt);
-        _empCtr.Max = _storeCtr.OccupantMax;
-    }
-
-    public void IncrementBldgs(int amt, int index) {
-        _storeCtr.IncrementCount(amt, index);
-        _empCtr.Max = _storeCtr.OccupantMax;
-    }
-
-    public void IncrementOccupants(int amt) {
-        _empCtr.IncrementCount(amt);
-    }
-
-    // Private helper function; generates weights using affectors and calls the individual Generate functions 
-    private void ManagerGenerate(float[] affectors) {
-        float[] commercialWeights = WeightAffector.GenerateEmploymentWeights(affectors);
-        _empMgr.Generate(_empCtr.Count, commercialWeights);
-    }
-
-    // Priave helper function; calls the individual Generate functions 
-    private void ManagerGenerate() {
-        _empMgr.Generate(_empCtr.Count);
-        //Debug.Log(_empCtr.Count);
-        //PrintDebugString();
-    }
-
-    // Debug functions
-    public void PrintDebugString() {
-        string outputString = GetDebugString();
-        Debug.Log(outputString);
-    }
-
-    public string GetDebugString() {
-        return "[CommercialSimulator]: Bldgs: "
-            + _storeCtr.TotalBuildings   + ", Labor: "
-            + _empCtr.Count              + " out of "
-            + _empCtr.Max                + ", Emp: "
-            + _empMgr.TotalEmployment    + "\n"
-            + _storeCtr.GetDebugString() + "\n"
-            + _empMgr.GetDebugString();
-    }
+    // Member functions need not be overridden; their base functionality is plenty already
 }

@@ -25,6 +25,7 @@ namespace DemandEvaluators {
         public int ResidentialIncrement { private set; get; } = 0;
 
         // This is a base demand that gets fulfilled no matter what
+        // This has to be nonzero or the city won't grow at all
         private static readonly int BaseDemandNoMatterWhat = 64;
 
         // Refined generate function for residential demand
@@ -35,6 +36,9 @@ namespace DemandEvaluators {
         public void GenerateDemand(SimulatorInterfaces.IZoningData resData, SimulatorInterfaces.IZoningData commData) {
             // Calculate the maximum employable maximum across all job-generating simulators; this figure represents
             // the maximum residential demand (since one unit of employment is one household)
+            // This calculation may be replaced due to some weird, undesirable behaviours; also, I'm kinda doubtful
+            // that commercial jobs alone can make people want to move in; basically, this calculation ain't necessarily
+            // ideal and I wanna one day replace this with something else; the one for the WorkEval is probably OK
             int maxResidentialFromJobs = commData.OccupantMax;
             ResidentialMax = BaseDemandNoMatterWhat + maxResidentialFromJobs;
 

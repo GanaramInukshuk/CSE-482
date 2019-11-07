@@ -17,7 +17,7 @@ namespace DemandEvaluators {
         // 2 - Generate a random number within the range [0, upperbound + 1); the number generated is your increment
         // 3 - Return the increment as a positive or negative number, depending on whether the demand is positive or negative
         public static int GenerateIncrement(int demand) {
-            int bound = Mathf.CeilToInt(Mathf.Abs(demand) * (Mathf.Sign(demand) == 1 ? MaxDemandPercentage : 1));
+            int bound = Mathf.CeilToInt(Mathf.Abs(demand) * MaxDemandPercentage);
             int increment = Random.Range(0, bound + 1);
             return Mathf.Sign(demand) == 1 ? increment : -increment;
         }
@@ -25,7 +25,7 @@ namespace DemandEvaluators {
         // Overload for accepting float demand
         // The RNG here has a range of [lower, upper] instead of [lower, upper)
         public static int GenerateIncrement(float demand) {
-            float bound = Mathf.CeilToInt(Mathf.Abs(demand) * (Mathf.Sign(demand) == 1 ? MaxDemandPercentage : 1));
+            float bound = Mathf.Abs(demand) * MaxDemandPercentage;
             int increment = Mathf.RoundToInt(Random.Range(0, bound));
             return Mathf.Sign(demand) == 1 ? increment : -increment;
         }

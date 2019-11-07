@@ -24,6 +24,8 @@ public class GameLoop : MonoBehaviour {
     [Header("References to other UI objects")]
     [SerializeField] private Text _textPopulation;
     [SerializeField] private Text _textEmployment;
+    [SerializeField] private Text _textResidentialDemand;
+    [SerializeField] private Text _textCommercialDemand;
 
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
@@ -90,6 +92,10 @@ public class GameLoop : MonoBehaviour {
 
             _resCtrl.IncrementOccupants(_resEval.ResidentialIncrement);
             _commCtrl.IncrementOccupants(_workEval.CommercialIncrement);
+
+            // Demand
+            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resCtrl.Simulator.OccupantCount) .ToString();
+            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commCtrl.Simulator.OccupantCount).ToString();
         }
 
         // Actions to perform every in-game week
@@ -100,7 +106,7 @@ public class GameLoop : MonoBehaviour {
 
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
             _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.TotalHouseholds * 2.5f).ToString();
-            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.TotalEmployment * 1.95f).ToString();
+            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.TotalEmployment * 1.75f).ToString();
         }
 
 

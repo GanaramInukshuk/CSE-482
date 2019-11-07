@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CommercialScripts;
 using SimulatorInterfaces;
 
 // This script should inherit from MonoBehaviour and therefore should be attached to a UI object
@@ -66,7 +65,7 @@ namespace PlayerControls {
             _sliderBldgSize.maxValue = _textBldgCount.Length - 1;
             _sliderBldgSize.wholeNumbers = true;
 
-            _textBldgSize.text = "Capacity: " + Constants.EmploymentSizes[0];
+            _textBldgSize.text = "Capacity: " + CommercialSimulator.Constants.BldgSizes[0];
         }
 
         // Some other notes:
@@ -119,7 +118,7 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Capacity: " + Constants.EmploymentSizes[(int)updatedValue];
+            _textBldgSize.text = "Capacity: " + CommercialSimulator.Constants.BldgSizes[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels

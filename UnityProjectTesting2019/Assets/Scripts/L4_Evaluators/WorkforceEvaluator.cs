@@ -29,10 +29,11 @@ namespace DemandEvaluators {
         public int CommercialIncrement { private set; get; } = 0;       // Increment amount
 
         // This is to compensate for the base demand in 
-        private static readonly int BaseDemandNoMatterWhat = 0;
+        // Make this nonzero for best results
+        private static readonly int BaseDemandNoMatterWhat = 56;
         
         // Refined generate function for job demand
-        public void GenerateDemand(SimulatorInterfaces.IZoningData commData, ResidentialScripts.IHousehold hhdData) {
+        public void GenerateDemand(SimulatorInterfaces.IZoningData commData, IHousehold hhdData) {
             // Calculate how many households have at least one employable person
             // This is tentatively calculated as all households that are not classified as a senior household
             int maxWorkforceFromHousing = hhdData.TotalHouseholds - hhdData.SeniorHouseholds;

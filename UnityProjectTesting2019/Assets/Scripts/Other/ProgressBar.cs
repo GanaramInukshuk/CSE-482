@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 // https://www.youtube.com/watch?v=J1ng1zA3-Pk
 
-[ExecuteInEditMode()]
+[ExecuteAlways()]
 public class ProgressBar : MonoBehaviour {
 
     // Values
@@ -31,6 +31,10 @@ public class ProgressBar : MonoBehaviour {
 
         _progressBarBackground.color = _emptyBarColor;
         _progressBarFill.color = _filledBarColor;
+    }
+
+    private void Update() {
+        UpdateFill();
     }
 
     // Updates the size of the progress bar mask; uses stored values

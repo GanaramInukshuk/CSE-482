@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using ResidentialScripts;
+//using ResidentialScripts;
 using SimulatorInterfaces;
 
 // This script should inherit from MonoBehaviour and therefore should be attached to a UI object
@@ -44,7 +44,7 @@ namespace PlayerControls {
         // Start is called before the first frame update
         void Start() {
             // Set up main stuff
-            _simulator   = new ResidentialSimulator();
+            _simulator = new ResidentialSimulator();
             UpdateTextLabels();
 
             //// Set up increment button functionality
@@ -122,7 +122,7 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Households: " + Constants.HousingSizes[(int)updatedValue];
+            _textBldgSize.text = "Households: " + ResidentialSimulator.Constants.BldgSizes[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels
