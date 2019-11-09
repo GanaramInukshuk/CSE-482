@@ -86,6 +86,7 @@ namespace PlayerControls {
         public void Generate() {
             _simulator.Generate();
             UpdateTextLabels();
+            _simulator.PrintDebugString();
         }
 
         public void IncrementOccupants(int incrementAmt) {

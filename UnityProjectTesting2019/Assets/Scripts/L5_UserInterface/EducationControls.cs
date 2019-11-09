@@ -105,7 +105,7 @@ namespace PlayerControls {
 
         public void UpdateTextLabels() {
             // Total text
-            string breakdownText = $"EDUCATION: {_simulator.CurrentCapacity[0]} elem. school, {_simulator.CurrentCapacity[1]} middle school, and {_simulator.CurrentCapacity[2]} high school students.";
+            string breakdownText = $"EDUCATION: {_simulator.SeatsFilled[0]} elem. school, {_simulator.SeatsFilled[1]} middle school, and {_simulator.SeatsFilled[2]} high school students.";
             _textTotal.text = breakdownText;
 
             for (int i = 0; i < _textBldgCount.Length; i++) {

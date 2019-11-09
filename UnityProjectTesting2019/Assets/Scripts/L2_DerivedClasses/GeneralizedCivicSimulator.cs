@@ -19,6 +19,14 @@ using UnityEngine;
 //   affects every school at once, not individual buildings.
 // - IntArray - This is simply an int[] that counts how many persons are being served by the civic simulator
 
+// Notes on using this with different implementations (education, for example):
+// - Scenario 1: No different sized schools per edu. level - use one simulator and have the Generate function
+//   accept an int[] of students of different schooling levels
+// - Scenario 2: Different sized schools per edu. level OR schools are modular and made from constituent
+//   subbuildings of different sizes - use one simulator per education level and have each simulator be a part of
+//   a larger simulator and have the Generate function accept an int that represents the students of only one
+//   schooling level
+
 public class CivicSimulatorSimple {
 
     // Counters
@@ -30,7 +38,12 @@ public class CivicSimulatorSimple {
 
     // Setter/getter for the current capacity of each building type, IE, how many people
     // are currently being served for each building type
-    public int[] CurrentCapacity { set; get; }
+    public int[] SeatsFilled { private set; get; }
+
+    // Setter/getter for leftover capacity
+    // A positive leftover capacity means that there are more seats than needed
+    // A negative leftover capacity means that there is more "demand" than what can be satisfied
+    public int[] SeatsLeft { private set; get; }
 
     // Setters and getters for identifying the civic simulator
     public int    CivicID   { private set; get; }
@@ -49,13 +62,15 @@ public class CivicSimulatorSimple {
             _buildingCounter.Count = value[0];
             _seatCounter.Max   = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _buildingSeats);
             _seatCounter.Count = value[1];
-            CurrentCapacity = value[2];
+            SeatsFilled = value[2];
+            SeatsLeft   = value[3];
         }
         get {
             return new int[][] {
                 _buildingCounter.Count,
                 _seatCounter.Count,
-                CurrentCapacity
+                SeatsFilled,
+                SeatsLeft,
             };
         }
     }
@@ -67,12 +82,16 @@ public class CivicSimulatorSimple {
         _seatCounter = new MultiCounter(_buildingSeats.Length);
         CivicID   = civicID;
         CivicName = civicName;
-        CurrentCapacity = new int[_buildingSeats.Length];
+        SeatsFilled = new int[_buildingSeats.Length];
+        SeatsLeft   = new int[_buildingSeats.Length];
     }
 
     // This setup assumes that each building serves a different demographic each
     public void Generate(int[] persons) {
-
+        for (int i = 0; i < persons.Length; i++) {
+            SeatsFilled[i] = Mathf.Clamp(persons[i], 0, _seatCounter.Count[i]);
+            SeatsLeft[i] = _seatCounter.Count[i] - persons[i];
+        }
     }
 
     public void IncrementBuildings(int incrementAmt, int bldgType) {

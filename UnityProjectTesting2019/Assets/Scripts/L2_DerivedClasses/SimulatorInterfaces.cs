@@ -22,40 +22,17 @@ namespace SimulatorInterfaces {
         int OccupantMax      { get; }
     }
 
-    //// A separate interface for zoning controls, IE, the functions that add/remove buildings and occupants
-    //public interface IZoningControls {
-    //    int[][] DataVector { get; }
-
-    //    void Generate(float[] affectors, int incrementAmt);
-    //    void Generate(int incrementAmt);
-    //    void IncrementBldgs(int[] amt);
-    //    void IncrementBldgs(int amt, int index);
-    //    void IncrementOccupants(int amt);
-
-    //    void PrintDebugString();
-    //    string GetDebugString();
+    //// For use with the job-generating simulators
+    //public interface ILaborUnits {
+    //    int LaborUnitCount { get; }
+    //    int LaborUnitMax   { get; }
     //}
 
-    //// For use with the multicounters used for a zoning simulator (multicounters record the number
-    //// of buildings across all sizes) and actual zoning simulators
-    //public interface IZonableBuilding {
-    //    //int this[int i]    { get; }     // Indexer
-    //    int OccupantMax    { get; }     // Total/max number of "zoning" units
-    //    int TotalBuildings { get; }     // Total number of buildings
-    //    int[] BldgVector   { get; }
+    //// I'm not sure whether I need to use this...
+    //public interface IEmployable {
+    //    int EmploymentCount { get; }
+    //    int EmploymentMax   { get; }
     //}
-
-    // For use with the job-generating simulators
-    public interface ILaborUnits {
-        int LaborUnitCount { get; }
-        int LaborUnitMax   { get; }
-    }
-
-    // I'm not sure whether I need to use this...
-    public interface IEmployable {
-        int EmploymentCount { get; }
-        int EmploymentMax   { get; }
-    }
 
     // For providing how much utilities a simulator uses per week
     // Utilities would be provided by utility companies (power plant, water pump, etc)

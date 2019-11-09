@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\L3_Simulators\CommercialSimulator.cs" />
     <Compile Include="Assets\Scripts\L3_Simulators\EducationSimulator.cs" />
     <Compile Include="Assets\Scripts\L3_Simulators\ResidentialSimulator.cs" />
+    <Compile Include="Assets\Scripts\L4_Evaluators\CivicEvaluator.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\GeneralEvaluators.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\PopulationSimulator.cs" />
     <Compile Include="Assets\Scripts\L4_Evaluators\ResidentialEvaluator.cs" />

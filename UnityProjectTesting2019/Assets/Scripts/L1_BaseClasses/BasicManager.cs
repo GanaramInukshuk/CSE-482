@@ -58,11 +58,12 @@ public class BasicManager {
     // - The second uses the descending method for the discrepancy
     // Cumulative time complexity: O(weights.Length^2)
     // Function can be overridden if needed (EG, if some randomness is desired)
+    // NOTE: I had to change v2 to use GenerateByWeights instead of GenerateByRoundDown because it wasn't working properly
     public virtual void Generate(int n, float[] weights) {
         if (n > 0 && weights.Length == _vectorSize) {
             int[] v1 = DistributionGen.Histogram.GenerateByRoundDown(n, weights);
             int disc = DistributionGen.Histogram.Discrepancy(n, v1);
-            int[] v2 = DistributionGen.Histogram.GenerateByDescending(-disc, weights);
+            int[] v2 = DistributionGen.Histogram.GenerateByWeights(-disc, weights);
             _vector  = DistributionGen.Histogram.Merge(v1, v2);
         } else _vector = new int[_vectorSize];
     }

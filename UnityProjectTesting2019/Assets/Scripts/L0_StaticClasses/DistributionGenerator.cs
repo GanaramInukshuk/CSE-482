@@ -293,6 +293,8 @@ public class DistributionGen {
         // If all the probabilities add up to 0, set the first element in the array to 1 with
         // all other elements after it to 0 as a failsafe
         public static float[] Reconcile(float[] prob) {
+            if (Verify.ProbValid(prob)) return prob;
+
             float[] newProb = new float[prob.Length];
             float weightSum = 0;
             for (int i = 0; i < prob.Length; i++) weightSum += newProb[i] = Mathf.Abs(prob[i]);

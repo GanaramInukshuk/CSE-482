@@ -15,8 +15,9 @@ public class GameLoop : MonoBehaviour {
     // - Most if not all zoning and civic controls: their simulators's interfaces and datavectors (for savedata)
     // - 
     [Header("References to Main UI Objects")]
-    public ResidentialControls     _resCtrl;
-    public CommercialControls      _commCtrl;
+    public ResidentialControls _resCtrl;
+    public CommercialControls  _commCtrl;
+    public EducationControls   _eduCtrl;
     public IncrementSliderControls _incrementCtrl;
     public TimeControls            _timeCtrl;
     public FundingControls         _fundingCtrl;
@@ -30,6 +31,7 @@ public class GameLoop : MonoBehaviour {
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
     private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
+    private CivicEvaluator _civicEval = new CivicEvaluator();
 
     private void Start() {
         _textPopulation.text = "Population: 0";
@@ -56,39 +58,9 @@ public class GameLoop : MonoBehaviour {
         if (_timeCtrl.TickCount % Timekeeper._ticksPerDay == 0) {
             //Debug.Log("[GameLoop]: Performing daily actions.");
 
-            // Plans for demand system
-            // - Demand is generated as a RandomGauss number
-            // - The mean may increase by things such as high employment demand or good education and
-            //   healthcare; likewise, lack of employment or poor education/health can drive this
-            //   value into the negatives
-            // - For simplicity's sake, stddev may increase proportionally to the mean; I'm currently
-            //   undecided whether I wanna make this be determined differently; for example, the stddev
-            //   may be abs(mean) / 2 + 1
-            // - For extra randomness, outside factors may screw with demand
-
-            // Some notes about a bellcurve
-            // - With a mean and stddev of 0 and 1, the area under the curve within +/- 1, 2, and 3 stddevs
-            //   from the mean represents 68, 95, and 99.7% of total area under the curve; alternatively,
-            //   given abs(RandomGauss(0, 1)), values between 0 and 1, 1 and 2, and 2 and 3 should occur
-            //   68, 27, and 4.7% of the time
-            // Base demand is based off of a RandomGauss with a mean of 1 and effective stddev of 1.5
-
-
-            //int baseDemand = 256;
-            //int prevResidentialOpenings = baseDemand - _resCtrl.ZoningBreakdown.OccupantCount;
-            //_resCtrl.IncrementOccupants(General.GenerateIncrement(prevResidentialOpenings));
-
-            //// Generate commercial demand; this is based off of the residential population
-            ////_workforceEval.GenerateDemand(_resCtrl.PopulationBreakdown, _commCtrl.EmploymentBreakdown);
-            //_workforceEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.EmploymentBreakdown);
-            //int commercialIncrement = _workforceEval.CommercialIncrement;
-            //_commCtrl.IncrementOccupants(commercialIncrement);
-
-            //_resEval.GenerateDemand(_commCtrl.ZoningBreakdown, _resCtrl.ZoningBreakdown, _resCtrl.DemographicBreakdown);
-            //_workEval.GenerateDemand(_resCtrl.DemographicBreakdown, _commCtrl.ZoningBreakdown, _resCtrl.ZoningBreakdown);
-
             _resEval.GenerateDemand(_resCtrl.Simulator, _commCtrl.Simulator);
             _workEval.GenerateDemand(_commCtrl.Simulator, _resCtrl.Simulator);
+            _civicEval.GenerateDemand(_resCtrl.Simulator);
 
             _resCtrl.IncrementOccupants(_resEval.ResidentialIncrement);
             _commCtrl.IncrementOccupants(_workEval.CommercialIncrement);
@@ -103,6 +75,9 @@ public class GameLoop : MonoBehaviour {
             //Debug.Log("[GameLoop]: Performing weekly actions.");
             _resCtrl.Generate();
             _commCtrl.Generate();
+
+            int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
+            _eduCtrl.Generate(schoolchildren);
 
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
             _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.OccupantCount * 2.5f).ToString();

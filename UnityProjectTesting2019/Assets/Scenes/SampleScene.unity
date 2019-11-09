@@ -848,6 +848,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resCtrl: {fileID: 1354532407}
   _commCtrl: {fileID: 4035150311231005778}
+  _eduCtrl: {fileID: 939035327}
   _incrementCtrl: {fileID: 1648728040}
   _timeCtrl: {fileID: 164453189}
   _fundingCtrl: {fileID: 0}
@@ -1180,6 +1181,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &939035327 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5232295463293644118, guid: 1c06725ac02296e47b115ced377dc221,
+    type: 3}
+  m_PrefabInstance: {fileID: 6414986527382625062}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e538f3e2ff9d459da42d9668fc3c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1081268735 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2744720791473944599, guid: 42cbee5f0a35f81429647a78230a4211,
