@@ -9,62 +9,88 @@ using UnityEngine;
 // addons); basically larger buildings are high-capacity versions of the originals that in the case of SC4 are unlockable
 // at a certain threshold
 
-// Notes for using this with different building sizes (education, for example):
-// - Scenario 1: No different school sizes per edu. level - Just use one CivicSimulator wherein the indices of the
-//   bicounter corresponds with different levels of schooling
-// - Scenario 2: Different school sizes exist per edu. level - One civic simulator per education level, then have those
-//   simulators be a part of a greater class
-// - Scenario 3: Schools are completely modular and consist of sub-buildings of fixed sizes - Same as scenario 2 where
-//   for each education level, within the counter, each index refers to "base buildings" and expansion modules (EG,
-//   portables, building wings, etc; portables have a count of one classroom, wings maybe 4-8 classrooms, etc)
-// * - Scenarios 2 and 3 may reqire a different setup
+// Dataflow between classes:
+// ArrayCounter -> MultiCounter -> IntArray
+// - ArrayCounter - This is an arraycounter that represents the number of buildings of each type
+// - MultiCounter - This is a second arraycounter whose max is the counts of the ArrayCounter multiplied by the bicounter ratios;
+//   as defined by the original Bicounter class, think of the ArrayCounter as the number of schools and the MultiCounter as the number
+//   of seats across all schools; if the ArrayCounter reprots 3 schools and each school has a 1200 seat capacity, then the MultiCounter
+//   will allow the user to specify a set number of seats available from 0 to 3600; this mimics how schools work in SC4 except it
+//   affects every school at once, not individual buildings.
+// - IntArray - This is simply an int[] that counts how many persons are being served by the civic simulator
+
 public class CivicSimulatorSimple {
 
-    // Bicounter array; each index of the array corresponds to a different tier of civic service, not a building size
-    private readonly Bicounter[] _civicCounter;
+    // Counters
+    private ArrayCounter _buildingCounter;
+    private MultiCounter _seatCounter;
+
+    // An internal copy of the bicounter ratios, or the number of "seats" per building, for each building type
+    private int[] _buildingSeats;
+
+    // Setter/getter for the current capacity of each building type, IE, how many people
+    // are currently being served for each building type
+    public int[] CurrentCapacity { set; get; }
 
     // Setters and getters for identifying the civic simulator
     public int    CivicID   { private set; get; }
     public string CivicName { private set; get; }
 
+    // Getters for individual bits of data
+    public int[] BuildingVector => _buildingCounter.Count;
+    public int[] SeatVector => _seatCounter.Count;
+
     // For savedata
-    // The fact that 2.147 billion is a part of the savedata should be an indicator that this is working and that this setup
-    // isn't exactly ideal for long-term use since I really wanted to use an arraycounter...
     public int[][] DataVector {
         set {
-            for (int i = 0; i < value.Length; i++) {
-                int[] subarray = { int.MaxValue, value[i][1], value[i][2] };
-                _civicCounter[i].DataVector = subarray;
-            }
+            // value[0] is the counts in the ArrayCounter
+            // value[1] is the counts in the MultiCounter
+            // value[2] is the CurrentCapacity
+            _buildingCounter.Count = value[0];
+            _seatCounter.Max   = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _buildingSeats);
+            _seatCounter.Count = value[1];
+            CurrentCapacity = value[2];
         }
         get {
-            int[][] returnVector = new int[_civicCounter.Length][];
-            for (int i = 0; i < returnVector.Length; i++) returnVector[i] = _civicCounter[i].DataVector;
-            return returnVector;
+            return new int[][] {
+                _buildingCounter.Count,
+                _seatCounter.Count,
+                CurrentCapacity
+            };
         }
     }
 
-    // Constructor; the last two parameters are self-explanatory, but I need to explain the first parameter
-    // The bicounter consists of two counters where the count of the first counter is the max of the second counter, times
-    // some ratio; for example, SC4 had a feature where overall school funding can be tuned down to the student
-    // level and this is something I'm more or less recreating; one counter counts off the number of schools available and
-    // the other counts off the number of available seats, and the ratio represents how many units in Count2 are represented
-    // by one unit in Count1
-    // For example, if the bicounter reprots a Count1 of 1 and there are 1500 seats per school, Count2 of the bicounter
-    // can count as high as 1500; Count2 can be tuned accordingly denpending on demand, and if more than 1500 students try
-    // to attend, that means it's time to add another school and Count2 can then go as high as 3000
-    public CivicSimulatorSimple(int[] bicounterRatios, int civicID = -1, string civicName = "unnamed_civic") {
-        _civicCounter = new Bicounter[bicounterRatios.Length];
-        for (int i = 0; i < bicounterRatios.Length; i++) _civicCounter[i] = new Bicounter(int.MaxValue, bicounterRatios[i]);
+    // Constructor
+    public CivicSimulatorSimple(int[] buildingSeats, int civicID = -1, string civicName = "unnamed_civic") {
+        _buildingSeats = buildingSeats;
+        _buildingCounter = new ArrayCounter(_buildingSeats.Length);
+        _seatCounter = new MultiCounter(_buildingSeats.Length);
         CivicID   = civicID;
         CivicName = civicName;
+        CurrentCapacity = new int[_buildingSeats.Length];
     }
 
-    public void IncrementBuildings(int level, int incrementAmt) {
-        if (level >= 0 || level < _civicCounter.Length) _civicCounter[level].IncrementCount1(incrementAmt);
+    // This setup assumes that each building serves a different demographic each
+    public void Generate(int[] persons) {
+
     }
 
-    public void IncrementUnits(int level, int incrementAmt) {
-        if (level >= 0 || level < _civicCounter.Length) _civicCounter[level].IncrementCount2(incrementAmt);
+    public void IncrementBuildings(int incrementAmt, int bldgType) {
+        if (bldgType >= 0 || bldgType < _buildingSeats.Length) {
+            _buildingCounter.IncrementCount(incrementAmt, bldgType);
+
+            // Set the new max for the multicounter
+            _seatCounter.IncrementMax(incrementAmt * _buildingSeats[bldgType], bldgType);
+
+            // A more... overkill method
+            //int[] newMax = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _bicounterRatios);
+            //_seatCounter.Max = newMax;
+        }
+    }
+
+    public void IncrementSeats(int incrementAmt, int bldgType) {
+        if (bldgType >= 0 || bldgType < _buildingSeats.Length) {
+            _seatCounter.IncrementCount(incrementAmt, bldgType);
+        }
     }
 }

@@ -30,13 +30,16 @@ namespace DemandEvaluators {
 
         // This is to compensate for the base demand in 
         // Make this nonzero for best results
-        private static readonly int BaseDemandNoMatterWhat = 56;
+        private static readonly int BaseDemandNoMatterWhat = 0;
         
         // Refined generate function for job demand
-        public void GenerateDemand(SimulatorInterfaces.IZoningData commData, IHousehold hhdData) {
+        public void GenerateDemand(SimulatorInterfaces.IZoningData commData, SimulatorInterfaces.IZoningData resData) {
+            // For identifying the senior household occupant index
+            int seniorIndex = (int)ResidentialSimulator.Constants.OccupantType.SENIOR;
+
             // Calculate how many households have at least one employable person
             // This is tentatively calculated as all households that are not classified as a senior household
-            int maxWorkforceFromHousing = hhdData.TotalHouseholds - hhdData.SeniorHouseholds;
+            int maxWorkforceFromHousing = resData.OccupantCount - resData.OccupantVector[seniorIndex];
             EmployableMax = BaseDemandNoMatterWhat + maxWorkforceFromHousing;
 
             // Divvy up the employable max among the different types of employment

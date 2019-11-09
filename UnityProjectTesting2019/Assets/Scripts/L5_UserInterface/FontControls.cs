@@ -16,15 +16,15 @@ namespace PlayerControls {
         //[SerializeField] private Image[] _uiPanels;
 
         // Aesthetic properties
-        [Header("A E S T H E T I C  P R O P S")]   
-        [SerializeField] private Color _textColor;
-        [SerializeField] private Color _residentialColor;
-        [SerializeField] private Color _commercialColor;
-        [SerializeField] private Color _civicColor;
-        [SerializeField] private Color _uiColor;
+        [Header("A E S T H E T I C  P R O P S")]
+        public Color _textColor;
+        //public Color _residentialColor;
+        //public Color _commercialColor;
+        //public Color _civicColor;
+        //public Color _uiColor;
 
-        [SerializeField] private Font _defaultFont;
-        [SerializeField] private Font _altFont;
+        public Font _defaultFont;
+        public Font _altFont;
 
         private bool _altFontEnabled;
         private List<Image> _uiPanels = new List<Image>();
@@ -41,7 +41,7 @@ namespace PlayerControls {
             _uiPanels = GetUIPanels();
 
 
-            SetPanelColors();
+            //SetPanelColors();
             SetTextColors();
             SetDefaultFont();
         }
@@ -69,16 +69,16 @@ namespace PlayerControls {
         }
 
         // Self-explanatory...
-        private void SetPanelColors() {
-            foreach (Image i in _uiPanels) {
-                switch (i.tag) {
-                    case "UI-RESIDENTIAL": i.color = _residentialColor; break;
-                    case "UI-COMMERCIAL" : i.color = _commercialColor ; break;
-                    case "UI-CIVIC"      : i.color = _civicColor      ; break;
-                    default:               i.color = _uiColor         ; break;
-                }
-            }
-        }
+        //private void SetPanelColors() {
+        //    foreach (Image i in _uiPanels) {
+        //        switch (i.tag) {
+        //            case "UI-RESIDENTIAL": i.color = _residentialColor; break;
+        //            case "UI-COMMERCIAL" : i.color = _commercialColor ; break;
+        //            case "UI-CIVIC"      : i.color = _civicColor      ; break;
+        //            default:               i.color = _uiColor         ; break;
+        //        }
+        //    }
+        //}
 
         // Self-explanatory...
         private void SetTextColors() {

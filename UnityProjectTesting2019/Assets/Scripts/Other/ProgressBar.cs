@@ -10,18 +10,18 @@ public class ProgressBar : MonoBehaviour {
 
     // Values
     [Header("Main Parameters")]
-    [SerializeField] private int  _min;         // In case the progress bar has a starting value that isn't zero; otherwise it's zero
-    [SerializeField] private int  _max;         // Self explanatory...
-    [SerializeField] private int  _currValue;
-    [SerializeField] private bool _loadBackwards;       // Makes the progress bar load right-to-left
+    public int  _min;         // In case the progress bar has a starting value that isn't zero; otherwise it's zero
+    public int  _max;         // Self explanatory...
+    public int  _currValue;
+    public bool _loadBackwards;       // Makes the progress bar load right-to-left
 
     // Aesthetic properties
     [Header("Aesthetic Properties")]
-    [SerializeField] private Image _progressBarBackground;
-    [SerializeField] private Image _progressBarMask;
-    [SerializeField] private Image _progressBarFill;
-    [SerializeField] private Color _emptyBarColor;
-    [SerializeField] private Color _filledBarColor;
+    public Image _progressBarBackground;
+    public Image _progressBarMask;
+    public Image _progressBarFill;
+    public Color _emptyBarColor;
+    public Color _filledBarColor;
 
     // Start function; sets the 
     private void Start() {

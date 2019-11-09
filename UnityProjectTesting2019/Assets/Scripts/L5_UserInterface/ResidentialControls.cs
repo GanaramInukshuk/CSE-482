@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 //using ResidentialScripts;
-using SimulatorInterfaces;
+//using SimulatorInterfaces;
 
 // This script should inherit from MonoBehaviour and therefore should be attached to a UI object
 // Attach this to the relevant UI panel and have this script be composed of its relevant simulator and evaluator
@@ -15,14 +15,14 @@ namespace PlayerControls {
 
         // Main UI objects
         [Header("Main UI Objects and Parameters")]
-        [SerializeField] private Button      _buttonIncrement;
-        [SerializeField] private Button      _buttonDecrement;
-        [SerializeField] private Button      _buttonIncrementRandom;
-        [SerializeField] private Text[]      _textBldgCount;
-        [SerializeField] private Text        _textTotal;
-        [SerializeField] private Text        _textBldgSize;
-        [SerializeField] private ProgressBar _progressBar;
-        [SerializeField] private Slider      _sliderBldgSize;
+        public Button      _buttonIncrement;
+        public Button      _buttonDecrement;
+        public Button      _buttonIncrementRandom;
+        public Text[]      _textBldgCount;
+        public Text        _textTotal;
+        public Text        _textBldgSize;
+        public ProgressBar _progressBar;
+        public Slider      _sliderBldgSize;
 
         [Header("Secondary UI Objects and Parameters")]
         [SerializeField] private IncrementSliderControls _incrementSlider;
@@ -114,7 +114,7 @@ namespace PlayerControls {
         // sizes built already
         private void IncrementRandom() {
             int     incrementAmount    = _incrementSlider.IncrementAmount;
-            int[]   bldgVector         = _simulator.BldgVector;
+            int[]   bldgVector         = _simulator.BuildingVector;
             float[] bldgDistribution   = DistributionGen.Probability.GenerateFromHist(bldgVector);
             int[]   bldgAdditionVector = DistributionGen.Histogram.GenerateByWeights(incrementAmount, bldgDistribution);
             _simulator.IncrementBldgs(bldgAdditionVector);
@@ -122,7 +122,7 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Households: " + ResidentialSimulator.Constants.BldgSizes[(int)updatedValue];
+            _textBldgSize.text = "Households: " + ResidentialSimulator.Constants.BuildingSizes[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels
@@ -135,7 +135,7 @@ namespace PlayerControls {
             // Breakdown text
             // These labels show the number of buildings by size and are displayed
             for (int i = 0; i < _textBldgCount.Length; i++) {
-                _textBldgCount[i].text = _simulator.BldgVector[i].ToString();
+                _textBldgCount[i].text = _simulator.BuildingVector[i].ToString();
             }
 
             // Progress bar

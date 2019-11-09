@@ -35,13 +35,19 @@ public class MultiCounter {
         _vectorSize = presetMax.Length;
         _count = new int[_vectorSize];
         Max = presetMax;        // Using the setter calls the clamp helper functions
+        for (int i = 0; i < _vectorSize; i++) {
+            _count[i] = 0;
+        }
     }
 
-    // Default constructor; assumes all counts are int.MaxValue
+    // Default constructor; assumes all counts' max are int.MaxValue
     public MultiCounter(int vectorSize) {
         _vectorSize = vectorSize;
         _max = _count = new int[vectorSize];
-        for (int i = 0; i < vectorSize; i++) _max[i] = int.MaxValue;
+        for (int i = 0; i < vectorSize; i++) {
+            _max[i] = int.MaxValue;
+            _count[i] = 0;
+        }
     }
 
     // Copy constructor (wouldn't hurt)

@@ -15,17 +15,17 @@ public class GameLoop : MonoBehaviour {
     // - Most if not all zoning and civic controls: their simulators's interfaces and datavectors (for savedata)
     // - 
     [Header("References to Main UI Objects")]
-    [SerializeField] private ResidentialControls     _resCtrl;
-    [SerializeField] private CommercialControls      _commCtrl;
-    [SerializeField] private IncrementSliderControls _incrementCtrl;
-    [SerializeField] private TimeControls            _timeCtrl;
-    [SerializeField] private FundingControls         _fundingCtrl;
+    public ResidentialControls     _resCtrl;
+    public CommercialControls      _commCtrl;
+    public IncrementSliderControls _incrementCtrl;
+    public TimeControls            _timeCtrl;
+    public FundingControls         _fundingCtrl;
 
     [Header("References to other UI objects")]
-    [SerializeField] private Text _textPopulation;
-    [SerializeField] private Text _textEmployment;
-    [SerializeField] private Text _textResidentialDemand;
-    [SerializeField] private Text _textCommercialDemand;
+    public Text _textPopulation;
+    public Text _textEmployment;
+    public Text _textResidentialDemand;
+    public Text _textCommercialDemand;
 
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
@@ -105,8 +105,8 @@ public class GameLoop : MonoBehaviour {
             _commCtrl.Generate();
 
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
-            _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.TotalHouseholds * 2.5f).ToString();
-            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.TotalEmployment * 1.75f).ToString();
+            _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.OccupantCount * 2.5f).ToString();
+            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.OccupantCount * 1.75f).ToString();
         }
 
 

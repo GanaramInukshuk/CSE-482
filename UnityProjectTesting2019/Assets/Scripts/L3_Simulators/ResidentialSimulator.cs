@@ -12,25 +12,28 @@ using SimulatorInterfaces;
 // implementation as those parts are, 1, not really needed for a residential simulator, and 2, can be separated
 // into a separate class.
 
-public interface IHousehold {
-    int SingleHouseholds   { get; }
-    int CohabHouseholds    { get; }
-    int CoupleHouseholds   { get; }
-    int FamilyHouseholds   { get; }
-    int ExtendedHouseholds { get; }
-    int SeniorHouseholds   { get; }
-    int TotalHouseholds    { get; }
-}
+// Note that the only interface these simulators should inherit from is the IZoningData interface; I've basically
+// removed the need to have additional interfaces for these things; to access data for occupant types, do this:
+
+// simulator.OccupantVector[(int)Simulator.Constants.OccupantType.TYPE]
+// where Simulator is the name of the simulator and simulator is an instance of said simulator
 
 /// <summary>
 /// A specialized version of the ZoningSimulator designed to simulate residential zoning.
 /// </summary>
-public class ResidentialSimulator : ZoningSimulator, IZoningData, IHousehold {
+public class ResidentialSimulator : ZoningSimulator, IZoningData {
 
+    /// <summary>
+    /// Constants specific to the ResidentialSimulator.
+    /// </summary>
     public static class Constants {
 
         // Enum for occupant types
         // Make sure the enums line up with the occupant weights listed below
+        /// <summary>
+        /// An enum that describes the occupant types available to the simulator.
+        /// <para>Current types are: SINGLE, COHAB, COUPLE, FAMILY, EXTENDED, SENIOR</para>
+        /// </summary>
         public enum OccupantType { SINGLE, COHAB, COUPLE, FAMILY, EXTENDED, SENIOR };
 
         // Occupant weights
@@ -43,7 +46,11 @@ public class ResidentialSimulator : ZoningSimulator, IZoningData, IHousehold {
         // - Extended - ...a family with at least one outside family member, usually a grandparent
         // - Senior   - ...one or two senior citizens living within
         // Note that these probabilities must sum up to 1.00f
-        public static float[] OccWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        /// <summary>
+        /// An array of probabilities that describes the probability that an occupant is one of the types
+        /// described by the OccupantType enum.
+        /// </summary>
+        public static float[] OccupantWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
 
         // Building sizes
         // Basically, these go up from bungalows to duplexes to fourplexes, all the way to what could be considered
@@ -51,20 +58,14 @@ public class ResidentialSimulator : ZoningSimulator, IZoningData, IHousehold {
         // there are small complexes that have 4 or more households; honestly, it's much more readily apparent if
         // your hometown features a military base with military housing; most of those houses are fourplexes (at least
         // the ones I've seen)
-        public static int[] BldgSizes = { 1, 2, 4, 6, 8, 12 };
+        /// <summary>
+        /// An array of building sizes available to the simulator.
+        /// </summary>
+        public static int[] BuildingSizes = { 1, 2, 4, 6, 8, 12 };
     }
 
-    // Getters for the interfaces
-    public int SingleHouseholds   => OccupantVector[0];
-    public int CohabHouseholds    => OccupantVector[1];
-    public int CoupleHouseholds   => OccupantVector[2];
-    public int FamilyHouseholds   => OccupantVector[3];
-    public int ExtendedHouseholds => OccupantVector[4];
-    public int SeniorHouseholds   => OccupantVector[5];
-    public int TotalHouseholds    => OccupantCount;
-
     // Constructor
-    public ResidentialSimulator() : base(Constants.BldgSizes, Constants.OccWeights, 0 , "Residential") { }
+    public ResidentialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 0 , "Residential") { }
 
     // Member functions need not be overridden; their base functionality is plenty already
 }

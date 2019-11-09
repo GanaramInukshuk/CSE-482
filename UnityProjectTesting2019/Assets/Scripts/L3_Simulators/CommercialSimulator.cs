@@ -8,24 +8,19 @@ using SimulatorInterfaces;
 // eliminates the overly complicated feature of having each constituent class be standalone. Additionally, this
 // simulator coes bundled with all the constants and interfaces it requires, apart from the general interfaces.
 
-public interface IEmployment {
-    int GroceryEmployment    { get; }
-    int RetailEmployment     { get; }
-    int FoodEmployment       { get; }
-    int ServiceEmployment    { get; }
-    int AutomotiveEmployment { get; }
-    int TotalEmployment      { get; }
-}
-
 /// <summary>
 /// A specialized version of the ZoningSimulator designed to simulate commercial zoning.
 /// </summary>
-public class CommercialSimulator : ZoningSimulator, IZoningData, IEmployment {
+public class CommercialSimulator : ZoningSimulator, IZoningData {
 
     public static class Constants {
 
         // Enum for occupant types
         // Make sure the enums line up with the occupant weights listed below
+        /// <summary>
+        /// An enum that describes the occupant types available to the simulator.
+        /// <para>Current types are: GROCERY, RETAIL, FOOD, SERVICE, AUTO</para>
+        /// </summary>
         public enum OccupantType { GROCERY, RETAIL, FOOD, SERVICE, AUTO };
 
         // Occupant weights
@@ -36,7 +31,11 @@ public class CommercialSimulator : ZoningSimulator, IZoningData, IEmployment {
         // - Food - restaurants, including fast food
         // - Service - other commercial services, such as door-to-door services
         // - Automotive - gas stations and auto shops
-        public static float[] OccWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        /// <summary>
+        /// An array of probabilities that describes the probability that an occupant is one of the types
+        /// described by the OccupantType enum.
+        /// </summary>
+        public static float[] OccupantWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
 
         // Building sizes
         // Basically, units of employment are one-to-one with households, and each household contains at least
@@ -44,19 +43,14 @@ public class CommercialSimulator : ZoningSimulator, IZoningData, IEmployment {
         // employable person; if we take the optimistic average of 2 employable persons per household (which is
         // almost certainly the case with certain demographics), the smallest building size will employ 8 people
         // (that is, unless I change the first parameter in the ScalarVectorMult function)
-        public static int[] BldgSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 3, 4, 6, 8 });
+        /// <summary>
+        /// An array of building sizes available to the simulator.
+        /// </summary>
+        public static int[] BuildingSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 3, 4, 6, 8 });
     }
 
-    // Getters for the interfaces
-    public int GroceryEmployment    => OccupantVector[0];
-    public int RetailEmployment     => OccupantVector[1];
-    public int FoodEmployment       => OccupantVector[2];
-    public int ServiceEmployment    => OccupantVector[3];
-    public int AutomotiveEmployment => OccupantVector[4];
-    public int TotalEmployment      => OccupantCount;
-
     // Constructor
-    public CommercialSimulator() : base(Constants.BldgSizes, Constants.OccWeights, 1 , "Commercial") { }
+    public CommercialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 1 , "Commercial") { }
 
     // Member functions need not be overridden; their base functionality is plenty already
 }

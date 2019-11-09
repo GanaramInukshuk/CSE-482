@@ -43,14 +43,14 @@ public class ArrayCounter {
     //public int Total => DistributionGen.Histogram.SumOfElements(_count); 
 
     // Constructor with a preset max
-    public ArrayCounter(int presetMax, int vectorSize) {
-        Max = presetMax;
-        _count = new int[vectorSize];
-        _vectorSize = _count.Length;
-    }
+    //public ArrayCounter(int presetMax, int vectorSize) {
+    //    Max = presetMax;
+    //    _count = new int[vectorSize];
+    //    _vectorSize = _count.Length;
+    //}
 
-    // Default constructor
-    public ArrayCounter(int vectorSize) {
+    // Default constructor; assumes an unspecified presetMax to be int.MaxValue
+    public ArrayCounter(int vectorSize, int presetMax = int.MaxValue) {
         _max = int.MaxValue;
         _count = new int[vectorSize];
         _vectorSize = _count.Length;

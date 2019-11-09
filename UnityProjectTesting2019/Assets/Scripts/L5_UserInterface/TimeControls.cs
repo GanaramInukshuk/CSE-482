@@ -15,29 +15,29 @@ namespace PlayerControls {
 
         // Main UI objects
         [Header("Main UI Objects")]
-        [SerializeField] private Button      _buttonPause;
-        [SerializeField] private Button      _buttonDate;
-        [SerializeField] private Image       _image;
-        [SerializeField] private Slider      _sliderSpeed;
-        [SerializeField] private ProgressBar _progressBar;
+        public Button      _buttonPause;
+        public Button      _buttonDate;
+        public Image       _image;
+        public Slider      _sliderSpeed;
+        public ProgressBar _progressBar;
 
         [Header("Main Parameters")]
-        [SerializeField] private int _tickCount;
-        [SerializeField] private int _yearOffset = 2000;      // So that the counter can start at, say, year 2000
-        [SerializeField] private int _tickRate = 60;          // Tickrate; divide 1 by this number to get the fixedDelatTime
+        public int _tickCount;
+        public int _yearOffset = 2000;      // So that the counter can start at, say, year 2000
+        public int _tickRate = 60;          // Tickrate; divide 1 by this number to get the fixedDelatTime
 
         // Aesthetic properties
         [Header("A E S T H E T I C  P R O P S")]
-        [SerializeField] private Color _color;
-        [SerializeField] private Font  _defaultFont;
-        [SerializeField] private Font  _altFont;
+        public Color _color;
+        public Font  _defaultFont;
+        public Font  _altFont;
 
         [Header("Other Parameters")]
-        [SerializeField] private int    _fineIncrements    = 100;       // Subdivisions; EG, if the slider goes from 1 to 5 and the slider goes by increments of 0.01
-        [SerializeField] private float  _textBlinkDuration = 1.0f;      // Blink period
-        [SerializeField] private bool   _timePaused    = false;         // For pausing/unpausing time
-        [SerializeField] private bool   _altTimeFormat = false;
-        [SerializeField] private string _timeFormat    = "00.00";       // Time format
+        public int    _fineIncrements    = 100;       // Subdivisions; EG, if the slider goes from 1 to 5 and the slider goes by increments of 0.01
+        public float  _textBlinkDuration = 1.0f;      // Blink period
+        public bool   _timePaused    = false;         // For pausing/unpausing time
+        public bool   _altTimeFormat = false;
+        public string _timeFormat    = "00.00";       // Time format
 
         // Test items
         [Header("Debug")]

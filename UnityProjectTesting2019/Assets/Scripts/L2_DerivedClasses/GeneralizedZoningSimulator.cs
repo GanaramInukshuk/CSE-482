@@ -30,7 +30,6 @@ using UnityEngine;
 /// <summary>
 /// A barebones simulator for a type of zoning typical of a city simulator (usually residential, commercial, industrial, and maybe commercial office).
 /// </summary>
-//[CreateAssetMenu(fileName = "New Zoning Simulator", menuName = "Zoning Simulator")]
 public class ZoningSimulator {
 
     /// <summary>
@@ -118,7 +117,7 @@ public class ZoningSimulator {
     public string ZoningName { private set; get; }
 
     // For getting specific pieces of data from the zoning simulator
-    public int[] BldgVector     => _bldgCounter.Count;
+    public int[] BuildingVector => _bldgCounter.Count;
     public int[] OccupantVector => _occManager.DataVector;
     public int TotalBuildings => DistributionGen.Histogram.SumOfElements(_bldgCounter.Count);
     public int OccupantCount  => _occCounter.Count;
