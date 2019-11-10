@@ -12,7 +12,11 @@ namespace PlayerControls {
         // Main increment and decrement buttons and buliding type slider
         public Button _buttonIncrement;
         public Button _buttonDecrement;
-        public Slider _sliderBldgType;
+
+        // For displaying information back into the UI
+        public Text[] _textBldgCount;
+        public Text   _textTotal;
+        public Text   _textBldgType;
 
         // Subsliders and subincrement/subdecrement buttons
         // These are the smaller silder, increment, and decrement buttons that
@@ -21,10 +25,7 @@ namespace PlayerControls {
         public Button[] _subincrement;
         public Button[] _subdecrement;
 
-        // For displaying information back into the UI
-        public Text   _textTotal;
-        public Text   _textBldgType;
-        public Text[] _textBldgCount;
+        public Slider _sliderBldgType;
 
         // Simulator
         private EducationSimulator _simulator;

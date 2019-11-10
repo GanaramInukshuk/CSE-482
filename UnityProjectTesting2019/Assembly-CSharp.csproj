@@ -120,6 +120,7 @@
     <Compile Include="Assets\Scripts\L5_UserInterface\FontControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\FundingControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\GameLoop.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\HealthControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\IncrementSliderControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\InterfaceInterfaces.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\ResidentialControls.cs" />

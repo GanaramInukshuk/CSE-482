@@ -14,8 +14,9 @@ public class SimpleTabController : MonoBehaviour {
 
     // The start function sets the first page to be displayed by default
     private void Start() {
-        for (int i = 1; i < tabButtons.Length; i++) {
-            tabPages[i].gameObject.SetActive(false);
+        for (int i = 0; i < tabButtons.Length; i++) {
+            if (i == 0) tabPages[i].gameObject.SetActive(true);
+            else tabPages[i].gameObject.SetActive(false);
         }
 
         // Set up listeners to each button
