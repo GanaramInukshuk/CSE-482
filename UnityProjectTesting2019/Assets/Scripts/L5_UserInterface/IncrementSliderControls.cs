@@ -19,7 +19,7 @@ namespace PlayerControls {
         // Other members
         public int IncrementAmount { private set; get; } = 1;
 
-        private void Start() {
+        private void Awake() {
             _incrementSlider.minValue = 1;
             _incrementSlider.maxValue = _sliderMaxValue;
             _incrementSlider.wholeNumbers = true;

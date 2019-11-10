@@ -42,7 +42,7 @@ namespace PlayerControls {
         public ResidentialSimulator Simulator => _simulator;
 
         // Start is called before the first frame update
-        void Start() {
+        void Awake() {
             // Set up main stuff
             _simulator = new ResidentialSimulator();
             UpdateTextLabels();

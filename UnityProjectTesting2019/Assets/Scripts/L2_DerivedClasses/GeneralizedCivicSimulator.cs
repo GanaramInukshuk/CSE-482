@@ -41,8 +41,8 @@ public class CivicSimulatorSimple {
     public string CivicName { private set; get; }
 
     // Getters for individual vectors of data
-    public int[] BuildingVector => _buildingCounter.Count;
-    public int[] SeatMaxVector => _seatCounter.Max;
+    public int[] BuildingVector  => _buildingCounter.Count;
+    public int[] SeatMaxVector   => _seatCounter.Max;
     public int[] SeatCountVector => _seatCounter.Count;
 
     // Setter/getter for the current capacity of each building type, IE, how many people
@@ -92,7 +92,7 @@ public class CivicSimulatorSimple {
     public void Generate(int[] persons) {
         for (int i = 0; i < persons.Length; i++) {
             SeatsFilled[i] = Mathf.Clamp(persons[i], 0, _seatCounter.Count[i]);
-            SeatsLeft[i] = _seatCounter.Count[i] - persons[i];
+            SeatsLeft  [i] = _seatCounter.Count[i] - persons[i];
         }
     }
 
@@ -106,6 +106,7 @@ public class CivicSimulatorSimple {
     // - If the increment is negative, decrement the count, THEN the max
     public void IncrementBuildings(int incrementAmt, int bldgType) {
         if (bldgType >= 0 || bldgType < _buildingSeats.Length) {
+            _buildingCounter.IncrementCount(incrementAmt, bldgType);
             int totalIncrement = incrementAmt * _buildingSeats[bldgType];
             if (incrementAmt >= 0) {
                 _seatCounter.IncrementMax  (totalIncrement, bldgType);

@@ -33,7 +33,7 @@ namespace PlayerControls {
         [Header("Secondary UI Objects and Parameters")]
         [SerializeField] private IncrementSliderControls _incrementSlider;
 
-        private void Start() {
+        private void Awake() {
             // Set up simulator
             _simulator = new EducationSimulator();
             UpdateTextLabels();

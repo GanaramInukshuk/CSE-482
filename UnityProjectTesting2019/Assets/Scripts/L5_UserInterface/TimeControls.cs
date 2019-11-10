@@ -58,7 +58,7 @@ namespace PlayerControls {
         }
 
         // Start is called before the first frame update
-        void Start() {
+        void Awake() {
             // Set important member values
             _lastRecordedTimeScale = 1;
             //Time.fixedDeltaTime = 1.0f / _tickRate;

@@ -37,7 +37,7 @@ namespace PlayerControls {
         public CommercialSimulator Simulator => _simulator;
 
         // Start is called before the first frame update
-        void Start() {
+        void Awake() {
             // Set up main stuff
             _simulator   = new CommercialSimulator();
             UpdateTextLabels();
