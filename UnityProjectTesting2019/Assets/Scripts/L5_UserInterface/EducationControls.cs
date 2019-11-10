@@ -96,12 +96,12 @@ namespace PlayerControls {
             _textBldgType.text = $"School Type:\n {(EducationSimulator.Constants.BuildingType)bldgType}";
         }
 
-        public void UpdateTextBldgCount(float updatedValue) {
-            for (int i = 0; i < _textBldgCount.Length; i++) {
-                string updatedText = $"{_simulator.BuildingVector[i]} schools, {_simulator.SeatVector[i]} seats";
-                _textBldgCount[i].text = updatedText;
-            }
-        }
+        //public void UpdateTextBldgCount(float updatedValue) {
+        //    for (int i = 0; i < _textBldgCount.Length; i++) {
+        //        string updatedText = $"{_simulator.BuildingVector[i]} schools, {_simulator.SeatVector[i]} seats";
+        //        _textBldgCount[i].text = updatedText;
+        //    }
+        //}
 
         public void UpdateTextLabels() {
             // Total text
@@ -109,7 +109,7 @@ namespace PlayerControls {
             _textTotal.text = breakdownText;
 
             for (int i = 0; i < _textBldgCount.Length; i++) {
-                string updatedText = $"{_simulator.BuildingVector[i]} ({_simulator.SeatVector[i]} seats)";
+                string updatedText = $"{_simulator.BuildingVector[i]} ({_simulator.SeatCountVector[i]}/{_simulator.SeatMaxVector[i]} seats)";
                 _textBldgCount[i].text = updatedText;
             }
         }

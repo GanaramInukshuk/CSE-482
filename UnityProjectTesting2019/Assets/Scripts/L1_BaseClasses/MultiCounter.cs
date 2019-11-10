@@ -40,12 +40,13 @@ public class MultiCounter {
         }
     }
 
-    // Default constructor; assumes all counts' max are int.MaxValue
-    public MultiCounter(int vectorSize) {
+    // Default constructor; sets all counts' max to be the same (or int.MaxValue if not specified)
+    public MultiCounter(int vectorSize, int presetMax = int.MaxValue) {
         _vectorSize = vectorSize;
-        _max = _count = new int[vectorSize];
+        _max = new int[vectorSize];
+        _count = new int[vectorSize];
         for (int i = 0; i < vectorSize; i++) {
-            _max[i] = int.MaxValue;
+            _max[i] = presetMax;
             _count[i] = 0;
         }
     }
@@ -72,20 +73,27 @@ public class MultiCounter {
     // Increment all the counts at once by using an array of values
     public void IncrementCount(int[] amt) {
         if (!VerifyVector(amt)) return;
-        for (int i = 0; i < _vectorSize; i++) _count[i] += amt[i];
-        ClampCount();
+        for (int i = 0; i < _vectorSize; i++) {
+            _count[i] += amt[i];
+            _count[i] = Mathf.Clamp(_count[i], 0, _max[i]);
+        }
     }
 
     // Increment a max by an arbitrary value; decrement using a negative value
     public void IncrementMax(int amt, int index) {
-        if (VerifyIndex(index)) _max[index] = Mathf.Max(_max[index] + amt, 0);
+        if (VerifyIndex(index)) {
+            _max[index] = Mathf.Max(_max[index] + amt, 0);
+            _count[index] = Mathf.Clamp(_count[index], 0, _max[index]);
+        }
     }
 
     // Increment all max at once by using an array of values
     public void IncrementMax(int[] amt) {
         if (VerifyVector(amt)) {
-            for (int i = 0; i < _vectorSize; i++) _max[i] = Mathf.Max(_max[i] + amt[i], 0);
-            ClampCount();
+            for (int i = 0; i < _vectorSize; i++) {
+                _max[i] = Mathf.Max(_max[i] + amt[i], 0);
+                _count[i] = Mathf.Clamp(_count[i], 0, _max[i]);
+            }
         }
     }
 
@@ -124,6 +132,6 @@ public class MultiCounter {
 
     // Function can be overridden if needed
     public virtual string GetDebugString() {
-        return "[MultiCounter]: " + DistributionGen.Debug.HistToString(_count);
+        return "[MultiCounter]: Max: " + DistributionGen.Debug.HistToString(_max) + " Count: " + DistributionGen.Debug.HistToString(_count);
     }
 }

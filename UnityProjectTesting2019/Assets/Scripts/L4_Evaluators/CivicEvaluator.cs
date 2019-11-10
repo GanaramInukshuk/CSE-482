@@ -25,9 +25,12 @@ namespace DemandEvaluators {
             // Recall that tentative calculations are as follows:
             // One household = 2.5 people and 1.75 employees
             // For our purposes, let's assume an avg family household size of 3.8 with 1.8 being parental figures
-            // then assume that 1/3rd that difference each goes to each level of schooling
+            // then assume that 5/12, 4/12, and 3/12 go to each education level
             float childrenPerHousehold = 3.5f - 1.8f;
-            ElementarySchoolMax = MiddleShcoolMax = HighSchoolMax = Mathf.RoundToInt(householdsWithSchoolchildren * childrenPerHousehold / 3);
+            float childrenPerEduLevel = householdsWithSchoolchildren * childrenPerHousehold;
+            ElementarySchoolMax = Mathf.RoundToInt(childrenPerEduLevel * 5 / 12);
+            MiddleShcoolMax     = Mathf.RoundToInt(childrenPerEduLevel * 4 / 12);
+            HighSchoolMax       = Mathf.RoundToInt(childrenPerEduLevel * 3 / 12);
             //Debug.Log(HighSchoolMax);
             }
     }

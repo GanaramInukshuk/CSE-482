@@ -36,6 +36,15 @@ public class CivicSimulatorSimple {
     // An internal copy of the bicounter ratios, or the number of "seats" per building, for each building type
     private int[] _buildingSeats;
 
+    // Setters and getters for identifying the civic simulator
+    public int    CivicID   { private set; get; }
+    public string CivicName { private set; get; }
+
+    // Getters for individual vectors of data
+    public int[] BuildingVector => _buildingCounter.Count;
+    public int[] SeatMaxVector => _seatCounter.Max;
+    public int[] SeatCountVector => _seatCounter.Count;
+
     // Setter/getter for the current capacity of each building type, IE, how many people
     // are currently being served for each building type
     public int[] SeatsFilled { private set; get; }
@@ -45,20 +54,13 @@ public class CivicSimulatorSimple {
     // A negative leftover capacity means that there is more "demand" than what can be satisfied
     public int[] SeatsLeft { private set; get; }
 
-    // Setters and getters for identifying the civic simulator
-    public int    CivicID   { private set; get; }
-    public string CivicName { private set; get; }
-
-    // Getters for individual bits of data
-    public int[] BuildingVector => _buildingCounter.Count;
-    public int[] SeatVector => _seatCounter.Count;
-
     // For savedata
     public int[][] DataVector {
         set {
-            // value[0] is the counts in the ArrayCounter
-            // value[1] is the counts in the MultiCounter
-            // value[2] is the CurrentCapacity
+            // value[0] is the counts in the ArrayCounter and indirectly sets the max of the MultiCounter (or MaxSeatVector)
+            // value[1] is the counts in the MultiCounter and represents AvailableSeatVector
+            // value[2] is the number of seats available that are already taken
+            // value[3] is the number of seats left over (or how many people still need a seat)
             _buildingCounter.Count = value[0];
             _seatCounter.Max   = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _buildingSeats);
             _seatCounter.Count = value[1];
@@ -79,7 +81,7 @@ public class CivicSimulatorSimple {
     public CivicSimulatorSimple(int[] buildingSeats, int civicID = -1, string civicName = "unnamed_civic") {
         _buildingSeats = buildingSeats;
         _buildingCounter = new ArrayCounter(_buildingSeats.Length);
-        _seatCounter = new MultiCounter(_buildingSeats.Length);
+        _seatCounter     = new MultiCounter(_buildingSeats.Length, 0);
         CivicID   = civicID;
         CivicName = civicName;
         SeatsFilled = new int[_buildingSeats.Length];
@@ -94,12 +96,24 @@ public class CivicSimulatorSimple {
         }
     }
 
+    // Typically with SC4, when a new school/hospital is placed, the number of available seats
+    // available to that building is at its max; to mimic that, the addition (or removal) of a building
+    // will result in the addition of its corresponding amount of seats
+    // In other words, if you build a school that has 1200 seats, the number of seats available
+    // will also increase by 1200, and the same goes for removal of a school
+    // Note that there is a specific order for this to happen:
+    // - If the increment is positive, increment the max, THEN the count
+    // - If the increment is negative, decrement the count, THEN the max
     public void IncrementBuildings(int incrementAmt, int bldgType) {
         if (bldgType >= 0 || bldgType < _buildingSeats.Length) {
-            _buildingCounter.IncrementCount(incrementAmt, bldgType);
-
-            // Set the new max for the multicounter
-            _seatCounter.IncrementMax(incrementAmt * _buildingSeats[bldgType], bldgType);
+            int totalIncrement = incrementAmt * _buildingSeats[bldgType];
+            if (incrementAmt >= 0) {
+                _seatCounter.IncrementMax  (totalIncrement, bldgType);
+                _seatCounter.IncrementCount(totalIncrement, bldgType);
+            } else {
+                _seatCounter.IncrementCount(totalIncrement, bldgType);
+                _seatCounter.IncrementMax  (totalIncrement, bldgType);
+            }
 
             // A more... overkill method
             //int[] newMax = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _bicounterRatios);
