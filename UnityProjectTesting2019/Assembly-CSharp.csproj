@@ -123,6 +123,7 @@
     <Compile Include="Assets\Scripts\L5_UserInterface\IncrementSliderControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\InterfaceInterfaces.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\ResidentialControls.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\SimpleTabController.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\TimeControls.cs" />
     <Compile Include="Assets\Scripts\Other\ProgressBar.cs" />
     <Reference Include="Unity.Timeline.Editor">
