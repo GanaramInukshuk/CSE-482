@@ -22,6 +22,31 @@ namespace SimulatorInterfaces {
         int OccupantMax      { get; }
     }
 
+    // This interface is for a zoning simulator's controls and also inherits IZoningData
+    public interface IZoningControls : IZoningData {
+        void Generate(float[] affectors, int incrementAmt);
+        void Generate(int incrementAmt);
+        void IncrementBldgs(int[] amt);
+        void IncrementBldgs(int amt, int index);
+        void IncrementOccupants(int amt);
+        void PrintDebugString();
+    }
+
+    public interface ICivicData {
+        int[] BuildingVector  { get; }
+        int[] SeatMaxVector   { get; }   
+        int[] SeatCountVector { get; }
+        int[] SeatsFilled { get; }
+        int[] SeatsLeft   { get; }
+    }
+
+    public interface ICivicControls : ICivicData {
+        void Generate(int[] persons);
+        void IncrementBuildings(int incrementAmt, int bldgType);
+        void IncrementSeats(int incrementAmt, int bldgType);
+        void PrintDebugString();
+    }
+
     //// For use with the job-generating simulators
     //public interface ILaborUnits {
     //    int LaborUnitCount { get; }

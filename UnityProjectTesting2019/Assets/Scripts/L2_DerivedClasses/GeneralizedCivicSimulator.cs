@@ -127,4 +127,17 @@ public class CivicSimulatorSimple {
             _seatCounter.IncrementCount(incrementAmt, bldgType);
         }
     }
+
+    public void PrintDebugString() {
+        string outputString = GetDebugString();
+        Debug.Log(outputString);
+    }
+
+    public string GetDebugString() {
+        return
+            $"[CivicSimulator]: CID: {CivicID} NAME: {CivicName}\n" +
+            DistributionGen.Debug.HistToString(SeatsFilled) + "\n" +
+            DistributionGen.Debug.HistToString(SeatCountVector);
+        ;
+    }
 }

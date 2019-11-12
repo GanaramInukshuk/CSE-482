@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SimulatorInterfaces;
 
 namespace PlayerControls {
 
@@ -21,21 +22,16 @@ namespace PlayerControls {
         // Subsliders and subincrement/subdecrement buttons
         // These are the smaller silder, increment, and decrement buttons that
         // adjust the overall number of available seats
-        //public Slider[] _subslider;
         public Button[] _subincrement;
         public Button[] _subdecrement;
-
         public Slider _sliderBldgType;
 
-        // Simulator
-        private HealthSimulator _simulator;
-
-        [Header("Secondary UI Objects and Parameters")]
-        [SerializeField] private IncrementSliderControls _incrementSlider;
+        // Other private members/variables
+        private ICivicControls _simulator;
+        private IncrementSliderControls _incrementSlider;
 
         private void Awake() {
             // Set up simulator
-            _simulator = new HealthSimulator();
             UpdateTextLabels();
 
             // Set up listeners
@@ -49,7 +45,6 @@ namespace PlayerControls {
                 int j = i;
                 _subincrement[i].onClick.AddListener(() => IncrementSeats(j));
                 _subdecrement[i].onClick.AddListener(() => DecrementSeats(j));
-                //_subslider[i].onValueChanged.AddListener(UpdateTextBldgCount);
             }
 
             // Set up slider
@@ -60,49 +55,10 @@ namespace PlayerControls {
             _textBldgType.text = $"Building Type:\n{(HealthSimulator.Constants.BuildingType)0}";
         }
 
-        public void Generate(int[] persons) {
-            _simulator.Generate(persons);
-            UpdateTextLabels();
+        public void SetSimulator(ICivicControls simulator, IncrementSliderControls incrementSlider) {
+            _incrementSlider = incrementSlider;
+            _simulator = simulator;
         }
-
-        // I don't want to use the increment slider for civic services, so this will
-        // exclusively increment and decrement by 1
-        public void IncrementBuildings() {
-            int bldgType = (int)_sliderBldgType.value;
-            _simulator.IncrementBuildings(1, bldgType);
-            UpdateTextLabels();
-        }
-
-        public void DecrementBuildings() {
-            int bldgType = (int)_sliderBldgType.value;
-            _simulator.IncrementBuildings(-1, bldgType);
-            UpdateTextLabels();
-        }
-
-        // That said, I will be using the increment slider for adjusting the number of seats
-        public void IncrementSeats(int bldgType) {
-            int incrementAmt = _incrementSlider.IncrementAmount;
-            _simulator.IncrementSeats(incrementAmt, bldgType);
-            UpdateTextLabels();
-        }
-
-        public void DecrementSeats(int bldgType) {
-            int incrementAmt = _incrementSlider.IncrementAmount;
-            _simulator.IncrementSeats(-incrementAmt, bldgType);
-            UpdateTextLabels();
-        }
-
-        public void UpdateBldgTypeText(float updatedValue) {
-            int bldgType = (int)_sliderBldgType.value;
-            _textBldgType.text = $"Building Type:\n {(HealthSimulator.Constants.BuildingType)bldgType}";
-        }
-
-        //public void UpdateTextBldgCount(float updatedValue) {
-        //    for (int i = 0; i < _textBldgCount.Length; i++) {
-        //        string updatedText = $"{_simulator.BuildingVector[i]} schools, {_simulator.SeatVector[i]} seats";
-        //        _textBldgCount[i].text = updatedText;
-        //    }
-        //}
 
         public void UpdateTextLabels() {
             // Total text
@@ -113,6 +69,44 @@ namespace PlayerControls {
                 string updatedText = $"{_simulator.BuildingVector[i]} ({_simulator.SeatCountVector[i]}/{_simulator.SeatMaxVector[i]} patient capacity)";
                 _textBldgCount[i].text = updatedText;
             }
+        }
+
+        //public void Generate(int[] persons) {
+        //    _simulator.Generate(persons);
+        //    UpdateTextLabels();
+        //}
+
+        // I don't want to use the increment slider for civic services, so this will
+        // exclusively increment and decrement by 1
+        private void IncrementBuildings() {
+            int bldgType = (int)_sliderBldgType.value;
+            _simulator.IncrementBuildings(1, bldgType);
+            UpdateTextLabels();
+        }
+
+        private void DecrementBuildings() {
+            int bldgType = (int)_sliderBldgType.value;
+            _simulator.IncrementBuildings(-1, bldgType);
+            UpdateTextLabels();
+        }
+
+        // That said, I will be using the increment slider for adjusting the number of seats
+        private void IncrementSeats(int bldgType) {
+            int incrementAmt = _incrementSlider.IncrementAmount;
+            _simulator.IncrementSeats(incrementAmt, bldgType);
+            UpdateTextLabels();
+        }
+
+        private void DecrementSeats(int bldgType) {
+            int incrementAmt = _incrementSlider.IncrementAmount;
+            _simulator.IncrementSeats(-incrementAmt, bldgType);
+            UpdateTextLabels();
+        }
+
+        // For slider
+        private void UpdateBldgTypeText(float updatedValue) {
+            int bldgType = (int)_sliderBldgType.value;
+            _textBldgType.text = $"Building Type:\n {(HealthSimulator.Constants.BuildingType)bldgType}";
         }
     }
 }

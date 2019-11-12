@@ -34,9 +34,20 @@ public class GameLoop : MonoBehaviour {
     private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
     private CivicEvaluator _civicEval = new CivicEvaluator();
 
-    private void Start() {
+    // Simulators
+    private ResidentialSimulator _resSim  = new ResidentialSimulator();
+    private CommercialSimulator  _commSim = new CommercialSimulator ();
+    private EducationSimulator   _eduSim  = new EducationSimulator  ();
+    private HealthSimulator      _hlthSim = new HealthSimulator     ();
+
+    private void Awake() {
         _textPopulation.text = "Population: 0";
         _textEmployment.text = "Employment: 0";
+
+        _resCtrl .SetSimulator(_resSim , _incrementCtrl);
+        _commCtrl.SetSimulator(_commSim, _incrementCtrl);
+        _eduCtrl .SetSimulator(_eduSim , _incrementCtrl);
+        _hlthCtrl.SetSimulator(_hlthSim, _incrementCtrl);
     }
 
     // In general:
@@ -59,35 +70,47 @@ public class GameLoop : MonoBehaviour {
         if (_timeCtrl.TickCount % Timekeeper._ticksPerDay == 0) {
             //Debug.Log("[GameLoop]: Performing daily actions.");
 
-            _resEval.GenerateDemand(_resCtrl.Simulator, _commCtrl.Simulator);
-            _workEval.GenerateDemand(_commCtrl.Simulator, _resCtrl.Simulator);
-            _civicEval.GenerateDemand(_resCtrl.Simulator);
+            _resEval.GenerateDemand(_resSim, _commSim);
+            _workEval.GenerateDemand(_commSim, _resSim);
+            _civicEval.GenerateDemand(_resSim);
 
-            _resCtrl.IncrementOccupants(_resEval.ResidentialIncrement);
-            _commCtrl.IncrementOccupants(_workEval.CommercialIncrement);
+            _resSim.IncrementOccupants(_resEval.ResidentialIncrement);
+            _commSim.IncrementOccupants(_workEval.CommercialIncrement);
+
+            // Update text labes on controls
+            _resCtrl .UpdateTextLabels();
+            _commCtrl.UpdateTextLabels();
+            _eduCtrl .UpdateTextLabels();
+            _hlthCtrl.UpdateTextLabels();
 
             // Demand
-            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resCtrl.Simulator.OccupantCount) .ToString();
-            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commCtrl.Simulator.OccupantCount).ToString();
+            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
+            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
         }
 
         // Actions to perform every in-game week
         if (_timeCtrl.TickCount % Timekeeper._ticksPerWeek == 0) {
             //Debug.Log("[GameLoop]: Performing weekly actions.");
-            _resCtrl.Generate();
-            _commCtrl.Generate();
+            _resSim.Generate();
+            _commSim.Generate();
 
             // Generate K12 education data
             int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
-            _eduCtrl.Generate(schoolchildren);
+            _eduSim.Generate(schoolchildren);
 
             // Generate data for patients
             int[] patients = new int[] { _civicEval.ClinicPatientsMax, _civicEval.HospitalPatientsMax };
-            _hlthCtrl.Generate(patients);
+            _hlthSim.Generate(patients);
+
+            // Update text labes on controls
+            _resCtrl .UpdateTextLabels();
+            _commCtrl.UpdateTextLabels();
+            _eduCtrl .UpdateTextLabels();
+            _hlthCtrl.UpdateTextLabels();
 
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
-            _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.OccupantCount * 2.5f).ToString();
-            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commCtrl.Simulator.OccupantCount * 1.75f).ToString();
+            _textPopulation.text = "Population: " + Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString();
+            _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commSim.OccupantCount * 1.75f).ToString();
         }
 
 
@@ -96,7 +119,5 @@ public class GameLoop : MonoBehaviour {
             //Debug.Log("[GameLoop]: Performing quad-weekly actions.");
 
         }
-
-    
     }
 }

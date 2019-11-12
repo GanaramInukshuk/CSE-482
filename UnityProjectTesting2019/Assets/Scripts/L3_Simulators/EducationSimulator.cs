@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimulatorInterfaces;
 
-public class EducationSimulator : CivicSimulatorSimple {
+public class EducationSimulator : CivicSimulatorSimple, ICivicControls {
 
     /// <summary>
     /// Constants specific to the EducationSimulator.

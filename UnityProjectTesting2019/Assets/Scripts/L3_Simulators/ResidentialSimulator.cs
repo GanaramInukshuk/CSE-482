@@ -21,7 +21,7 @@ using SimulatorInterfaces;
 /// <summary>
 /// A specialized version of the ZoningSimulator designed to simulate residential zoning.
 /// </summary>
-public class ResidentialSimulator : ZoningSimulator, IZoningData {
+public class ResidentialSimulator : ZoningSimulator, IZoningControls {
 
     /// <summary>
     /// Constants specific to the ResidentialSimulator.

@@ -11,7 +11,7 @@ using SimulatorInterfaces;
 /// <summary>
 /// A specialized version of the ZoningSimulator designed to simulate commercial zoning.
 /// </summary>
-public class CommercialSimulator : ZoningSimulator, IZoningData {
+public class CommercialSimulator : ZoningSimulator, IZoningControls {
 
     public static class Constants {
 
