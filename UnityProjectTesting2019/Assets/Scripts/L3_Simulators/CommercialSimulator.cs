@@ -46,7 +46,7 @@ public class CommercialSimulator : ZoningSimulator, IZoningData {
         /// <summary>
         /// An array of building sizes available to the simulator.
         /// </summary>
-        public static int[] BuildingSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 3, 4, 6, 8 });
+        public static int[] BuildingSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 4, 8 });
     }
 
     // Constructor

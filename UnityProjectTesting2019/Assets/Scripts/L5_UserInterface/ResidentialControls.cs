@@ -69,7 +69,7 @@ namespace PlayerControls {
             _sliderBldgSize.maxValue = _textBldgCount.Length - 1;
             _sliderBldgSize.wholeNumbers = true;
 
-            _textBldgSize.text = "Households: 1";
+            _textBldgSize.text = "Households per buliding:\n" + ResidentialSimulator.Constants.BuildingSizes[0];
         }
 
         // Some other notes:
@@ -123,7 +123,7 @@ namespace PlayerControls {
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = "Households: " + ResidentialSimulator.Constants.BuildingSizes[(int)updatedValue];
+            _textBldgSize.text = "Households per buliding:\n" + ResidentialSimulator.Constants.BuildingSizes[(int)updatedValue];
         }
 
         // This is used to update the rest of the text labels

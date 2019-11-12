@@ -18,6 +18,7 @@ public class GameLoop : MonoBehaviour {
     public ResidentialControls _resCtrl;
     public CommercialControls  _commCtrl;
     public EducationControls   _eduCtrl;
+    public HealthControls      _hlthCtrl;
     public IncrementSliderControls _incrementCtrl;
     public TimeControls            _timeCtrl;
     public FundingControls         _fundingCtrl;
@@ -76,8 +77,13 @@ public class GameLoop : MonoBehaviour {
             _resCtrl.Generate();
             _commCtrl.Generate();
 
+            // Generate K12 education data
             int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
             _eduCtrl.Generate(schoolchildren);
+
+            // Generate data for patients
+            int[] patients = new int[] { _civicEval.ClinicPatientsMax, _civicEval.HospitalPatientsMax };
+            _hlthCtrl.Generate(patients);
 
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
             _textPopulation.text = "Population: " + Mathf.RoundToInt(_resCtrl.Simulator.OccupantCount * 2.5f).ToString();

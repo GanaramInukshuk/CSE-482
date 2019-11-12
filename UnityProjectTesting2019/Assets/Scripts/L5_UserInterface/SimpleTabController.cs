@@ -18,6 +18,7 @@ public class SimpleTabController : MonoBehaviour {
             tabPages[i].gameObject.SetActive(true);
             tabPages[i].gameObject.SetActive(false);
         }
+        tabButtons[0].interactable = false;
         tabPages[0].gameObject.SetActive(true);
 
         // Set up listeners to each button
@@ -27,10 +28,20 @@ public class SimpleTabController : MonoBehaviour {
         }
     }
 
+    // This goes through all the pages and hides them except for the one specified by
+    // the page number, THEN specifically disables that page's corresponding button while
+    // enabling all other buttons
+    // Note: it's actually buttonName.interactable, not buttonName.enabled
+    // I mean, it's pointless to swap pages when you're already on the page you want to swap to
     public void SwapPages(int pageNumber) {
         for (int i = 0; i < tabButtons.Length; i++) {
-            if (pageNumber == i) tabPages[i].gameObject.SetActive(true);
-            else tabPages[i].gameObject.SetActive(false);
+            if (pageNumber == i) {
+                tabPages[i].gameObject.SetActive(true);
+                tabButtons[i].interactable = false;
+            } else {
+                tabPages[i].gameObject.SetActive(false);
+                tabButtons[i].interactable = true;
+            }
         }
     }
 }

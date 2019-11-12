@@ -43,7 +43,7 @@ public class MultiCounter {
     // Default constructor; sets all counts' max to be the same (or int.MaxValue if not specified)
     public MultiCounter(int vectorSize, int presetMax = int.MaxValue) {
         _vectorSize = vectorSize;
-        _max = new int[vectorSize];
+        _max   = new int[vectorSize];
         _count = new int[vectorSize];
         for (int i = 0; i < vectorSize; i++) {
             _max[i] = presetMax;
@@ -98,10 +98,21 @@ public class MultiCounter {
     }
 
     // Zeroing out or maxing counts
-    public void ZeroOutCount(int index) { if (VerifyIndex(index)) _count[index] = 0;           }
-    public void ZeroOutCount(         ) { _count = new int[_vectorSize];                       }
-    public void MaxOutCount (int index) { if (VerifyIndex(index)) _count[index] = _max[index]; }
-    public void MaxOutCount (         ) { _count = _max;                                       }
+    public void ZeroOutCount(int index) {
+        if (VerifyIndex(index)) _count[index] = 0;
+    }
+
+    public void ZeroOutCount() {
+        for (int i = 0; i < _vectorSize; i++) _count[i] = 0;
+    }
+
+    public void MaxOutCount(int index) {
+        if (VerifyIndex(index)) _count[index] = _max[index];
+    }
+
+    public void MaxOutCount() {
+        for (int i = 0; i < _vectorSize; i++) _count[i] = _max[i];
+    }
 
     // Helper functions
     // Ensures index is valid, within the range [0, _vectorSize)

@@ -61,7 +61,7 @@ public class ResidentialSimulator : ZoningSimulator, IZoningData {
         /// <summary>
         /// An array of building sizes available to the simulator.
         /// </summary>
-        public static int[] BuildingSizes = { 1, 2, 4, 6, 8, 12 };
+        public static int[] BuildingSizes = { 1, 2, 4, 8 };
     }
 
     // Constructor

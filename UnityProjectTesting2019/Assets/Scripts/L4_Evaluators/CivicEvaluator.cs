@@ -15,6 +15,9 @@ namespace DemandEvaluators {
         public int MiddleShcoolMax     { private set; get; }
         public int HighSchoolMax       { private set; get; }
 
+        public int ClinicPatientsMax   { private set; get; }
+        public int HospitalPatientsMax { private set; get; }
+
         public void GenerateDemand(IZoningData resData) { 
             int familiesIndex = (int)OccupantType.FAMILY;
             int extendedsIndex = (int)OccupantType.EXTENDED;
@@ -32,6 +35,12 @@ namespace DemandEvaluators {
             MiddleShcoolMax     = Mathf.RoundToInt(childrenPerEduLevel * 4 / 12);
             HighSchoolMax       = Mathf.RoundToInt(childrenPerEduLevel * 3 / 12);
             //Debug.Log(HighSchoolMax);
-            }
+
+            // Tentative calculations for the health simulator
+            float averageHouseholdOccupancy = 2.5f;
+            float populationUnrounded = averageHouseholdOccupancy * resData.OccupantCount;
+            ClinicPatientsMax   = Mathf.RoundToInt(populationUnrounded / 16);
+            HospitalPatientsMax = Mathf.RoundToInt(populationUnrounded / 12);
+        }
     }
 }
