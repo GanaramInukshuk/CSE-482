@@ -49,10 +49,12 @@ public class CivicSimulatorSimple {
     public int[] SeatCountVector => _seatCounter.Count;
 
     // Setters and getters for the number of seats filled and seats leftover
+    // - SeatsNeeded is the number of people to be served (it's the array passed into the generate function)
     // - SeatsFilled is the number of people being served by this facility
     // - SeatsLeft is the number of seats not filled; positive means the number of people being served
     //   is less than the number of seats available (SeatCountVector); negative means there is more
     //   "demand" than what can be satisfied
+    public int[] SeatsNeeded { private set; get; }
     public int[] SeatsFilled { private set; get; }
     public int[] SeatsLeft   { private set; get; }
 
@@ -66,13 +68,15 @@ public class CivicSimulatorSimple {
             _buildingCounter.Count = value[0];
             _seatCounter.Max   = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _buildingSeats);
             _seatCounter.Count = value[1];
-            SeatsFilled = value[2];
-            SeatsLeft   = value[3];
+            SeatsNeeded = value[2];
+            SeatsFilled = value[3];
+            SeatsLeft   = value[4];
         }
         get {
             return new int[][] {
                 _buildingCounter.Count,
                 _seatCounter.Count,
+                SeatsNeeded,
                 SeatsFilled,
                 SeatsLeft,
             };
@@ -86,6 +90,7 @@ public class CivicSimulatorSimple {
         _seatCounter     = new MultiCounter(_buildingSeats.Length, 0);
         CivicID   = civicID;
         CivicName = civicName;
+        SeatsNeeded = new int[_buildingSeats.Length];
         SeatsFilled = new int[_buildingSeats.Length];
         SeatsLeft   = new int[_buildingSeats.Length];
     }
@@ -93,6 +98,7 @@ public class CivicSimulatorSimple {
     // This setup assumes that each building serves a different demographic each
     public void Generate(int[] persons) {
         for (int i = 0; i < persons.Length; i++) {
+            SeatsNeeded[i] = persons[i];
             SeatsFilled[i] = Mathf.Clamp(persons[i], 0, _seatCounter.Count[i]);
             SeatsLeft  [i] = _seatCounter.Count[i] - persons[i];
         }

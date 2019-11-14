@@ -3295,16 +3295,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ResPanelBigger
       objectReference: {fileID: 0}
-    - target: {fileID: 8085258633575081753, guid: 7f66abfa83f8b90418d15665e74f6340,
-        type: 3}
-      propertyPath: _textBldgCount.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8085258633575081753, guid: 7f66abfa83f8b90418d15665e74f6340,
-        type: 3}
-      propertyPath: _incrementSlider
-      value: 
-      objectReference: {fileID: 1648728040}
     - target: {fileID: 421371623599929634, guid: 7f66abfa83f8b90418d15665e74f6340,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3410,6 +3400,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8085258633575081753, guid: 7f66abfa83f8b90418d15665e74f6340,
+        type: 3}
+      propertyPath: _textBldgCount.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8085258633575081753, guid: 7f66abfa83f8b90418d15665e74f6340,
+        type: 3}
+      propertyPath: _incrementSlider
+      value: 
+      objectReference: {fileID: 1648728040}
     - target: {fileID: 2849926317465660018, guid: 7f66abfa83f8b90418d15665e74f6340,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -4226,11 +4226,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EduPanelBigger
       objectReference: {fileID: 0}
-    - target: {fileID: 4748143708282224962, guid: 787b1791858de62409167f3a700aab2c,
-        type: 3}
-      propertyPath: _incrementSlider
-      value: 
-      objectReference: {fileID: 1648728040}
     - target: {fileID: 1034824674772103597, guid: 787b1791858de62409167f3a700aab2c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4336,6 +4331,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4748143708282224962, guid: 787b1791858de62409167f3a700aab2c,
+        type: 3}
+      propertyPath: _incrementSlider
+      value: 
+      objectReference: {fileID: 1648728040}
     - target: {fileID: 5472026158580527182, guid: 787b1791858de62409167f3a700aab2c,
         type: 3}
       propertyPath: _incrementSlider

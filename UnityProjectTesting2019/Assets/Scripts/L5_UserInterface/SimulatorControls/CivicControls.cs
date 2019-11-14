@@ -13,16 +13,17 @@ namespace PlayerControls {
         // Main increment and decrement buttons and buliding type slider
         public Button _buttonIncrement;
         public Button _buttonDecrement;
-        public Button[] _subincrement;
-        public Button[] _subdecrement;
+        public Button[] _buttonSubincrement;
+        public Button[] _buttonSubdecrement;
+        public Button[] _buttonQuickSwitch;
 
         // For displaying information back into the UI
-        public Text[] _textBldgCount;
-        public Text   _textTotal;
-        public Text   _textBldgType;
-        public Text   _textBldgCost;
-
-        public Slider _sliderBldgType;
+        public Text[]      _textBldgCount;
+        public Text        _textTotal;
+        public Text        _textBldgType;
+        public Text        _textBldgCost;
+        public ProgressBar _progressBar;
+        public Slider      _sliderBldgType;
 
         // Strings for use with labels; for clarity:
         // - With education, these are "School type", "school students", and "seats"
@@ -37,6 +38,7 @@ namespace PlayerControls {
         // Other private members/variables
         private ICivicControls _simulator;
         private IncrementSliderControls _incrementSlider;
+        private string[] _breakdownTextBuffer;
 
         // Awake function is for setting up the listeners and slider parameters
         void Awake() {
@@ -45,17 +47,20 @@ namespace PlayerControls {
             _buttonDecrement.onClick.AddListener(() => DecrementBuildings());
             _sliderBldgType.onValueChanged.AddListener(UpdateBldgTypeText);
 
-            // Set up listeners for the sub-buttons
-            for (int i = 0; i < _subincrement.Length; i++) {
-                int j = i;
-                _subincrement[i].onClick.AddListener(() => IncrementSeats(j));
-                _subdecrement[i].onClick.AddListener(() => DecrementSeats(j));
-            }
-
             // Set up slider
             _sliderBldgType.minValue = 0;
             _sliderBldgType.maxValue = _textBldgCount.Length - 1;
             _sliderBldgType.wholeNumbers = true;
+
+            // Set up listeners for the sub-buttons
+            // This also sets up the quick-switch buttons which allow for quickly switching
+            // between building types without using the slider
+            for (int i = 0; i < _buttonSubincrement.Length; i++) {
+                int j = i;
+                _buttonSubincrement[i].onClick.AddListener(() => IncrementSeats(j));
+                _buttonSubdecrement[i].onClick.AddListener(() => DecrementSeats(j));
+                _buttonQuickSwitch[i].onClick.AddListener(() => QuickSwitch(j));
+            }
         }
 
         // This is to receive the simulator and increment slider from the game loop, and to set
@@ -63,34 +68,50 @@ namespace PlayerControls {
         public void SetSimulator(ICivicControls simulator, IncrementSliderControls incrementSlider) {
             _incrementSlider = incrementSlider;
             _simulator = simulator;
+
+            _breakdownTextBuffer = new string[_simulator.ConstBuildingTypes.Length];
+
             _textBldgType.text = $"{_labelBuildingType}:\n{_simulator.ConstBuildingTypes[0]}";
             UpdateTextLabels();
         }
 
         public void UpdateTextLabels() {
-            // Total text
-            string breakdownText = $"{_simulator.CivicName}: ";
-            int numTypes = _simulator.SeatsFilled.Length;
+            //// Total text
+            //string breakdownText = $"{_simulator.CivicName}: ";
 
-            // Depending on how many building types there are, special formatting is needed
-            // For one type, just print the one type
-            // For two types, format it as "ABC and XYZ"
-            // For three types, format it as "ABC, XYZ, and 123" using a for loop
-            // Also note that I'm imposing a limit at three building types because that's as much as I can fit on the screen
-            // NOTE THAT ALL THE ENUMS ARE IN ALLCAPS, SO USE ToLower() TO CONVERT TO LOWERCASE
-            if (numTypes == 1) {
-                breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
-            } else if (numTypes == 2) {
-                breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()} and {_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
-            } else {
-                for (int i = 0; i < numTypes; i++) {
-                    breakdownText += $"{_simulator.SeatsFilled[i]} {_simulator.ConstBuildingTypes[i].ToLower()}";
-                    if (i != numTypes - 1) breakdownText += ", ";       // So that every entry is separated by commas
-                    if (i == numTypes - 2) breakdownText += "and ";     // ...except that the last entry gets an "and" between it and its (Oxford) comma
-                }
+            //// Depending on how many building types there are, special formatting is needed
+            //// For one type, just print the one type
+            //// For two types, format it as "ABC and XYZ"
+            //// For three types, format it as "ABC, XYZ, and 123" using a for loop
+            //// Also note that I'm imposing a limit at three building types because that's as much as I can fit on the screen
+            //// NOTE THAT ALL THE ENUMS ARE IN ALLCAPS, SO USE ToLower() TO CONVERT TO LOWERCASE
+            //int numTypes = _simulator.SeatsFilled.Length;
+            //if (numTypes == 1) {
+            //    breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
+            //} else if (numTypes == 2) {
+            //    breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()} and {_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
+            //} else {
+            //    for (int i = 0; i < numTypes; i++) {
+            //        breakdownText += $"{_simulator.SeatsFilled[i]} {_simulator.ConstBuildingTypes[i].ToLower()}";
+            //        if (i != numTypes - 1) breakdownText += ", ";       // So that every entry is separated by commas
+            //        if (i == numTypes - 2) breakdownText += "and ";     // ...except that the last entry gets an "and" between it and its (Oxford) comma
+            //    }
+            //}
+            //breakdownText += $" {_labelPersonToServe}";
+            //_textTotal.text = breakdownText;
+
+            // Update the breakdown text with the proper text for the current building type
+            // Due to the limited space available on the progress bar, only the breakdown text for
+            // the currently selected building type is displayed; the breakdown text for all
+            // of the building types are generated at once and stored in a buffer, and the current
+            // value of _sliderBldgType is used as the index for that buffer to show the breakdown
+            // text
+            for (int i = 0; i < _simulator.ConstBuildingTypes.Length; i++) {
+                string personsToServe = $"{_simulator.ConstBuildingTypes[i].ToLower()} {_labelPersonToServe}";    // To make it easier to write out the string
+                _breakdownTextBuffer[i] = $"{_simulator.CivicName}: {_simulator.SeatsFilled[i]} out of {_simulator.SeatsNeeded[i]} {personsToServe} (out of {_simulator.SeatCountVector[i]} {_labelGeneralSeatName} available)";
             }
-            breakdownText += $" {_labelPersonToServe}";
-            _textTotal.text = breakdownText;
+            int index = (int)_sliderBldgType.value;
+            _textTotal.text = _breakdownTextBuffer[index];
 
             // Seat counts
             for (int i = 0; i < _textBldgCount.Length; i++) {
@@ -126,10 +147,19 @@ namespace PlayerControls {
             UpdateTextLabels();
         }
 
+        // For quickly switching between building sizes
+        private void QuickSwitch(int i) {
+            _sliderBldgType.value = i;
+        }
+
         // For slider
+        // This also updates the text on the progress bar
         private void UpdateBldgTypeText(float updatedValue) {
             int bldgType = (int)_sliderBldgType.value;
             _textBldgType.text = $"{_labelBuildingType}:\n{_simulator.ConstBuildingTypes[bldgType]}";
+
+            int index = (int)_sliderBldgType.value;
+            _textTotal.text = _breakdownTextBuffer[index];
         }
     }
 }

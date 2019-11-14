@@ -14,18 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buttonIncrement: {fileID: 9193024806313115318}
   _buttonDecrement: {fileID: 379610374403090273}
-  _subincrement:
+  _buttonSubincrement:
   - {fileID: 7485686401101704628}
   - {fileID: 797811060921136757}
-  _subdecrement:
+  _buttonSubdecrement:
   - {fileID: 7941714396977370300}
   - {fileID: 8182005248248616195}
+  _buttonQuickSwitch:
+  - {fileID: 3983815864111272175}
+  - {fileID: 3529112272266477896}
   _textBldgCount:
   - {fileID: 2953108956851478826}
   - {fileID: 3670518959596558708}
   _textTotal: {fileID: 6011983060027847412}
   _textBldgType: {fileID: 6210964415226370987}
   _textBldgCost: {fileID: 3802561752089132651}
+  _progressBar: {fileID: 0}
   _sliderBldgType: {fileID: 1328567862602221428}
   _labelBuildingType: Healthcare facility
   _labelPersonToServe: patients
@@ -277,6 +281,31 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0.2705882
       objectReference: {fileID: 0}
+    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -240
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 480
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 480
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656715160042850662, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7a504a93bbf0504ebbf7ce6091019bb, type: 3}
 --- !u!1 &6011983060439441788 stripped
@@ -427,5 +456,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3983815864111272175 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8024846481006052063, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6346873905902506544}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3529112272266477896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7560783845715972984, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6346873905902506544}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

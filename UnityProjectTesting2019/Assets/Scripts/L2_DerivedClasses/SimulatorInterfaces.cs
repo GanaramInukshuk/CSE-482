@@ -47,6 +47,7 @@ namespace SimulatorInterfaces {
         int[] BuildingVector  { get; }
         int[] SeatMaxVector   { get; }   
         int[] SeatCountVector { get; }
+        int[] SeatsNeeded { get; }
         int[] SeatsFilled { get; }
         int[] SeatsLeft   { get; }
     }

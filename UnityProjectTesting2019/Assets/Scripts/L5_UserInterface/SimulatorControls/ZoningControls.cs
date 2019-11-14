@@ -16,6 +16,7 @@ namespace PlayerControls {
         public Button      _buttonIncrement;
         public Button      _buttonDecrement;
         public Button      _buttonIncrementRandom;
+        public Button[]    _buttonQuickSwitch;
         public Text[]      _textBldgCount;
         public Text        _textTotal;
         public Text        _textBldgSize;
@@ -47,6 +48,14 @@ namespace PlayerControls {
             _sliderBldgSize.minValue = 0;
             _sliderBldgSize.maxValue = _textBldgCount.Length - 1;
             _sliderBldgSize.wholeNumbers = true;
+
+            // Set up listeners to the "quick switch" buttons
+            // These buttons allow for quickly switching between building sizes by clicking what
+            // appears to be an image graphic without having to use the slider
+            for (int i = 0; i < _buttonQuickSwitch.Length; i++) {
+                int j = i;
+                _buttonQuickSwitch[i].onClick.AddListener(() => QuickSwitch(j));
+            }
         }
 
         // This is to receive the simulator and increment slider from the game loop, and to set
@@ -101,6 +110,11 @@ namespace PlayerControls {
             int[]   bldgAdditionVector = DistributionGen.Histogram.GenerateByWeights(incrementAmount, bldgDistribution);
             _simulator.IncrementBldgs(bldgAdditionVector);
             UpdateTextLabels();
+        }
+
+        // For quickly switching between building sizes
+        private void QuickSwitch(int i) {
+            _sliderBldgSize.value = i;
         }
 
         private void UpdateBldgSizeText(float updatedValue) {
