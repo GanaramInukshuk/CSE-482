@@ -41,18 +41,20 @@ public class CivicSimulatorSimple {
     public string CivicName { private set; get; }
 
     // Getters for individual vectors of data
+    // - BuildingVector is the number of buildings available
+    // - SeatMaxVector is the maximum number of seats across all buildings
+    // - SeatCountVector is the number of seats made available
     public int[] BuildingVector  => _buildingCounter.Count;
     public int[] SeatMaxVector   => _seatCounter.Max;
     public int[] SeatCountVector => _seatCounter.Count;
 
-    // Setter/getter for the current capacity of each building type, IE, how many people
-    // are currently being served for each building type
+    // Setters and getters for the number of seats filled and seats leftover
+    // - SeatsFilled is the number of people being served by this facility
+    // - SeatsLeft is the number of seats not filled; positive means the number of people being served
+    //   is less than the number of seats available (SeatCountVector); negative means there is more
+    //   "demand" than what can be satisfied
     public int[] SeatsFilled { private set; get; }
-
-    // Setter/getter for leftover capacity
-    // A positive leftover capacity means that there are more seats than needed
-    // A negative leftover capacity means that there is more "demand" than what can be satisfied
-    public int[] SeatsLeft { private set; get; }
+    public int[] SeatsLeft   { private set; get; }
 
     // For savedata
     public int[][] DataVector {

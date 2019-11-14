@@ -13,44 +13,33 @@ using SimulatorInterfaces;
 /// </summary>
 public class CommercialSimulator : ZoningSimulator, IZoningControls {
 
+    // Constants
+    // - OccupantType is an enum describing each of the occupant types
+    // - Building sizes represents different density levels of a given zoning type
+    // - Occupant weights represent the probabilities that an occupant is one of the types described below; note that
+    //   these weights must, 1, add up to 1.0f, and 2, match with the enum described above
+    /// <summary>
+    /// A static class containing the simulator's accompanying constants. This contains:
+    /// <para>An enum for each of the occupant types.</para>
+    /// <para>An array of building sizes.</para>
+    /// <para>An array of probabilities (weights) describing the probability that
+    /// an occupant is one of the types described by the enum.</para>
+    /// </summary>
     public static class Constants {
-
-        // Enum for occupant types
-        // Make sure the enums line up with the occupant weights listed below
-        /// <summary>
-        /// An enum that describes the occupant types available to the simulator.
-        /// <para>Current types are: GROCERY, RETAIL, FOOD, SERVICE, AUTO</para>
-        /// </summary>
         public enum OccupantType { GROCERY, RETAIL, FOOD, SERVICE, AUTO };
-
-        // Occupant weights
-        // In the context of commercial zoning, these represent the percentages at which a unit of employment
-        // is of one of the following types:
-        // - Grocery - Self-explanatory
-        // - Retail - Retail stores (clothing, furniture, etc)
-        // - Food - restaurants, including fast food
-        // - Service - other commercial services, such as door-to-door services
-        // - Automotive - gas stations and auto shops
-        /// <summary>
-        /// An array of probabilities that describes the probability that an occupant is one of the types
-        /// described by the OccupantType enum.
-        /// </summary>
-        public static float[] OccupantWeights = { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
-
-        // Building sizes
-        // Basically, units of employment are one-to-one with households, and each household contains at least
-        // one employable person, so depending on household averages, one household should have more than one
-        // employable person; if we take the optimistic average of 2 employable persons per household (which is
-        // almost certainly the case with certain demographics), the smallest building size will employ 8 people
-        // (that is, unless I change the first parameter in the ScalarVectorMult function)
-        /// <summary>
-        /// An array of building sizes available to the simulator.
-        /// </summary>
-        public static int[] BuildingSizes = ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 4, 8 });
+        public static int  [] BuildingSizes   => ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 4, 8 });
+        public static float[] OccupantWeights => new float[] { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
     }
 
+    // Getters for the constants listed above
+    // This is in case a class needs to be fed these things directly, IE, cannot be accessed
+    // via Simulator.Constants.BuildingSizes, for example
+    public int   [] ConstBuildingSizes   => Constants.BuildingSizes  ;
+    public float [] ConstOccupantWeights => Constants.OccupantWeights;
+    public string[] ConstOccupantTypes   => System.Enum.GetNames(typeof(Constants.OccupantType));
+
     // Constructor
-    public CommercialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 1 , "Commercial") { }
+    public CommercialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 1 , "COMMERCIAL") { }
 
     // Member functions need not be overridden; their base functionality is plenty already
 }

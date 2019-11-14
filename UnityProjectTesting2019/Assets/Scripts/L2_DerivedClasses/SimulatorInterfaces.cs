@@ -12,9 +12,10 @@ using UnityEngine;
 // - CivicSimulators may inherit from IUpkeep
 
 namespace SimulatorInterfaces {
-    // This interface, provides basic zoning information (the number of buildings,
-    // the number of occupants, and the max occupancy)
+    // For basic information about a zoning simulator
     public interface IZoningData {
+        string ZoningName { get; }
+        int    ZoningID   { get; }
         int[] BuildingVector { get; }
         int[] OccupantVector { get; }
         int TotalBuildings   { get; }
@@ -22,8 +23,15 @@ namespace SimulatorInterfaces {
         int OccupantMax      { get; }
     }
 
-    // This interface is for a zoning simulator's controls and also inherits IZoningData
-    public interface IZoningControls : IZoningData {
+    // For accessing a zoning simulator's constants
+    public interface IZoningConstants {
+        string[] ConstOccupantTypes   { get; }
+        float [] ConstOccupantWeights { get; }
+        int   [] ConstBuildingSizes   { get; }
+    }
+
+    // Sor a zoning simulator's controls; inherits IZoningData and IZoningConstants
+    public interface IZoningControls : IZoningData, IZoningConstants {
         void Generate(float[] affectors, int incrementAmt);
         void Generate(int incrementAmt);
         void IncrementBldgs(int[] amt);
@@ -32,7 +40,10 @@ namespace SimulatorInterfaces {
         void PrintDebugString();
     }
 
+    // For basic information about a civic simulator
     public interface ICivicData {
+        string CivicName { get; }
+        int    CivicID   { get; }
         int[] BuildingVector  { get; }
         int[] SeatMaxVector   { get; }   
         int[] SeatCountVector { get; }
@@ -40,7 +51,14 @@ namespace SimulatorInterfaces {
         int[] SeatsLeft   { get; }
     }
 
-    public interface ICivicControls : ICivicData {
+    // For accessing a civic simulator's constants
+    public interface ICivicConstants {
+        string[] ConstBuildingTypes { get; }
+        int   [] ConstBuildingSeats { get; }
+    }
+
+    // For a civic simulator's controls; inherits ICivicData and ICivicConstants
+    public interface ICivicControls : ICivicData, ICivicConstants {
         void Generate(int[] persons);
         void IncrementBuildings(int incrementAmt, int bldgType);
         void IncrementSeats(int incrementAmt, int bldgType);

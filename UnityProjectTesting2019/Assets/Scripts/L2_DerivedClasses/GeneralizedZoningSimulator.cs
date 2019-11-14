@@ -146,21 +146,6 @@ public class ZoningSimulator {
         _occManager  = new OccupantManager(occWeights);
     }
 
-    //// Constructor; this accepts a ZoningSimulatorSettings object that contains all the data needed
-    //// for a zoning simulator
-    //public ZoningSimulator(ZoningSimulatorSettings z) {
-    //    ZoningID   = z.ZoningID;
-    //    ZoningName = z.ZoningName;
-    //    _bldgCounter = new BuildingCounter(z.BldgSizes);
-    //    _occManager  = new OccupantManager(z.OccWeights);
-    //}
-
-    //// Constructor; use this if the zoning simulator is itself a scriptable object
-    //public ZoningSimulator() {
-    //    _bldgCounter = new BuildingCounter(_bldgSizes);
-    //    _occManager  = new OccupantManager(_occWeights);
-    //}
-
     // Generate function that uses affectors and accepts an increment; default value for incrementAmt is zero,
     // effectively making that parameter optional
     public void Generate(float[] affectors, int incrementAmt = 0) {

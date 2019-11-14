@@ -121,10 +121,12 @@
     <Compile Include="Assets\Scripts\L5_UserInterface\IncrementSliderControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\InterfaceInterfaces.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\SimpleTabController.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\CivicControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\CommercialControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\EducationControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\HealthControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\ResidentialControls.cs" />
+    <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\ZoningControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\TimeControls.cs" />
     <Compile Include="Assets\Scripts\Other\ProgressBar.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4748143708282224962
+--- !u!114 &4914286129561301483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,17 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1034824674772103598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19e538f3e2ff9d459da42d9668fc3c4, type: 3}
+  m_Script: {fileID: 11500000, guid: a58d89e2a9c1dbc48bd99fea64750df8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonIncrement: {fileID: 2496852816066555492}
   _buttonDecrement: {fileID: 6374300659128760243}
-  _textBldgCount:
-  - {fileID: 8487378476894597624}
-  - {fileID: 7141354109291400118}
-  - {fileID: 8053272558917110182}
-  _textTotal: {fileID: 1034824674377277990}
-  _textBldgType: {fileID: 793603338093054841}
   _subincrement:
   - {fileID: 4237945714397855078}
   - {fileID: 7401700982043210614}
@@ -28,8 +22,17 @@ MonoBehaviour:
   - {fileID: 3676087489296073838}
   - {fileID: 3205565632874906629}
   - {fileID: 3224268777739552209}
+  _textBldgCount:
+  - {fileID: 8487378476894597624}
+  - {fileID: 7141354109291400118}
+  - {fileID: 8053272558917110182}
+  _textTotal: {fileID: 1034824674377277990}
+  _textBldgType: {fileID: 793603338093054841}
+  _textBldgCost: {fileID: 7635814645645930169}
   _sliderBldgType: {fileID: 5711321187042645926}
-  _incrementSlider: {fileID: 0}
+  _labelBuildingType: School Type
+  _labelPersonToServe: school students
+  _labelGeneralSeatName: seats
 --- !u!1001 &371007118480949986
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -240,6 +243,18 @@ MonoBehaviour:
 --- !u!114 &793603338093054841 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1019334184149911963, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 371007118480949986}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7635814645645930169 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7841270480169446491, guid: e7a504a93bbf0504ebbf7ce6091019bb,
     type: 3}
   m_PrefabInstance: {fileID: 371007118480949986}
   m_PrefabAsset: {fileID: 0}

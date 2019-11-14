@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &8085258633575081753
+--- !u!114 &7019621908659790649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 421371623599929633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e02c5886c2edf24a8b092431440d252, type: 3}
+  m_Script: {fileID: 11500000, guid: a778fc8c045525943bcdb92a70752cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonIncrement: {fileID: 2964484168430872299}
@@ -22,9 +22,11 @@ MonoBehaviour:
   - {fileID: 3695842155061750234}
   _textTotal: {fileID: 421371623456828073}
   _textBldgSize: {fileID: 37751479613391862}
+  _textBldgCost: {fileID: 5554283589129506004}
   _progressBar: {fileID: 7975174437849691701}
   _sliderBldgSize: {fileID: 4956172431754862377}
-  _incrementSlider: {fileID: 0}
+  _labelBuildingSize: Households per building
+  _labelGeneralOccupantName: households
 --- !u!1001 &3061050311246405194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -491,6 +493,18 @@ MonoBehaviour:
 --- !u!114 &37751479613391862 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3097658298496376252, guid: c2e37d6934406524a80835a3081b72a5,
+    type: 3}
+  m_PrefabInstance: {fileID: 3061050311246405194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5554283589129506004 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7453402911010738846, guid: c2e37d6934406524a80835a3081b72a5,
     type: 3}
   m_PrefabInstance: {fileID: 3061050311246405194}
   m_PrefabAsset: {fileID: 0}

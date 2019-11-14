@@ -14,11 +14,15 @@ public class GameLoop : MonoBehaviour {
     // so those UI objects require accessors to the simulator's data (setters/getters basically)
     // - Most if not all zoning and civic controls: their simulators's interfaces and datavectors (for savedata)
     // - 
-    [Header("References to Main UI Objects")]
-    public ResidentialControls _resCtrl;
-    public CommercialControls  _commCtrl;
-    public EducationControls   _eduCtrl;
-    public HealthControls      _hlthCtrl;
+    [Header("Zoning Simulators")]
+    public ZoningControls _resCtrl;
+    public ZoningControls _commCtrl;
+
+    [Header("Civic Simulators")]
+    public CivicControls _eduCtrl;
+    public CivicControls _hlthCtrl;
+
+    [Header("Other controls")]
     public IncrementSliderControls _incrementCtrl;
     public TimeControls            _timeCtrl;
     public FundingControls         _fundingCtrl;
@@ -32,7 +36,7 @@ public class GameLoop : MonoBehaviour {
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
     private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
-    private CivicEvaluator _civicEval = new CivicEvaluator();
+    private CivicEvaluator       _civicEval = new CivicEvaluator();
 
     // Simulators
     private ResidentialSimulator _resSim  = new ResidentialSimulator();

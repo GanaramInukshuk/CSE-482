@@ -11,10 +11,10 @@ namespace PlayerControls {
 
         // Main UI objects
         [Header("Main UI Objects")]
-        [SerializeField] private Image  _image;
-        [SerializeField] private Slider _incrementSlider;
-        [SerializeField] private Text   _textIncrementAmount;
-        [SerializeField] private int    _sliderMaxValue = 64;
+        public Image  _image;
+        public Slider _incrementSlider;
+        public Text   _textIncrementAmount;
+        public int    _sliderMaxValue = 64;
 
         // Other members
         public int IncrementAmount { private set; get; } = 1;

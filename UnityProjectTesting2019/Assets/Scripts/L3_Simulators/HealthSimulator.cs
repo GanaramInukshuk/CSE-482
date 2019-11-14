@@ -6,20 +6,21 @@ using SimulatorInterfaces;
 public class HealthSimulator : CivicSimulatorSimple, ICivicControls {
 
     /// <summary>
-    /// Constants specific to the EducationSimulator.
+    /// A static class containing the simulator's accompanying constants. This contains:
+    /// <para>An enum for each of the building types.</para>
+    /// <para>An array for the number of seats per building type.</para>
     /// </summary>
     public static class Constants {
-
-        // Enum for building types
         public enum BuildingType { CLINIC, HOSPITAL };
-
-        // Array for bicounter ratios
-        // How many patients can each building type accommodate?
-        public static int[] BuildingSeats = { 200, 1000 };
+        public static int[] BuildingSeats = { 200, 600 };
     }
 
+    // For getting the simulator's constants
+    public int   [] ConstBuildingSeats => Constants.BuildingSeats;
+    public string[] ConstBuildingTypes => System.Enum.GetNames(typeof(Constants.BuildingType));
+
     // Constructor
-    public HealthSimulator() : base(Constants.BuildingSeats, 1, "Health") { }
+    public HealthSimulator() : base(Constants.BuildingSeats, 1, "HEALTH") { }
 
     // Member functions need not be overridden; their base functionality is plenty already
 }
