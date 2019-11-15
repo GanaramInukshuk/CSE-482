@@ -376,11 +376,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4444749566504743087}
     m_Modifications:
-    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
-        type: 3}
-      propertyPath: m_Name
-      value: IncomeBar
-      objectReference: {fileID: 0}
     - target: {fileID: 1707620649240092275, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -485,6 +480,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
+        type: 3}
+      propertyPath: m_Name
+      value: IncomeBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1561366366225786720, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
@@ -815,11 +820,13 @@ MonoBehaviour:
   _hlthCtrl: {fileID: 124530134}
   _incrementCtrl: {fileID: 1648728040}
   _timeCtrl: {fileID: 164453189}
-  _fundingCtrl: {fileID: 0}
   _textPopulation: {fileID: 443423745}
   _textEmployment: {fileID: 159630873}
   _textResidentialDemand: {fileID: 73524708}
   _textCommercialDemand: {fileID: 1382320097}
+  _textFunds: {fileID: 4444749566490397186}
+  _textIncome: {fileID: 112231777}
+  _initialFunds: 200000
 --- !u!1 &395268258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2105,11 +2112,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4444749566504743087}
     m_Modifications:
-    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
-        type: 3}
-      propertyPath: m_Name
-      value: ExpensesBar
-      objectReference: {fileID: 0}
     - target: {fileID: 1707620649240092275, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2214,6 +2216,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
+        type: 3}
+      propertyPath: m_Name
+      value: ExpensesBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707620649240092274, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1561366366225786720, guid: 70b1a9badd3c9a24f95f1c73bf8fdefc,
         type: 3}
@@ -3627,6 +3639,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TimeSpeedPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2868926825576796300, guid: 0d3395528f2677f4ca570f7e7d21034a,
+        type: 3}
+      propertyPath: _fineIncrements
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2868926825576796303, guid: 0d3395528f2677f4ca570f7e7d21034a,
         type: 3}

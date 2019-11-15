@@ -33,14 +33,17 @@ namespace PlayerControls {
 
         // Other private members/variables
         private IZoningControls _simulator;
-        private IncrementSliderControls _incrementSlider;
+        //private IncrementSliderControls _incrementSlider;
+        private FundingManager _fundingMgr;
+
+        private Slider _incrementSlider;
 
         // Awake function is for setting up the listeners and slider parameters
         void Awake() {
             // Set up listeners
             _buttonIncrement.onClick.AddListener(() => IncrementBuildings());
             _buttonDecrement.onClick.AddListener(() => DecrementBuildings());
-            _buttonIncrementRandom.onClick.AddListener(() => IncrementRandom());
+            //_buttonIncrementRandom.onClick.AddListener(() => IncrementRandom());
             _sliderBldgSize.onValueChanged.AddListener(UpdateBldgSizeText);
 
             // Set up slider parameters
@@ -60,10 +63,14 @@ namespace PlayerControls {
 
         // This is to receive the simulator and increment slider from the game loop, and to set
         // all the labels afterwards
-        public void SetSimulator(IZoningControls simulator, IncrementSliderControls incrementSlider) {
+        // This also receives the funding manager that handles construction costs and demolition costs (or recouped funds from demolition)
+        public void SetSimulator(IZoningControls simulator, Slider incrementSlider, FundingManager fundingManager) {
             _incrementSlider = incrementSlider;
             _simulator = simulator;
-            _textBldgSize.text = _labelBuildingSize + ":\n" + _simulator.ConstBuildingSizes[0];
+            _fundingMgr = fundingManager;
+
+            _incrementSlider.onValueChanged.AddListener(UpdateConstructionCostText);
+            UpdateBldgSizeText(0);
             UpdateTextLabels();
         }
 
@@ -87,29 +94,46 @@ namespace PlayerControls {
         // Clicking this button adds residential buildings of a particular size determined by
         // the slider; that slider value is used as the index that determines which building
         // size to increment by
+        // This action can only be successfully performed if there is sufficient funds to do so
         private void IncrementBuildings() {
-            int incrementAmount = _incrementSlider.IncrementAmount;
-            _simulator.IncrementBldgs(incrementAmount, (int)_sliderBldgSize.value);
-            UpdateTextLabels();
+            int incrementAmount = (int)_incrementSlider.value;
+            int buildingIndex   = (int)_sliderBldgSize.value;                       // Pass this to _simulator.IncrementBldgs
+            int buildingSize    = _simulator.ConstBuildingSizes[buildingIndex];     // Pass this to _fundMgr.ConstructZoning
+
+            if (_fundingMgr.ConstructZoning(incrementAmount, buildingSize)) {
+                _simulator.IncrementBldgs(incrementAmount, buildingIndex);
+                UpdateTextLabels();
+            }
         }
 
         // Clicking this button decrements housing from the city; much like the increment button
         // the size of buildings being demolished is determined by the slider
+        // This action can only be successfully performed if there is sufficient funds to do so
         private void DecrementBuildings() {
-            int incrementAmount = _incrementSlider.IncrementAmount;
-            _simulator.IncrementBldgs(-incrementAmount, (int)_sliderBldgSize.value);
-            UpdateTextLabels();
+            int buildingIndex = (int)_sliderBldgSize.value;                       // Pass this to _simulator.IncrementBldgs
+            int buildingSize  = _simulator.ConstBuildingSizes[buildingIndex];     // Pass this to _fundMgr.ConstructZoning
+
+            // If the increment amount exceeds the number of buildings available for that size,
+            // replace the increment amount with the number of buildings
+            // Or just use mathf.min
+            int incrementAmount = Mathf.Min(_simulator.BuildingVector[buildingIndex], (int)_incrementSlider.value);
+
+            if (_fundingMgr.DemolishZoning(incrementAmount, buildingSize)) {
+                _simulator.IncrementBldgs(-incrementAmount, buildingIndex);
+                UpdateTextLabels();
+            }
         }
 
         // This adds a random amount of buildings in a proportion based on the distribution of building
         // sizes built already
+        // I'm, uhh, actually gonna deactivate this feature...
         private void IncrementRandom() {
-            int     incrementAmount    = _incrementSlider.IncrementAmount;
-            int[]   bldgVector         = _simulator.BuildingVector;
-            float[] bldgDistribution   = DistributionGen.Probability.GenerateFromHist(bldgVector);
-            int[]   bldgAdditionVector = DistributionGen.Histogram.GenerateByWeights(incrementAmount, bldgDistribution);
-            _simulator.IncrementBldgs(bldgAdditionVector);
-            UpdateTextLabels();
+            //int     incrementAmount    = _incrementSlider.IncrementAmount;
+            //int[]   bldgVector         = _simulator.BuildingVector;
+            //float[] bldgDistribution   = DistributionGen.Probability.GenerateFromHist(bldgVector);
+            //int[]   bldgAdditionVector = DistributionGen.Histogram.GenerateByWeights(incrementAmount, bldgDistribution);
+            //_simulator.IncrementBldgs(bldgAdditionVector);
+            //UpdateTextLabels();
         }
 
         // For quickly switching between building sizes
@@ -117,8 +141,19 @@ namespace PlayerControls {
             _sliderBldgSize.value = i;
         }
 
+        // For updating the text for the building size; this also displays the construction cost per building
         private void UpdateBldgSizeText(float updatedValue) {
-            _textBldgSize.text = _labelBuildingSize + ":\n" + _simulator.ConstBuildingSizes[(int)updatedValue];
+            int buildingSize = _simulator.ConstBuildingSizes[(int)updatedValue];
+            int incrementAmt = (int)_incrementSlider.value;
+            _textBldgSize.text = _labelBuildingSize + ":\n" + buildingSize;
+            _textBldgCost.text = "Cost: " + _fundingMgr.CalculateZoningConstructionCost(buildingSize) * incrementAmt + "\nDemolition: " + _fundingMgr.CalculateZoningDemolitionCost(buildingSize) * incrementAmt;
+        }
+        
+        // For updating the construction/demolition cost whenever the increment slider is changed
+        private void UpdateConstructionCostText(float updatedValue) {
+            int incrementAmt = (int)updatedValue;
+            int buildingSize = _simulator.ConstBuildingSizes[(int)_sliderBldgSize.value];
+            _textBldgCost.text = "Cost: " + _fundingMgr.CalculateZoningConstructionCost(buildingSize) * incrementAmt + "\nDemolition: " + _fundingMgr.CalculateZoningDemolitionCost(buildingSize) * incrementAmt;
         }
     }
 }

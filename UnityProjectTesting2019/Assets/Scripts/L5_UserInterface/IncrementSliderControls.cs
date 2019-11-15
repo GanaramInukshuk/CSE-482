@@ -14,6 +14,8 @@ namespace PlayerControls {
         public Image  _image;
         public Slider _incrementSlider;
         public Text   _textIncrementAmount;
+
+        [Header("Main Parameters")]
         public int    _sliderMaxValue = 64;
 
         // Other members

@@ -25,18 +25,25 @@ public class GameLoop : MonoBehaviour {
     [Header("Other controls")]
     public IncrementSliderControls _incrementCtrl;
     public TimeControls            _timeCtrl;
-    public FundingControls         _fundingCtrl;
+    //public FundingControls         _fundingCtrl;
 
     [Header("References to other UI objects")]
     public Text _textPopulation;
     public Text _textEmployment;
     public Text _textResidentialDemand;
     public Text _textCommercialDemand;
+    public Text _textFunds;
+    public Text _textIncome;
+
+    [Header("Parameters")]
+    public int _initialFunds = 200000;
 
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
     private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
     private CivicEvaluator       _civicEval = new CivicEvaluator();
+
+    private FundingManager _fundingMgr;
 
     // Simulators
     private ResidentialSimulator _resSim  = new ResidentialSimulator();
@@ -48,8 +55,13 @@ public class GameLoop : MonoBehaviour {
         _textPopulation.text = "Population: 0";
         _textEmployment.text = "Employment: 0";
 
-        _resCtrl .SetSimulator(_resSim , _incrementCtrl);
-        _commCtrl.SetSimulator(_commSim, _incrementCtrl);
+        _fundingMgr = new FundingManager(_initialFunds, _textFunds, _textIncome);
+
+        _textFunds.text = _fundingMgr.Funds.ToString();
+        _textIncome.text = "0";
+
+        _resCtrl .SetSimulator(_resSim , _incrementCtrl._incrementSlider, _fundingMgr);
+        _commCtrl.SetSimulator(_commSim, _incrementCtrl._incrementSlider, _fundingMgr);
         _eduCtrl .SetSimulator(_eduSim , _incrementCtrl);
         _hlthCtrl.SetSimulator(_hlthSim, _incrementCtrl);
     }
