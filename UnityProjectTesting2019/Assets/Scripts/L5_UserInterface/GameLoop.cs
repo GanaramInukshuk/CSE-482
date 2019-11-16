@@ -62,8 +62,8 @@ public class GameLoop : MonoBehaviour {
 
         _resCtrl .SetSimulator(_resSim , _incrementCtrl._incrementSlider, _fundingMgr);
         _commCtrl.SetSimulator(_commSim, _incrementCtrl._incrementSlider, _fundingMgr);
-        _eduCtrl .SetSimulator(_eduSim , _incrementCtrl);
-        _hlthCtrl.SetSimulator(_hlthSim, _incrementCtrl);
+        _eduCtrl .SetSimulator(_eduSim , _incrementCtrl._incrementSlider, _fundingMgr);
+        _hlthCtrl.SetSimulator(_hlthSim, _incrementCtrl._incrementSlider, _fundingMgr);
     }
 
     // In general:
@@ -127,6 +127,11 @@ public class GameLoop : MonoBehaviour {
             // These calculations are tentative until I get the population simulator up and running (and separated from the ResSim)
             _textPopulation.text = "Population: " + Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString();
             _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commSim.OccupantCount * 1.75f).ToString();
+
+            // Calculate the total number of civic seats available
+            int totalCivicSeats = DistributionGen.Histogram.SumOfElements(_eduSim.SeatCountVector) + DistributionGen.Histogram.SumOfElements(_hlthSim.SeatCountVector);
+            int totalZoningOccupants = _resSim.OccupantCount + _commSim.OccupantCount;
+            _fundingMgr.GenerateIncome(totalZoningOccupants, totalCivicSeats);
         }
 
 

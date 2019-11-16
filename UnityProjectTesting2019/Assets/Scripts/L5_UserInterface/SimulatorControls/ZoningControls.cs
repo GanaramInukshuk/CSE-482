@@ -17,6 +17,8 @@ namespace PlayerControls {
         public Button      _buttonDecrement;
         public Button      _buttonIncrementRandom;
         public Button[]    _buttonQuickSwitch;
+
+        // For displaying information back into the UI
         public Text[]      _textBldgCount;
         public Text        _textTotal;
         public Text        _textBldgSize;

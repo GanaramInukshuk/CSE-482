@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4914286129561301483
+--- !u!114 &1638409480242359805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33,11 +33,12 @@ MonoBehaviour:
   _textTotal: {fileID: 1034824674377277990}
   _textBldgType: {fileID: 793603338093054841}
   _textBldgCost: {fileID: 7635814645645930169}
-  _progressBar: {fileID: 0}
+  _progressBar: {fileID: 7289337855993560762}
   _sliderBldgType: {fileID: 5711321187042645926}
-  _labelBuildingType: School Type
-  _labelPersonToServe: school students
+  _labelBuildingType: Building type
+  _labelPersonToServe: clients
   _labelGeneralSeatName: seats
+  _labelGeneralSeatNameSingular: seat
 --- !u!1001 &371007118480949986
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155,16 +156,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 8097859885349689877, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2967732712437375007, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7a504a93bbf0504ebbf7ce6091019bb, type: 3}
 --- !u!1 &1034824674772103598 stripped
@@ -173,6 +164,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 371007118480949986}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7289337855993560762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6921745838888680536, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 371007118480949986}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7270ef8548602ad4ca549110392105a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2496852816066555492 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2846432651876134022, guid: e7a504a93bbf0504ebbf7ce6091019bb,

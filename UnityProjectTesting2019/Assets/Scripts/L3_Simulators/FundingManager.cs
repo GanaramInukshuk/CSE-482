@@ -21,7 +21,7 @@ public class FundingManager {
     // NOTE: Revenues are to be added, costs are to be subtracted
     public static class Constants {
         public static int   BaseZoningCost    = 200;
-        public static int   BaseCivicSeatCost =  10;
+        public static int   BaseCivicSeatCost =  5;
         public static int   BaseCivicMultiplier   = 4;
         public static float HighDensityMultiplier = 0.875f;
         public static float DemolitionMultiplier  = -0.5f;
@@ -90,9 +90,12 @@ public class FundingManager {
         } else return false;
     }
 
-    // Note: to calculate this, the number of civic seats and zoning occupants must be tallied up and passed into this function
+    // Note: to calculate this, the number of civic seats and zoning occupants must be tallied up and passed into this function;
+    // these are multiplied by the base civic seat cost and base tax revenue respectively, then the seat cost is subtracted
+    // from the base tax revenue
     public void GenerateIncome(int zoningOccupants, int civicSeats) {
-        Funds += (civicSeats * Constants.BaseCivicSeatCost) + (zoningOccupants * Constants.BaseTaxRevenue);
+        Funds += -(civicSeats * Constants.BaseCivicSeatCost) + (zoningOccupants * Constants.BaseTaxRevenue);
+        UpdateText();
     }
 
     public int CalculateZoningConstructionCost(int bldgSize) {
@@ -104,6 +107,14 @@ public class FundingManager {
     public int CalculateZoningDemolitionCost(int bldgSize) {
         int demolitionCost = Mathf.RoundToInt(CalculateZoningConstructionCost(bldgSize) * Constants.DemolitionMultiplier);
         return demolitionCost;
+    }
+
+    public int CalculateCivicConstructionCost(int bldgSeats) {
+        return bldgSeats * Constants.BaseCivicMultiplier * Constants.BaseCivicSeatCost;
+    }
+
+    public int CalculateCivicDemolitionCost(int bldgSeats) {
+        return Mathf.RoundToInt(CalculateCivicConstructionCost(bldgSeats) * Constants.DemolitionMultiplier);
     }
 
     private void UpdateText() {

@@ -34,10 +34,13 @@ namespace PlayerControls {
         public string _labelBuildingType    = "Building type";
         public string _labelPersonToServe   = "clients";
         public string _labelGeneralSeatName = "seats";
+        public string _labelGeneralSeatNameSingular = "seat";
 
         // Other private members/variables
         private ICivicControls _simulator;
-        private IncrementSliderControls _incrementSlider;
+        private Slider _incrementSlider;
+        private FundingManager _fundingMgr;
+
         private string[] _breakdownTextBuffer;
 
         // Awake function is for setting up the listeners and slider parameters
@@ -65,14 +68,16 @@ namespace PlayerControls {
 
         // This is to receive the simulator and increment slider from the game loop, and to set
         // all the labels afterwards
-        public void SetSimulator(ICivicControls simulator, IncrementSliderControls incrementSlider) {
+        public void SetSimulator(ICivicControls simulator, Slider incrementSlider, FundingManager fundingManager) {
             _incrementSlider = incrementSlider;
+            _fundingMgr = fundingManager;
             _simulator = simulator;
 
             _breakdownTextBuffer = new string[_simulator.ConstBuildingTypes.Length];
 
-            _textBldgType.text = $"{_labelBuildingType}:\n{_simulator.ConstBuildingTypes[0]}";
+            _textBldgType.text = $"{_labelBuildingType}: {_simulator.ConstBuildingTypes[0]}\n({_simulator.ConstBuildingSeats[0]} {_labelGeneralSeatName})";
             UpdateTextLabels();
+            UpdateBldgTypeText(0);
         }
 
         public void UpdateTextLabels() {
@@ -122,28 +127,38 @@ namespace PlayerControls {
 
         // I don't want to use the increment slider for civic services, so this will
         // exclusively increment and decrement by 1
+        // This action can only be successfully performed if there is sufficient funds to do so
         private void IncrementBuildings() {
             int bldgType = (int)_sliderBldgType.value;
-            _simulator.IncrementBuildings(1, bldgType);
-            UpdateTextLabels();
+            int bldgSeats = _simulator.ConstBuildingSeats[bldgType];
+
+            if (_fundingMgr.ConstructCivic(bldgSeats)) {
+                _simulator.IncrementBuildings(1, bldgType);
+                UpdateTextLabels();
+            }
         }
 
+        // This action can only be successfully performed if there is enough funds to do so and the count isn't already 0
         private void DecrementBuildings() {
             int bldgType = (int)_sliderBldgType.value;
-            _simulator.IncrementBuildings(-1, bldgType);
-            UpdateTextLabels();
+            int bldgSeats = _simulator.ConstBuildingSeats[bldgType];
+
+            if (_fundingMgr.ConstructCivic(bldgSeats) && _simulator.BuildingVector[bldgType] != 0) {
+                _simulator.IncrementBuildings(-1, bldgType);
+                UpdateTextLabels();
+            }
         }
 
         // That said, I will be using the increment slider for adjusting the number of seats
         private void IncrementSeats(int bldgType) {
-            int incrementAmt = _incrementSlider.IncrementAmount;
-            _simulator.IncrementSeats(incrementAmt, bldgType);
+            int incrementAmount = (int)_incrementSlider.value;
+            _simulator.IncrementSeats(incrementAmount, bldgType);
             UpdateTextLabels();
         }
 
         private void DecrementSeats(int bldgType) {
-            int incrementAmt = _incrementSlider.IncrementAmount;
-            _simulator.IncrementSeats(-incrementAmt, bldgType);
+            int incrementAmount = (int)_incrementSlider.value;
+            _simulator.IncrementSeats(-incrementAmount, bldgType);
             UpdateTextLabels();
         }
 
@@ -156,10 +171,18 @@ namespace PlayerControls {
         // This also updates the text on the progress bar
         private void UpdateBldgTypeText(float updatedValue) {
             int bldgType = (int)_sliderBldgType.value;
-            _textBldgType.text = $"{_labelBuildingType}:\n{_simulator.ConstBuildingTypes[bldgType]}";
+            int buildingSize = _simulator.ConstBuildingSeats[bldgType];
+            _textBldgType.text = $"{_labelBuildingType}: {_simulator.ConstBuildingTypes[bldgType]}\n({buildingSize} {_labelGeneralSeatName})";
 
             int index = (int)_sliderBldgType.value;
             _textTotal.text = _breakdownTextBuffer[index];
+            _textBldgCost.text = $"Cost: {_fundingMgr.CalculateCivicConstructionCost(buildingSize)}\nDemolition: {_fundingMgr.CalculateCivicDemolitionCost(buildingSize)}\n(Costs {_fundingMgr.ConstBaseCivicSeatCost} per {_labelGeneralSeatNameSingular} per week to maintain)";
         }
+
+        //// For updating the construction/demolition cost whenever the increment slider is changed
+        //private void UpdateConstructionCostText(float updatedValue) {
+        //    int buildingSize = _simulator.ConstBuildingSeats[(int)_sliderBldgType.value];
+        //    _textBldgCost.text = "Cost: " + _fundingMgr.CalculateZoningConstructionCost(buildingSize) + "\nDemolition: " + _fundingMgr.CalculateZoningDemolitionCost(buildingSize);
+        //}
     }
 }
