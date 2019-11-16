@@ -25,7 +25,7 @@ public class FundingManager {
         public static int   BaseCivicMultiplier   = 4;
         public static float HighDensityMultiplier = 0.875f;
         public static float DemolitionMultiplier  = -0.5f;
-        public static int   BaseTaxRevenue = 20;
+        public static int   BaseTaxRevenue = 15;
     }
 
     // Alternative getters for constants
@@ -60,10 +60,11 @@ public class FundingManager {
         } else return false;
     }
 
+    // Demolition is allowed if the demolition cost recoups construction costs, even if the current funds are negative
     public bool DemolishZoning(int numBuildings, int bldgSize) {
         int demolitionCost = numBuildings * CalculateZoningDemolitionCost(bldgSize);
         int newFunds = Funds - demolitionCost;
-        if (newFunds >= 0) {
+        if (newFunds >= Funds) {
             Funds = newFunds;
             UpdateText();
             return true;
@@ -80,10 +81,11 @@ public class FundingManager {
         } else return false;
     }
 
+    // Demolition is allowed if the demolition cost recoups construction costs, even if the current funds are negative
     public bool DemolishCivic(int seatsPerBuilding) {
-        int constructionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier * Constants.DemolitionMultiplier);
-        int newFunds = Funds - constructionCost;
-        if (newFunds >= 0) {
+        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier * Constants.DemolitionMultiplier);
+        int newFunds = Funds - demolitionCost;
+        if (newFunds >= Funds) {
             Funds = newFunds;
             UpdateText();
             return true;

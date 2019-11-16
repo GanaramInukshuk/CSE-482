@@ -86,7 +86,7 @@ public class GameLoop : MonoBehaviour {
         if (_timeCtrl.TickCount % Timekeeper._ticksPerDay == 0) {
             //Debug.Log("[GameLoop]: Performing daily actions.");
 
-            _resEval.GenerateDemand(_resSim, _commSim);
+            _resEval.GenerateDemand(_resSim, _eduSim, _hlthSim);
             _workEval.GenerateDemand(_commSim, _resSim);
             _civicEval.GenerateDemand(_resSim);
 

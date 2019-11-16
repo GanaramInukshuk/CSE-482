@@ -26,7 +26,7 @@ namespace DemandEvaluators {
 
         // This is a base demand that gets fulfilled no matter what
         // This has to be nonzero or the city won't grow at all
-        private static readonly int BaseDemandNoMatterWhat = 64;
+        private static readonly int BaseDemandNoMatterWhat = 256;
 
         // Refined generate function for residential demand
         // One metric for residential demand is the maximum number of job openings
@@ -41,6 +41,46 @@ namespace DemandEvaluators {
             // ideal and I wanna one day replace this with something else; the one for the WorkEval is probably OK
             int maxResidentialFromJobs = commData.OccupantMax;
             ResidentialMax = BaseDemandNoMatterWhat + maxResidentialFromJobs;
+
+            // Calculate a delta; this delta is how far the current residential occupant count is from the max
+            // From that delta, the increment is calculated
+            int residentialDelta = ResidentialMax - resData.OccupantCount;
+            ResidentialIncrement = General.GenerateIncrement(residentialDelta);
+
+            // Limit demand to 1/16th of available openings, unless negative
+            if (ResidentialIncrement > 0) {
+                int maxIncrement = Mathf.CeilToInt((resData.OccupantMax - resData.OccupantCount) * General.MaxDemandPercentage);
+                ResidentialIncrement = Mathf.Min(maxIncrement, ResidentialIncrement);
+            }
+        }
+
+        // Alternate generate function for residential demand
+        // A much better metric for demand is how good the city's services are; the performance of these services will increase
+        // a base increment amount so that more people will want to move in.  
+        public void GenerateDemand(SimulatorInterfaces.IZoningData resData, SimulatorInterfaces.ICivicData eduData, SimulatorInterfaces.ICivicData hlthData) {
+
+            // To calculate school performance, divide the number of seats filled by the number of seats needed
+            // Any would-be divide-by-zero calculation will result in a zero instead
+            float overallSchoolPerformance = 0f;
+            for (int i = 0; i < eduData.SeatsFilled.Length; i++) {
+                overallSchoolPerformance += CalculateCivicPerformance(eduData.SeatsFilled[i], eduData.SeatsNeeded[i]);
+            }
+
+            // The calculation for healthcare performance is largely the same
+            float overallHealthcarePerformance = 0f;
+            for (int i = 0; i < hlthData.SeatsFilled.Length; i++) {
+                overallHealthcarePerformance += CalculateCivicPerformance(hlthData.SeatsFilled[i], eduData.SeatsNeeded[i]);
+            }
+
+            // If you can see where this is going, then this is what's happening
+            // Civic performance ranges on a scale going from [0, 1], and anywhere there is lackluster performance, that score
+            // will be less than 1; these numbers add up and result in the final overall performance score
+            float overallPerformance = Mathf.Abs(overallSchoolPerformance + overallHealthcarePerformance);
+
+            // Take the overall performance and multiply it by 1/4th the number of occupied households; that is the demand
+            // Use that demand with the previous demand calculations to get the increment amount
+            int maxResidentialFromCivicPerformance = Mathf.RoundToInt(resData.OccupantCount * overallPerformance / 4);
+            ResidentialMax = BaseDemandNoMatterWhat + maxResidentialFromCivicPerformance;
 
             // Calculate a delta; this delta is how far the current residential occupant count is from the max
             // From that delta, the increment is calculated
@@ -86,5 +126,9 @@ namespace DemandEvaluators {
         //    }
         //}
         #endregion
+
+        private float CalculateCivicPerformance(int seatsFilled, int seatsNeeded) {
+            return seatsNeeded == 0 ? 0 : (float)seatsFilled / seatsNeeded;
+        }
     }
 }

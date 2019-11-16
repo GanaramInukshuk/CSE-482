@@ -36,7 +36,7 @@ MonoBehaviour:
   _progressBar: {fileID: 7289337855993560762}
   _sliderBldgType: {fileID: 5711321187042645926}
   _labelBuildingType: Building type
-  _labelPersonToServe: clients
+  _labelPersonToServe: students
   _labelGeneralSeatName: seats
   _labelGeneralSeatNameSingular: seat
 --- !u!1001 &371007118480949986
