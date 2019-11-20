@@ -81,29 +81,9 @@ namespace PlayerControls {
         }
 
         public void UpdateTextLabels() {
-            //// Total text
-            //string breakdownText = $"{_simulator.CivicName}: ";
-
-            //// Depending on how many building types there are, special formatting is needed
-            //// For one type, just print the one type
-            //// For two types, format it as "ABC and XYZ"
-            //// For three types, format it as "ABC, XYZ, and 123" using a for loop
-            //// Also note that I'm imposing a limit at three building types because that's as much as I can fit on the screen
-            //// NOTE THAT ALL THE ENUMS ARE IN ALLCAPS, SO USE ToLower() TO CONVERT TO LOWERCASE
-            //int numTypes = _simulator.SeatsFilled.Length;
-            //if (numTypes == 1) {
-            //    breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
-            //} else if (numTypes == 2) {
-            //    breakdownText += $"{_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()} and {_simulator.SeatsFilled[0]} {_simulator.ConstBuildingTypes[0].ToLower()}";
-            //} else {
-            //    for (int i = 0; i < numTypes; i++) {
-            //        breakdownText += $"{_simulator.SeatsFilled[i]} {_simulator.ConstBuildingTypes[i].ToLower()}";
-            //        if (i != numTypes - 1) breakdownText += ", ";       // So that every entry is separated by commas
-            //        if (i == numTypes - 2) breakdownText += "and ";     // ...except that the last entry gets an "and" between it and its (Oxford) comma
-            //    }
-            //}
-            //breakdownText += $" {_labelPersonToServe}";
-            //_textTotal.text = breakdownText;
+            // Update the progress bar
+            int bldgType = (int)_sliderBldgType.value;
+            _progressBar.UpdateFill(0, _simulator.SeatCountVector[bldgType], _simulator.SeatsFilled[bldgType]);
 
             // Update the breakdown text with the proper text for the current building type
             // Due to the limited space available on the progress bar, only the breakdown text for
@@ -113,7 +93,8 @@ namespace PlayerControls {
             // text
             for (int i = 0; i < _simulator.ConstBuildingTypes.Length; i++) {
                 string personsToServe = $"{_simulator.ConstBuildingTypes[i].ToLower()} {_labelPersonToServe}";    // To make it easier to write out the string
-                _breakdownTextBuffer[i] = $"{_simulator.CivicName}: {_simulator.SeatsFilled[i]} out of {_simulator.SeatsNeeded[i]} {personsToServe} (out of {_simulator.SeatCountVector[i]} {_labelGeneralSeatName} available)";
+                //_breakdownTextBuffer[i] = $"{_simulator.CivicName}: {_simulator.SeatsFilled[i]} out of {_simulator.SeatsNeeded[i]} {personsToServe} (out of {_simulator.SeatCountVector[i]} {_labelGeneralSeatName} available)";
+                _breakdownTextBuffer[i] = $"{_simulator.CivicName}: {_simulator.SeatsFilled[i]} (out of {_simulator.SeatsNeeded[i]} {personsToServe}) out of {_simulator.SeatCountVector[i]} {_labelGeneralSeatName} available";
             }
             int index = (int)_sliderBldgType.value;
             _textTotal.text = _breakdownTextBuffer[index];
@@ -132,7 +113,7 @@ namespace PlayerControls {
             int bldgType = (int)_sliderBldgType.value;
             int bldgSeats = _simulator.ConstBuildingSeats[bldgType];
 
-            if (_fundingMgr.ConstructCivic(bldgSeats)) {
+            if (_fundingMgr.ConstructCivic(bldgSeats, _simulator.CivicID)) {
                 _simulator.IncrementBuildings(1, bldgType);
                 UpdateTextLabels();
             }
@@ -143,7 +124,7 @@ namespace PlayerControls {
             int bldgType = (int)_sliderBldgType.value;
             int bldgSeats = _simulator.ConstBuildingSeats[bldgType];
 
-            if (_fundingMgr.ConstructCivic(bldgSeats) && _simulator.BuildingVector[bldgType] != 0) {
+            if (_fundingMgr.ConstructCivic(bldgSeats, _simulator.CivicID) && _simulator.BuildingVector[bldgType] != 0) {
                 _simulator.IncrementBuildings(-1, bldgType);
                 UpdateTextLabels();
             }
@@ -176,7 +157,7 @@ namespace PlayerControls {
 
             int index = (int)_sliderBldgType.value;
             _textTotal.text = _breakdownTextBuffer[index];
-            _textBldgCost.text = $"Cost: {_fundingMgr.CalculateCivicConstructionCost(buildingSize)}\nDemolition: {_fundingMgr.CalculateCivicDemolitionCost(buildingSize)}\n(Costs {_fundingMgr.ConstBaseCivicSeatCost} per {_labelGeneralSeatNameSingular} per week to maintain)";
+            _textBldgCost.text = $"Cost: {_fundingMgr.CalculateCivicConstructionCost(buildingSize, _simulator.CivicID)}\nDemolition: {_fundingMgr.CalculateCivicDemolitionCost(buildingSize, _simulator.CivicID)}\n(Costs {_fundingMgr.ConstBaseCivicSeatCost} per {_labelGeneralSeatNameSingular} per week to maintain)";
         }
 
         //// For updating the construction/demolition cost whenever the increment slider is changed

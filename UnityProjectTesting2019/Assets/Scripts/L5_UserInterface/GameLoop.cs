@@ -57,8 +57,8 @@ public class GameLoop : MonoBehaviour {
 
         _fundingMgr = new FundingManager(_initialFunds, _textFunds, _textIncome);
 
-        _textFunds.text = _fundingMgr.Funds.ToString();
-        _textIncome.text = "0";
+        _textFunds.text = $"Funds: {_initialFunds}";
+        _textIncome.text = "";
 
         _resCtrl .SetSimulator(_resSim , _incrementCtrl._incrementSlider, _fundingMgr);
         _commCtrl.SetSimulator(_commSim, _incrementCtrl._incrementSlider, _fundingMgr);

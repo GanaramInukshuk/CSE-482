@@ -21,17 +21,17 @@ public class FundingManager {
     // NOTE: Revenues are to be added, costs are to be subtracted
     public static class Constants {
         public static int   BaseZoningCost    = 200;
-        public static int   BaseCivicSeatCost =  5;
-        public static int   BaseCivicMultiplier   = 4;
+        public static int   BaseCivicSeatCost =  12;
+        public static int[] BaseCivicMultiplier   = { 8, 12 };      // This is an array of multipliers that correspond to education and health; I basically wanna make healthcare cost more for the sake of gameplay
         public static float HighDensityMultiplier = 0.875f;
         public static float DemolitionMultiplier  = -0.5f;
-        public static int   BaseTaxRevenue = 15;
+        public static int   BaseTaxRevenue = 4;
     }
 
     // Alternative getters for constants
     public int   ConstBaseZoningCost        => Constants.BaseZoningCost       ;
     public int   ConstBaseCivicSeatCost     => Constants.BaseCivicSeatCost    ;
-    public int   ConstBaseCivicMultiplier   => Constants.BaseCivicMultiplier  ;
+    public int[] ConstBaseCivicMultiplier   => Constants.BaseCivicMultiplier  ;
     public float ConstHighDensityMultiplier => Constants.HighDensityMultiplier;
     public float ConstDemolitionMultiplier  => Constants.DemolitionMultiplier ;
     public int   ConstBaseTaxRevenue        => Constants.BaseTaxRevenue       ;
@@ -71,8 +71,8 @@ public class FundingManager {
         } else return false;
     }
     
-    public bool ConstructCivic(int seatsPerBuilding) {
-        int constructionCost = seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier;
+    public bool ConstructCivic(int seatsPerBuilding, int civicID) {
+        int constructionCost = seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier[civicID];
         int newFunds = Funds - constructionCost;
         if (newFunds >= 0) {
             Funds = newFunds;
@@ -82,8 +82,8 @@ public class FundingManager {
     }
 
     // Demolition is allowed if the demolition cost recoups construction costs, even if the current funds are negative
-    public bool DemolishCivic(int seatsPerBuilding) {
-        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier * Constants.DemolitionMultiplier);
+    public bool DemolishCivic(int seatsPerBuilding, int civicID) {
+        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier[civicID] * Constants.DemolitionMultiplier);
         int newFunds = Funds - demolitionCost;
         if (newFunds >= Funds) {
             Funds = newFunds;
@@ -111,12 +111,12 @@ public class FundingManager {
         return demolitionCost;
     }
 
-    public int CalculateCivicConstructionCost(int bldgSeats) {
-        return bldgSeats * Constants.BaseCivicMultiplier * Constants.BaseCivicSeatCost;
+    public int CalculateCivicConstructionCost(int bldgSeats, int civicID) {
+        return bldgSeats * Constants.BaseCivicMultiplier[civicID] * Constants.BaseCivicSeatCost;
     }
 
-    public int CalculateCivicDemolitionCost(int bldgSeats) {
-        return Mathf.RoundToInt(CalculateCivicConstructionCost(bldgSeats) * Constants.DemolitionMultiplier);
+    public int CalculateCivicDemolitionCost(int bldgSeats, int civicID) {
+        return Mathf.RoundToInt(CalculateCivicConstructionCost(bldgSeats, civicID) * Constants.DemolitionMultiplier);
     }
 
     private void UpdateText() {

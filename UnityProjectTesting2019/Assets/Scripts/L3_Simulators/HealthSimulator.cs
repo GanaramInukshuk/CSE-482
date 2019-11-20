@@ -12,7 +12,7 @@ public class HealthSimulator : CivicSimulatorSimple, ICivicControls {
     /// </summary>
     public static class Constants {
         public enum BuildingType { CLINIC, HOSPITAL };
-        public static int[] BuildingSeats = { 200, 600 };
+        public static int[] BuildingSeats = { 200, 800 };
     }
 
     // For getting the simulator's constants

@@ -29,11 +29,12 @@ MonoBehaviour:
   _textTotal: {fileID: 6011983060027847412}
   _textBldgType: {fileID: 6210964415226370987}
   _textBldgCost: {fileID: 3802561752089132651}
-  _progressBar: {fileID: 0}
+  _progressBar: {fileID: 4042643784154787432}
   _sliderBldgType: {fileID: 1328567862602221428}
   _labelBuildingType: Healthcare facility
   _labelPersonToServe: patients
   _labelGeneralSeatName: openings
+  _labelGeneralSeatNameSingular: seat
 --- !u!1001 &6346873905902506544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,6 +187,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -40
       objectReference: {fileID: 0}
+    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -240
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 480
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 480
+      objectReference: {fileID: 0}
     - target: {fileID: 125497956167534765, guid: e7a504a93bbf0504ebbf7ce6091019bb,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -222,6 +243,11 @@ PrefabInstance:
       value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 6529824200845299862, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656715160042850662, guid: e7a504a93bbf0504ebbf7ce6091019bb,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -281,31 +307,6 @@ PrefabInstance:
       propertyPath: m_Color.b
       value: 0.2705882
       objectReference: {fileID: 0}
-    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -240
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990422184028182794, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 480
-      objectReference: {fileID: 0}
-    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 240
-      objectReference: {fileID: 0}
-    - target: {fileID: 5171630282803642772, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 480
-      objectReference: {fileID: 0}
-    - target: {fileID: 4656715160042850662, guid: e7a504a93bbf0504ebbf7ce6091019bb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7a504a93bbf0504ebbf7ce6091019bb, type: 3}
 --- !u!1 &6011983060439441788 stripped
@@ -314,6 +315,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6346873905902506544}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4042643784154787432 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6921745838888680536, guid: e7a504a93bbf0504ebbf7ce6091019bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6346873905902506544}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7270ef8548602ad4ca549110392105a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &9193024806313115318 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2846432651876134022, guid: e7a504a93bbf0504ebbf7ce6091019bb,

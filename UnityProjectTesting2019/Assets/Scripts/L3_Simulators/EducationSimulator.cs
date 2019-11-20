@@ -12,7 +12,7 @@ public class EducationSimulator : CivicSimulatorSimple, ICivicControls {
     /// </summary>
     public static class Constants {
         public enum BuildingType { ELEMENTARY, MIDDLE, HIGH };
-        public static int[] BuildingSeats = { 600, 800, 1000 };
+        public static int[] BuildingSeats = { 400, 600, 800 };
     }
 
     // For getting the simulator's constants
