@@ -29,6 +29,16 @@ using UnityEngine;
 
 public class CivicSimulatorSimple {
 
+    // Data class for savedata
+    // I'm switching from using jagged arrays to using a dataclass because Unity's built-in JSON utility can't handle jagged arrays
+    public class DataClass {
+        public int[] buildingVector;
+        public int[] seatCountVector;
+        public int[] seatsNeeded;
+        public int[] seatsFilled;
+        public int[] seatsLeft;
+    }
+
     // Counters
     private ArrayCounter _buildingCounter;
     private MultiCounter _seatCounter;
@@ -59,26 +69,26 @@ public class CivicSimulatorSimple {
     public int[] SeatsLeft   { private set; get; }
 
     // For savedata
-    public int[][] DataVector {
+    public DataClass DataVector {
         set {
             // value[0] is the counts in the ArrayCounter and indirectly sets the max of the MultiCounter (or MaxSeatVector)
             // value[1] is the counts in the MultiCounter and represents AvailableSeatVector
             // value[2] is the number of seats available that are already taken
             // value[3] is the number of seats left over (or how many people still need a seat)
-            _buildingCounter.Count = value[0];
+            _buildingCounter.Count = value.buildingVector;
             _seatCounter.Max   = ExtraMath.Linear.AlignedVectorProduct(_buildingCounter.Count, _buildingSeats);
-            _seatCounter.Count = value[1];
-            SeatsNeeded = value[2];
-            SeatsFilled = value[3];
-            SeatsLeft   = value[4];
+            _seatCounter.Count = value.seatCountVector;
+            SeatsNeeded = value.seatsNeeded;
+            SeatsFilled = value.seatsFilled;
+            SeatsLeft   = value.seatsLeft  ;
         }
         get {
-            return new int[][] {
-                _buildingCounter.Count,
-                _seatCounter.Count,
-                SeatsNeeded,
-                SeatsFilled,
-                SeatsLeft,
+            return new DataClass() {
+                buildingVector  =_buildingCounter.Count,
+                seatCountVector =_seatCounter.Count,
+                seatsNeeded     =SeatsNeeded,
+                seatsFilled     =SeatsFilled,
+                seatsLeft       =SeatsLeft,
             };
         }
     }

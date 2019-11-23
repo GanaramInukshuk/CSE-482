@@ -4,11 +4,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using DemandEvaluators;
 using PlayerControls;
+using Newtonsoft.Json;
+using System.IO;
 
 // This class is in charge of all of the game's calculations and requires references
 // to every UI object in the game's UI
 
+// The gameloop also manages savefiles
+
 public class GameLoop : MonoBehaviour {
+
+    // A data class for savefiles
+    private class Savedata {
+        public ZoningSimulator.DataClass residentialData;
+        public ZoningSimulator.DataClass commercialData ;
+        public CivicSimulatorSimple.DataClass educationData  ;
+        public CivicSimulatorSimple.DataClass healthcareData ;
+        public int financialData;
+        public int gameTime;
+    }
 
     // Many of the UI objects here either have a simulator or something else that's important
     // so those UI objects require accessors to the simulator's data (setters/getters basically)
@@ -129,9 +143,10 @@ public class GameLoop : MonoBehaviour {
             _textEmployment.text = "Employment: " + Mathf.RoundToInt(_commSim.OccupantCount * 1.75f).ToString();
 
             // Calculate the total number of civic seats available
-            int totalCivicSeats = DistributionGen.Histogram.SumOfElements(_eduSim.SeatCountVector) + DistributionGen.Histogram.SumOfElements(_hlthSim.SeatCountVector);
+            int totalEduSeats    = DistributionGen.Histogram.SumOfElements(_eduSim .SeatCountVector);
+            int totalHealthSeats = DistributionGen.Histogram.SumOfElements(_hlthSim.SeatCountVector);
             int totalZoningOccupants = _resSim.OccupantCount + _commSim.OccupantCount;
-            _fundingMgr.GenerateIncome(totalZoningOccupants, totalCivicSeats);
+            _fundingMgr.GenerateIncome(totalZoningOccupants, totalEduSeats, totalHealthSeats);
         }
 
 
@@ -140,5 +155,33 @@ public class GameLoop : MonoBehaviour {
             //Debug.Log("[GameLoop]: Performing quad-weekly actions.");
 
         }
+    }
+
+    // Savefile handler
+    // This is accomplished with the help of the JSON.NET for Unity asset
+    public void SaveGame() {
+        // The game will save data in JSON format into a text file
+        // These datavectors, plus the funding amount, are saved into a single JSON string
+        Savedata s = new Savedata {
+            residentialData = _resSim.DataVector ,
+            commercialData  = _commSim.DataVector,
+            educationData   = _eduSim.DataVector ,
+            healthcareData  = _hlthSim.DataVector,
+            financialData   = _fundingMgr.Funds,
+            gameTime = _timeCtrl.TickCount
+        };
+
+        string saveString = JsonConvert.SerializeObject(s);
+        string savePath = Application.dataPath + "/Saves";
+        string saveName = savePath + "/savedata.txt";
+
+        // Create the savefile folder if it doesn't exist
+        DirectoryInfo d = Directory.CreateDirectory(savePath);
+
+        // Create the savefile if it doesn't exist either
+        // If it exists, overwrite it
+        File.WriteAllText(saveName, saveString);
+
+        Debug.Log(saveString);
     }
 }

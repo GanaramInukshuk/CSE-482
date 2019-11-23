@@ -138,19 +138,19 @@ public class GameLogicTester : MonoBehaviour {
         //    _testMgr.PrintDebugString();
         //}
 
-        // To test out saves
-        if (Input.GetKeyDown(KeyCode.M)) {
-            _resSim.DataVector = new int[][] {
-                ExtraRandom.RandomArray( 7, 100, 1000),
-                ExtraRandom.RandomArray( 2, 100, 1000),
-                ExtraRandom.RandomArray( 2, 100, 1000),
-                ExtraRandom.RandomArray(13, 100, 1000),
-                ExtraRandom.RandomArray( 2, 100, 1000),
-            };
-            _resSim.PrintDebugString();
-            _resSim.Generate();
-            _resSim.PrintDebugString();
-        }
+        //// To test out saves
+        //if (Input.GetKeyDown(KeyCode.M)) {
+        //    _resSim.DataVector = new int[][] {
+        //        ExtraRandom.RandomArray( 7, 100, 1000),
+        //        ExtraRandom.RandomArray( 2, 100, 1000),
+        //        ExtraRandom.RandomArray( 2, 100, 1000),
+        //        ExtraRandom.RandomArray(13, 100, 1000),
+        //        ExtraRandom.RandomArray( 2, 100, 1000),
+        //    };
+        //    _resSim.PrintDebugString();
+        //    _resSim.Generate();
+        //    _resSim.PrintDebugString();
+        //}
 
         if (Input.GetKeyDown(KeyCode.U)) {
             Debug.Log(Timekeeper.DetailedDate(_ticks));

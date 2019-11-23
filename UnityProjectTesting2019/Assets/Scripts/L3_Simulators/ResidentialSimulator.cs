@@ -28,25 +28,21 @@ public class ResidentialSimulator : ZoningSimulator, IZoningControls {
     // - Building sizes represents different density levels of a given zoning type
     // - Occupant weights represent the probabilities that an occupant is one of the types described below; note that
     //   these weights must, 1, add up to 1.0f, and 2, match with the enum described above
-    /// <summary>
-    /// A static class containing the simulator's accompanying constants. This contains:
-    /// <para>An enum for each of the occupant types.</para>
-    /// <para>An array of building sizes.</para>
-    /// <para>An array of probabilities (weights) describing the probability that
-    /// an occupant is one of the types described by the enum.</para>
-    /// </summary>
     public static class Constants {
         public enum OccupantType { SINGLE, COHAB, COUPLE, FAMILY, EXTENDED, SENIOR };
-        public static int  [] BuildingSizes   => new int  [] { 1, 2, 4, 8 };
-        public static float[] OccupantWeights => new float[] { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        public static int  [] BuildingSizes      => new int  [] { 1, 2, 4, 8 };
+        public static float[] OccupantWeights    => new float[] { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        //public static int  [] ConstructionCost   => ExtraMath.Linear.ScalarVectorMult(200, BuildingSizes);
+        //public static int  [] DemolitionCost     => ExtraMath.Linear.ScalarVectorMultToInt(0.5f, ConstructionCost);
+        //public static int     RevenuePerOccupant => 8;
     }
 
-    // Getters for the constants listed above
-    // This is in case a class needs to be fed these things directly, IE, cannot be accessed
-    // via Simulator.Constants.BuildingSizes, for example
-    public int   [] ConstBuildingSizes   => Constants.BuildingSizes  ;
-    public float [] ConstOccupantWeights => Constants.OccupantWeights;
-    public string[] ConstOccupantTypes   => System.Enum.GetNames(typeof(Constants.OccupantType));
+    public string[] ConstOccupantTypes      => System.Enum.GetNames(typeof(Constants.OccupantType));
+    public int   [] ConstBuildingSizes      => Constants.BuildingSizes;
+    public float [] ConstOccupantWeights    => Constants.OccupantWeights;
+    //public int   [] ConstConstructionCost   => Constants.ConstructionCost;
+    //public int   [] ConstDemolitionCost     => Constants.DemolitionCost;
+    //public int      ConstRevenuePerOccupant => Constants.RevenuePerOccupant;
 
     // Constructor; note that this also sets the zoning ID and zoning name
     public ResidentialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 0, "RESIDENTIAL") { }

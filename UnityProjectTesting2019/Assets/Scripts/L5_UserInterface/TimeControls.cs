@@ -69,9 +69,9 @@ namespace PlayerControls {
 
             // Set UI parameters here
             _sliderSpeed.minValue = 0;
-            _sliderSpeed.maxValue = 5 * _fineIncrements;
+            _sliderSpeed.maxValue = 2 * _fineIncrements;
             _sliderSpeed.value = _sliderSpeed.minValue;
-            _sliderSpeed.wholeNumbers = true;
+            _sliderSpeed.wholeNumbers = false;
             _textButtonPause.text = "SPEED: 1.00";
 
             // Add event listeners here

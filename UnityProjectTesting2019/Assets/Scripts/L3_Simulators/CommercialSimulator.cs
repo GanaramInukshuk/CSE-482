@@ -27,16 +27,22 @@ public class CommercialSimulator : ZoningSimulator, IZoningControls {
     /// </summary>
     public static class Constants {
         public enum OccupantType { GROCERY, RETAIL, FOOD, SERVICE, AUTO };
-        public static int  [] BuildingSizes   => ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 4, 8 });
-        public static float[] OccupantWeights => new float[] { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        public static int  [] BuildingSizes      => ExtraMath.Linear.ScalarVectorMult(8, new int[] { 1, 2, 4, 8 });
+        public static float[] OccupantWeights    => new float[] { 0.20f, 0.10f, 0.20f, 0.30f, 0.10f, 0.10f };
+        //public static int  [] ConstructionCost   => ExtraMath.Linear.ScalarVectorMult(200, BuildingSizes);
+        //public static int  [] DemolitionCost     => ExtraMath.Linear.ScalarVectorMultToInt(0.5f, ConstructionCost);
+        //public static int     RevenuePerOccupant => 8;
     }
 
     // Getters for the constants listed above
     // This is in case a class needs to be fed these things directly, IE, cannot be accessed
     // via Simulator.Constants.BuildingSizes, for example
-    public int   [] ConstBuildingSizes   => Constants.BuildingSizes  ;
-    public float [] ConstOccupantWeights => Constants.OccupantWeights;
-    public string[] ConstOccupantTypes   => System.Enum.GetNames(typeof(Constants.OccupantType));
+    public int   [] ConstBuildingSizes      => Constants.BuildingSizes ;
+    public float [] ConstOccupantWeights    => Constants.OccupantWeights;
+    public string[] ConstOccupantTypes      => System.Enum.GetNames(typeof(Constants.OccupantType));
+    //public int   [] ConstConstructionCost   => Constants.ConstructionCost;
+    //public int   [] ConstDemolitionCost     => Constants.DemolitionCost;
+    //public int      ConstRevenuePerOccupant => Constants.RevenuePerOccupant;
 
     // Constructor
     public CommercialSimulator() : base(Constants.BuildingSizes, Constants.OccupantWeights, 1 , "COMMERCIAL") { }

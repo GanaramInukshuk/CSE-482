@@ -157,7 +157,7 @@ namespace PlayerControls {
 
             int index = (int)_sliderBldgType.value;
             _textTotal.text = _breakdownTextBuffer[index];
-            _textBldgCost.text = $"Cost: {_fundingMgr.CalculateCivicConstructionCost(buildingSize, _simulator.CivicID)}\nDemolition: {_fundingMgr.CalculateCivicDemolitionCost(buildingSize, _simulator.CivicID)}\n(Costs {_fundingMgr.ConstBaseCivicSeatCost} per {_labelGeneralSeatNameSingular} per week to maintain)";
+            _textBldgCost.text = $"Cost: {_fundingMgr.CalculateCivicConstructionCost(buildingSize, _simulator.CivicID)}\nDemolition: {_fundingMgr.CalculateCivicDemolitionCost(buildingSize, _simulator.CivicID)}\n(Costs {_fundingMgr.ConstBaseCivicSeatCost[_simulator.CivicID]} per {_labelGeneralSeatNameSingular} per week)";
         }
 
         //// For updating the construction/demolition cost whenever the increment slider is changed

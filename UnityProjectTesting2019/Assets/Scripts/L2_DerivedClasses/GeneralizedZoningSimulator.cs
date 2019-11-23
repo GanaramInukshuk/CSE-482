@@ -32,6 +32,12 @@ using UnityEngine;
 /// </summary>
 public class ZoningSimulator {
 
+    // Dataclass for savedata
+    public class DataClass {
+        public int[] buildingVector;
+        public int[] occupantVector;
+    }
+
     /// <summary>
     /// A specialized ArrayCounter specifically for use with the ZoningSimulator.
     /// </summary>
@@ -124,16 +130,16 @@ public class ZoningSimulator {
     public int OccupantMax    => _occCounter.Max;
 
     // For savedata
-    public int[][] DataVector {
+    public DataClass DataVector {
         set {
-            _bldgCounter.Count = value[0];
-            _occManager.DataVector = value[1];
+            _bldgCounter.Count = value.buildingVector;
+            _occManager.DataVector = value.occupantVector;
             _occCounter.Max = _bldgCounter.OccupantMax;
             _occCounter.Count = _occManager.TotalOccupants;
         }
-        get => new int[][] {
-            _bldgCounter.Count,
-            _occManager.DataVector
+        get => new DataClass() {
+            buildingVector = _bldgCounter.Count,
+            occupantVector =_occManager.DataVector
         };
     }
 

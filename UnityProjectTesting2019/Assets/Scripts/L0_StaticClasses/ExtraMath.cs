@@ -227,6 +227,12 @@ public static class ExtraMath {
             for (int i = 0; i < product.Length; i++) product[i] = scalar * vector[i];
             return product;
         }
+
+        public static int[] ScalarVectorMultToInt(float scalar, int[] vector) {
+            int[] product = new int[vector.Length];
+            for (int i = 0; i < product.Length; i++) product[i] = Mathf.RoundToInt(scalar * vector[i]);
+            return product;
+        }
         #endregion
 
         // This can be defined using matrix multiplication, but I'm short-circuiting that process:

@@ -21,16 +21,16 @@ public class FundingManager {
     // NOTE: Revenues are to be added, costs are to be subtracted
     public static class Constants {
         public static int   BaseZoningCost    = 200;
-        public static int   BaseCivicSeatCost =  12;
-        public static int[] BaseCivicMultiplier   = { 8, 12 };      // This is an array of multipliers that correspond to education and health; I basically wanna make healthcare cost more for the sake of gameplay
+        public static int[] BaseCivicSeatCost     = { 10, 16 };      // Again, so I can make healthcare more of an endgame feature
+        public static int[] BaseCivicMultiplier   = {  8, 12 };      // This is an array of multipliers that correspond to education and health; I basically wanna make healthcare cost more for the sake of gameplay
         public static float HighDensityMultiplier = 0.875f;
         public static float DemolitionMultiplier  = -0.5f;
-        public static int   BaseTaxRevenue = 4;
+        public static int   BaseTaxRevenue = 6;
     }
 
     // Alternative getters for constants
     public int   ConstBaseZoningCost        => Constants.BaseZoningCost       ;
-    public int   ConstBaseCivicSeatCost     => Constants.BaseCivicSeatCost    ;
+    public int[] ConstBaseCivicSeatCost     => Constants.BaseCivicSeatCost    ;
     public int[] ConstBaseCivicMultiplier   => Constants.BaseCivicMultiplier  ;
     public float ConstHighDensityMultiplier => Constants.HighDensityMultiplier;
     public float ConstDemolitionMultiplier  => Constants.DemolitionMultiplier ;
@@ -72,7 +72,7 @@ public class FundingManager {
     }
     
     public bool ConstructCivic(int seatsPerBuilding, int civicID) {
-        int constructionCost = seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier[civicID];
+        int constructionCost = seatsPerBuilding * Constants.BaseCivicSeatCost[civicID] * Constants.BaseCivicMultiplier[civicID];
         int newFunds = Funds - constructionCost;
         if (newFunds >= 0) {
             Funds = newFunds;
@@ -83,7 +83,7 @@ public class FundingManager {
 
     // Demolition is allowed if the demolition cost recoups construction costs, even if the current funds are negative
     public bool DemolishCivic(int seatsPerBuilding, int civicID) {
-        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost * Constants.BaseCivicMultiplier[civicID] * Constants.DemolitionMultiplier);
+        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost[civicID] * Constants.BaseCivicMultiplier[civicID] * Constants.DemolitionMultiplier);
         int newFunds = Funds - demolitionCost;
         if (newFunds >= Funds) {
             Funds = newFunds;
@@ -95,8 +95,14 @@ public class FundingManager {
     // Note: to calculate this, the number of civic seats and zoning occupants must be tallied up and passed into this function;
     // these are multiplied by the base civic seat cost and base tax revenue respectively, then the seat cost is subtracted
     // from the base tax revenue
-    public void GenerateIncome(int zoningOccupants, int civicSeats) {
-        Funds += -(civicSeats * Constants.BaseCivicSeatCost) + (zoningOccupants * Constants.BaseTaxRevenue);
+    // I wanted to add some unpredictability, so I decided to throw in the "magic die" that I added into the ExtraRandom library
+    // Tax revenue from zoning is calculated like this: take the base revenue and divide it by 2, then multiply that by the number
+    // zoning occupants, then take a die whose side count corresponds to the base revenue and roll it once for every zoning occupant
+    // and the resulting score from all of those dice rolls is added to the total revenue (this can be done with the MagicDice
+    // function I wrote in the ExtraRandom function)
+    public void GenerateIncome(int zoningOccupants, int eduSeats, int healthSeats) {
+        int revenue = (ConstBaseTaxRevenue / 2) * zoningOccupants + ExtraRandom.MagicDice(ConstBaseTaxRevenue, zoningOccupants);
+        Funds += -(eduSeats * Constants.BaseCivicSeatCost[0]) + (zoningOccupants * Constants.BaseTaxRevenue);
         UpdateText();
     }
 
@@ -112,7 +118,7 @@ public class FundingManager {
     }
 
     public int CalculateCivicConstructionCost(int bldgSeats, int civicID) {
-        return bldgSeats * Constants.BaseCivicMultiplier[civicID] * Constants.BaseCivicSeatCost;
+        return bldgSeats * Constants.BaseCivicMultiplier[civicID] * Constants.BaseCivicSeatCost[civicID];
     }
 
     public int CalculateCivicDemolitionCost(int bldgSeats, int civicID) {

@@ -25,12 +25,15 @@ namespace SimulatorInterfaces {
 
     // For accessing a zoning simulator's constants
     public interface IZoningConstants {
-        string[] ConstOccupantTypes   { get; }
-        float [] ConstOccupantWeights { get; }
-        int   [] ConstBuildingSizes   { get; }
+        string[] ConstOccupantTypes      { get; }
+        float [] ConstOccupantWeights    { get; }
+        int   [] ConstBuildingSizes      { get; }
+        //int   [] ConstConstructionCost   { get; }
+        //int   [] ConstDemolitionCost     { get; }
+        //int      ConstRevenuePerOccupant { get; }
     }
 
-    // Sor a zoning simulator's controls; inherits IZoningData and IZoningConstants
+    // For a zoning simulator's controls; inherits IZoningData and IZoningConstants
     public interface IZoningControls : IZoningData, IZoningConstants {
         void Generate(float[] affectors, int incrementAmt);
         void Generate(int incrementAmt);
