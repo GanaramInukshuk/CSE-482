@@ -16,12 +16,12 @@ public class GameLoop : MonoBehaviour {
 
     // A data class for savefiles
     private class Savedata {
-        public ZoningSimulator.DataClass residentialData;
-        public ZoningSimulator.DataClass commercialData ;
-        public CivicSimulatorSimple.DataClass educationData  ;
-        public CivicSimulatorSimple.DataClass healthcareData ;
-        public int financialData;
-        public int gameTime;
+        public ZoningSimulator.DataClass residentialData = new ZoningSimulator.DataClass();
+        public ZoningSimulator.DataClass commercialData  = new ZoningSimulator.DataClass();
+        public CivicSimulatorSimple.DataClass educationData  = new CivicSimulatorSimple.DataClass();
+        public CivicSimulatorSimple.DataClass healthcareData = new CivicSimulatorSimple.DataClass();
+        public int financialData = 200000;
+        public int gameTime      = 0;
     }
 
     // Many of the UI objects here either have a simulator or something else that's important
@@ -160,6 +160,10 @@ public class GameLoop : MonoBehaviour {
     // Savefile handler
     // This is accomplished with the help of the JSON.NET for Unity asset
     public void SaveGame() {
+        // Strings for the save directory and savefile
+        string savePath = Application.dataPath + "/Saves";
+        string saveName = savePath + "/_autosave.txt";
+
         // The game will save data in JSON format into a text file
         // These datavectors, plus the funding amount, are saved into a single JSON string
         Savedata s = new Savedata {
@@ -171,9 +175,8 @@ public class GameLoop : MonoBehaviour {
             gameTime = _timeCtrl.TickCount
         };
 
-        string saveString = JsonConvert.SerializeObject(s);
-        string savePath = Application.dataPath + "/Saves";
-        string saveName = savePath + "/savedata.txt";
+        // Convert the savedata class into a JSON string
+        string saveString = JsonConvert.SerializeObject(s, Formatting.Indented);
 
         // Create the savefile folder if it doesn't exist
         DirectoryInfo d = Directory.CreateDirectory(savePath);
@@ -182,6 +185,46 @@ public class GameLoop : MonoBehaviour {
         // If it exists, overwrite it
         File.WriteAllText(saveName, saveString);
 
+        // For debugging; load the string
         Debug.Log(saveString);
+    }
+
+    // This is also accomplished with the JSON.NET for Unity asset
+    public void LoadGame() {
+        // Strings for the save directory and savefile
+        string savePath = Application.dataPath + "/Saves";
+        string saveName = savePath + "/_autosave.txt";
+
+        if (File.Exists(saveName)) {
+            string saveString = File.ReadAllText(saveName);
+            Savedata s = JsonConvert.DeserializeObject<Savedata>(saveString);
+
+            _resSim    .DataVector = s.residentialData;
+            _commSim   .DataVector = s.commercialData;
+            _eduSim    .DataVector = s.educationData;
+            _hlthSim   .DataVector = s.healthcareData;
+            _fundingMgr.Funds      = s.financialData;
+            _timeCtrl  .TickCount  = s.gameTime;
+
+            Debug.Log("[GameLoop]: Loaded save.");
+
+            // Loading a save requires updating the game's UI to reflect new data
+            _resEval.GenerateDemand(_resSim, _eduSim, _hlthSim);
+            _workEval.GenerateDemand(_commSim, _resSim);
+            _civicEval.GenerateDemand(_resSim);
+
+            _resSim.IncrementOccupants(_resEval.ResidentialIncrement);
+            _commSim.IncrementOccupants(_workEval.CommercialIncrement);
+
+            // Update text labes on controls
+            _resCtrl .UpdateTextLabels();
+            _commCtrl.UpdateTextLabels();
+            _eduCtrl .UpdateTextLabels();
+            _hlthCtrl.UpdateTextLabels();
+
+            // Demand
+            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
+            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+        }
     }
 }
