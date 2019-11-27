@@ -136,11 +136,12 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-    <None Include="Assets\Saves\savedata.txt" />
+    <None Include="Assets\Saves\_savefile2.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\AssetStore\JsonDotNet\link.xml" />
+    <None Include="Assets\Saves\_savefile1.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\Saves\_autosave.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
@@ -154,25 +155,25 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.1.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -358,16 +359,16 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.1.6f1/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Assets/AssetStore/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Assets/AssetStore/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Ganar/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>E:/Users/Giovanni Orijuela/OneDrive/Documents/GitHub/CSE482-2019/UnityProjectTesting2019/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.1.6f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

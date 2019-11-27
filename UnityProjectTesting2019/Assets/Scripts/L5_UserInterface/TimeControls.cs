@@ -53,7 +53,7 @@ namespace PlayerControls {
         private bool   _coroutineActive = false;    // Semaphore for coroutine; prevents it from being activated more than once
 
         public int TickCount {
-            set { value = Mathf.Max(0, value); }
+            set { _tickCount = Mathf.Max(0, value); }
             get => _tickCount;
         }
 

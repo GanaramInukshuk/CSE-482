@@ -22,6 +22,7 @@ public class GameLoop : MonoBehaviour {
         public CivicSimulatorSimple.DataClass healthcareData = new CivicSimulatorSimple.DataClass();
         public int financialData = 200000;
         public int gameTime      = 0;
+        public bool gameSaved = false;
     }
 
     // Many of the UI objects here either have a simulator or something else that's important
@@ -48,6 +49,8 @@ public class GameLoop : MonoBehaviour {
     public Text _textCommercialDemand;
     public Text _textFunds;
     public Text _textIncome;
+
+    public Text _textSavefilePreview;
 
     [Header("Parameters")]
     public int _initialFunds = 200000;
@@ -151,18 +154,21 @@ public class GameLoop : MonoBehaviour {
 
 
         // Actions to perform every 4 in-game weeks
+        // Saves are recorded to autosave at these intervals
         if (_timeCtrl.TickCount % Timekeeper._ticksPerEpisodicDay == 0) {
-            //Debug.Log("[GameLoop]: Performing quad-weekly actions.");
-
+            SaveGame();
         }
     }
 
     // Savefile handler
     // This is accomplished with the help of the JSON.NET for Unity asset
-    public void SaveGame() {
+    public void SaveGame(string filename = "_autosave") {
         // Strings for the save directory and savefile
         string savePath = Application.dataPath + "/Saves";
-        string saveName = savePath + "/_autosave.txt";
+        string saveName = savePath + "/" + filename + ".txt";
+
+        // Sanity check: if the filename is "", assume it's "_autosave"
+        if (filename == "") saveName = savePath + "/_autosave.txt";
 
         // The game will save data in JSON format into a text file
         // These datavectors, plus the funding amount, are saved into a single JSON string
@@ -172,7 +178,8 @@ public class GameLoop : MonoBehaviour {
             educationData   = _eduSim.DataVector ,
             healthcareData  = _hlthSim.DataVector,
             financialData   = _fundingMgr.Funds,
-            gameTime = _timeCtrl.TickCount
+            gameTime = _timeCtrl.TickCount,
+            gameSaved = true
         };
 
         // Convert the savedata class into a JSON string
@@ -181,30 +188,34 @@ public class GameLoop : MonoBehaviour {
         // Create the savefile folder if it doesn't exist
         DirectoryInfo d = Directory.CreateDirectory(savePath);
 
-        // Create the savefile if it doesn't exist either
-        // If it exists, overwrite it
+        // Create the savefile if it doesn't exist either; if it exists, overwrite it
         File.WriteAllText(saveName, saveString);
 
         // For debugging; load the string
         Debug.Log(saveString);
+        _textSavefilePreview.text = "Saved to savefile: " + filename.ToString();
     }
 
     // This is also accomplished with the JSON.NET for Unity asset
-    public void LoadGame() {
+    // Parameter is the file name (without the file extension)
+    public void LoadGame(string filename = "_autosave") {
         // Strings for the save directory and savefile
         string savePath = Application.dataPath + "/Saves";
-        string saveName = savePath + "/_autosave.txt";
+        string saveName = savePath + "/" + filename + ".txt";
 
-        if (File.Exists(saveName)) {
+        // Sanity check: if the filename is "", assume it's "_autosave"
+        if (filename == "") saveName = savePath + "/_autosave.txt";
+
+        try {
             string saveString = File.ReadAllText(saveName);
             Savedata s = JsonConvert.DeserializeObject<Savedata>(saveString);
 
-            _resSim    .DataVector = s.residentialData;
-            _commSim   .DataVector = s.commercialData;
-            _eduSim    .DataVector = s.educationData;
-            _hlthSim   .DataVector = s.healthcareData;
+            _resSim.DataVector = s.residentialData;
+            _commSim.DataVector = s.commercialData;
+            _eduSim.DataVector = s.educationData;
+            _hlthSim.DataVector = s.healthcareData;
             _fundingMgr.Funds      = s.financialData;
-            _timeCtrl  .TickCount  = s.gameTime;
+            _timeCtrl.TickCount  = s.gameTime;
 
             Debug.Log("[GameLoop]: Loaded save.");
 
@@ -217,14 +228,52 @@ public class GameLoop : MonoBehaviour {
             _commSim.IncrementOccupants(_workEval.CommercialIncrement);
 
             // Update text labes on controls
-            _resCtrl .UpdateTextLabels();
+            _resCtrl.UpdateTextLabels();
             _commCtrl.UpdateTextLabels();
-            _eduCtrl .UpdateTextLabels();
+            _eduCtrl.UpdateTextLabels();
             _hlthCtrl.UpdateTextLabels();
 
+            // Update funds
+            _fundingMgr.UpdateText();
+
             // Demand
-            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
-            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim.OccupantCount).ToString();
+            _textCommercialDemand.text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+
+            _textSavefilePreview.text = "Loaded savefile: " + filename.ToString();
+        } catch (FileNotFoundException) {
+            Debug.Log("[GameLoop]: Failed to find save.");
+            _textSavefilePreview.text = "Failed to find save.";
+        }
+    }
+
+    public void DeleteSave(string filename = "_autosave") {
+
+    }
+
+    // This previews the contents of the savefile
+    public void PreviewSave(string filename = "_autosave") {
+        // Strings for the save directory and savefile
+        string savePath = Application.dataPath + "/Saves";
+        string saveName = savePath + "/" + filename + ".txt";
+
+        // Sanity check: if the filename is "", assume it's "_autosave"
+        if (filename == "") saveName = savePath + "/_autosave.txt";
+
+        // Try to open the file and preview its contents
+        try {
+            string saveString = File.ReadAllText(saveName);
+            Savedata s = JsonConvert.DeserializeObject<Savedata>(saveString);
+
+            string previewText = "Savefile: " + filename + "\n" +
+                "City Funds: " + s.financialData + "\n" +
+                "Game time: " + s.gameTime
+            ;
+
+            _textSavefilePreview.text = previewText;
+        } catch (FileNotFoundException) {
+            _textSavefilePreview.text = "Failed to find save for previewing.";
+            Debug.Log("[GameLoop]: Failed to find save for previewing.");
         }
     }
 }

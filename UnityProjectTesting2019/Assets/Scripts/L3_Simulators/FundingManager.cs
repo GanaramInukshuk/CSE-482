@@ -125,7 +125,7 @@ public class FundingManager {
         return Mathf.RoundToInt(CalculateCivicConstructionCost(bldgSeats, civicID) * Constants.DemolitionMultiplier);
     }
 
-    private void UpdateText() {
+    public void UpdateText() {
         _textFunds.text = "Funds: " + Funds.ToString();
     }
 }
