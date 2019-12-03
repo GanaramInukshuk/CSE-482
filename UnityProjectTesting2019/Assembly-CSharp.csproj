@@ -132,6 +132,7 @@
     <Compile Include="Assets\Scripts\L5_UserInterface\SimulatorControls\ZoningControls.cs" />
     <Compile Include="Assets\Scripts\L5_UserInterface\TimeControls.cs" />
     <Compile Include="Assets\Scripts\Other\ProgressBar.cs" />
+    <Compile Include="Assets\Scripts\Other\SunController.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />

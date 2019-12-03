@@ -154,6 +154,17 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 886086697789320679, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1888739443857103845, guid: 278dcc3b2f89a314f9a50ae527201b7c,
+        type: 3}
+    - target: {fileID: 886086697789320679, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1006539024332174392, guid: c2e37d6934406524a80835a3081b72a5,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -294,6 +305,17 @@ PrefabInstance:
       propertyPath: m_Colors.m_PressedColor.b
       value: 0.8584906
       objectReference: {fileID: 0}
+    - target: {fileID: 7168312839339781598, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5428159460711061460, guid: 278dcc3b2f89a314f9a50ae527201b7c,
+        type: 3}
+    - target: {fileID: 7168312839339781598, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8757378574490231158, guid: c2e37d6934406524a80835a3081b72a5,
         type: 3}
       propertyPath: m_Colors.m_HighlightedColor.r
@@ -339,6 +361,17 @@ PrefabInstance:
       propertyPath: m_Colors.m_SelectedColor.b
       value: 0.9607843
       objectReference: {fileID: 0}
+    - target: {fileID: 5248817756474296901, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2333573954749430852, guid: 278dcc3b2f89a314f9a50ae527201b7c,
+        type: 3}
+    - target: {fileID: 5248817756474296901, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4960305900972583039, guid: c2e37d6934406524a80835a3081b72a5,
         type: 3}
       propertyPath: _filledBarColor.r
@@ -353,6 +386,17 @@ PrefabInstance:
         type: 3}
       propertyPath: _filledBarColor.b
       value: 0.8584906
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351582986236901430, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7289243805620140162, guid: 278dcc3b2f89a314f9a50ae527201b7c,
+        type: 3}
+    - target: {fileID: 6351582986236901430, guid: c2e37d6934406524a80835a3081b72a5,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6104928826320916018, guid: c2e37d6934406524a80835a3081b72a5,
         type: 3}

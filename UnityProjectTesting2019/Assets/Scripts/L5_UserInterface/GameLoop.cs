@@ -55,6 +55,9 @@ public class GameLoop : MonoBehaviour {
     [Header("Parameters")]
     public int _initialFunds = 200000;
 
+    [Header("References to Game Objects")]
+    public SunController _sc;
+
     // Private objects
     private WorkforceEvaluator   _workEval = new WorkforceEvaluator();
     private ResidentialEvaluator _resEval  = new ResidentialEvaluator();
@@ -98,9 +101,12 @@ public class GameLoop : MonoBehaviour {
     //   tax, sales tax, etc) and how much the city spends on other amenities (public schools,
     //   hospitals, etc)
     private void FixedUpdate() {
+        // Actions to perform EVERY TICK must preceed the IF statement blocks
+        _sc.UpdateSunAndMoon(_timeCtrl.TickCount, Timekeeper._ticksPerEpisodicDay);
 
         // Actions to perform every in-game day (not to be confused with an episodic day)
         if (_timeCtrl.TickCount % Timekeeper._ticksPerDay == 0) {
+
             //Debug.Log("[GameLoop]: Performing daily actions.");
 
             _resEval.GenerateDemand(_resSim, _eduSim, _hlthSim);
@@ -117,8 +123,8 @@ public class GameLoop : MonoBehaviour {
             _hlthCtrl.UpdateTextLabels();
 
             // Demand
-            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
-            _textCommercialDemand .text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+            _textResidentialDemand.text = "Residential demand: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
+            _textCommercialDemand .text = "Commercial demand: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
         }
 
         // Actions to perform every in-game week
@@ -237,13 +243,13 @@ public class GameLoop : MonoBehaviour {
             _fundingMgr.UpdateText();
 
             // Demand
-            _textResidentialDemand.text = "Residential: " + (_resEval.ResidentialMax - _resSim.OccupantCount).ToString();
-            _textCommercialDemand.text = "Commercial: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+            _textResidentialDemand.text = "Residential demand: " + (_resEval.ResidentialMax - _resSim.OccupantCount).ToString();
+            _textCommercialDemand.text = "Commercial demand: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
 
             _textSavefilePreview.text = "Loaded savefile: " + filename.ToString();
         } catch (FileNotFoundException) {
+            _textSavefilePreview.text = "No data saved in slot to load.";
             Debug.Log("[GameLoop]: Failed to find save.");
-            _textSavefilePreview.text = "Failed to find save.";
         }
     }
 
@@ -267,13 +273,15 @@ public class GameLoop : MonoBehaviour {
 
             string previewText = "Savefile: " + filename + "\n" +
                 "City Funds: " + s.financialData + "\n" +
-                "Game time: " + s.gameTime
+                "Game time: " + Timekeeper.SimpleDate(s.gameTime, 2000);
             ;
 
             _textSavefilePreview.text = previewText;
         } catch (FileNotFoundException) {
-            _textSavefilePreview.text = "Failed to find save for previewing.";
+            _textSavefilePreview.text = "No data saved in slot to preview.";
             Debug.Log("[GameLoop]: Failed to find save for previewing.");
         }
     }
+
+
 }

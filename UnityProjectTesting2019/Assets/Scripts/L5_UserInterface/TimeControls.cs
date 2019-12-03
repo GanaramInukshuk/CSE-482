@@ -24,6 +24,7 @@ namespace PlayerControls {
         [Header("Main Parameters")]
         public int _tickCount;
         public int _yearOffset = 2000;      // So that the counter can start at, say, year 2000
+        public float _timeOfDayOffset = 0.25f;      // So that the episodic day can start at, say, 06:00
         public int _tickRate = 60;          // Tickrate; divide 1 by this number to get the fixedDelatTime
 
         // Aesthetic properties
@@ -94,7 +95,7 @@ namespace PlayerControls {
         private void FixedUpdate() {
             // This is to cache the time strings for both time formats
             _lastRecordedTimeString1 = Timekeeper.SimpleDate(_tickCount, _yearOffset);
-            _lastRecordedTimeString2 = "Day: " + (Timekeeper.EpisodicDay(_tickCount) + 1) + " (" + Timekeeper.EpisodicTime(_tickCount) + /*":" + UnityEngine.Random.Range(0, 59).ToString("00") +*/ ")";
+            _lastRecordedTimeString2 = "Day: " + (Timekeeper.EpisodicDay(_tickCount) + 1) + " (" + Timekeeper.EpisodicTime(_tickCount, _timeOfDayOffset) + /*":" + UnityEngine.Random.Range(0, 59).ToString("00") +*/ ")";
 
             // Update date/time text
             UpdateTimeText();

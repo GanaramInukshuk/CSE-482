@@ -97,6 +97,7 @@ public static class Timekeeper {
     }
 
     // Overloaded function from above that takes a year offset
+    // This allows the game to start at an arbitrary year (EG 2000) without explicitly stating so as a tick count
     public static string SimpleDate(int tickCount, int yearOffset) {
         return SimpleDate(tickCount + yearOffset * _ticksPerYear);
     }
@@ -110,6 +111,12 @@ public static class Timekeeper {
         int mins = Mathf.FloorToInt(tickRemainder % _ticksPerEpisodicHour / _ticksPerEpisodicMin);
         int secs = Mathf.FloorToInt(tickRemainder % _ticksPerEpisodicHour % _ticksPerEpisodicMin / _ticksPerEpisodicSec);
         return hour.ToString("00") + ":" + mins.ToString("00") + ":" + secs.ToString("00");
+    }
+
+    // Overloaded function from the above that takes a time-of-day offset
+    // This allows the game to start at an arbitrary time-of-day (EG 06:00) without explicitly stating so as a tick count
+    public static string EpisodicTime(int tickCount, float timeOfDayOffset) {
+        return EpisodicTime(tickCount + Mathf.RoundToInt(timeOfDayOffset * _ticksPerEpisodicDay));
     }
 
     public static int EpisodicDayOutOfYear(int tickCount) {
