@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.22627417"
-     inkscape:cx="2199.7689"
-     inkscape:cy="23.105332"
+     inkscape:zoom="0.16"
+     inkscape:cx="3028.3633"
+     inkscape:cy="-149.94587"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -1139,7 +1139,9 @@
        x="-1.2353516e-07"
        y="-10.583333" />
     <g
-       id="g3393">
+       id="g3393"
+       inkscape:export-xdpi="48"
+       inkscape:export-ydpi="48">
       <g
          transform="translate(3.5058594e-6,169.33333)"
          id="g3259">

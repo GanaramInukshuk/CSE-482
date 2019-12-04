@@ -1,18 +1,18 @@
 {
   "residentialData": {
     "buildingVector": [
-      0,
+      514,
       0,
       0,
       0
     ],
     "occupantVector": [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      73,
+      35,
+      71,
+      108,
+      35,
+      35
     ]
   },
   "commercialData": {
@@ -33,54 +33,54 @@
   },
   "educationData": {
     "buildingVector": [
-      0,
+      1,
       0,
       0
     ],
     "seatCountVector": [
-      0,
+      107,
       0,
       0
     ],
     "seatsNeeded": [
-      0,
-      0,
-      0
+      100,
+      80,
+      60
     ],
     "seatsFilled": [
-      0,
+      100,
       0,
       0
     ],
     "seatsLeft": [
-      0,
-      0,
-      0
+      7,
+      -80,
+      -60
     ]
   },
   "healthcareData": {
     "buildingVector": [
-      0,
+      1,
       0
     ],
     "seatCountVector": [
-      0,
+      55,
       0
     ],
     "seatsNeeded": [
-      0,
-      0
+      55,
+      74
     ],
     "seatsFilled": [
-      0,
+      55,
       0
     ],
     "seatsLeft": [
       0,
-      0
+      -74
     ]
   },
-  "financialData": 135800,
-  "gameTime": 1680,
+  "financialData": 21490,
+  "gameTime": 6720,
   "gameSaved": true
 }

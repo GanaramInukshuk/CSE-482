@@ -202,8 +202,8 @@ public class GameLoop : MonoBehaviour {
         string outputString = 
             "<b>Overall City Stats</b>\n" +
             $"Population: {Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString()}\n" +
-            $"Employment: {Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString()}\n" +
-            $"Weekly income: {income}\n\n" +
+            $"Employment: {Mathf.RoundToInt(_commSim.OccupantCount * 1.75f).ToString()}\n" +
+            $"Expected weekly income: {income}\n\n" +
 
             "<b>Residential Stats</b>\n" +
             $"Residences: {_resSim.OccupantCount}\n" + 
@@ -215,17 +215,17 @@ public class GameLoop : MonoBehaviour {
 
             // Note: any would-be division by 0 results in a 0; for our purposes, n / 0 where n is [0, infinity) gets mapped back to 0
             "<b>Education Stats</b>\n" +
-            $"Elementary School Percent Capacity: {(_eduSim.SeatCountVector[0] == 0 ? 0 : (float)_eduSim.SeatsFilled[0] * 100 / _eduSim.SeatCountVector[0])}%\n" + 
-            $"Middle School Percent Capacity: {(_eduSim.SeatCountVector[1] == 0 ? 0 : (float)_eduSim.SeatsFilled[1] * 100 / _eduSim.SeatCountVector[1])}%\n" + 
-            $"High School Percent Capacity: {(_eduSim.SeatCountVector[2] == 0 ? 0 : (float)_eduSim.SeatsFilled[2] * 100 / _eduSim.SeatCountVector[2])}%\n" + 
+            $"Elementary School Percent Capacity: {(_eduSim.SeatCountVector[0] == 0 ? 0 : Mathf.RoundToInt(_eduSim.SeatsFilled[0] * 100f / _eduSim.SeatCountVector[0]))}%\n" + 
+            $"Middle School Percent Capacity: {(_eduSim.SeatCountVector[1] == 0 ? 0 : Mathf.RoundToInt(_eduSim.SeatsFilled[1] * 100f / _eduSim.SeatCountVector[1]))}%\n" + 
+            $"High School Percent Capacity: {(_eduSim.SeatCountVector[2] == 0 ? 0 : Mathf.RoundToInt(_eduSim.SeatsFilled[2] * 100f / _eduSim.SeatCountVector[2]))}%\n" + 
             $"Elementary School Expenses per week: {elemExpenses}\n" +
             $"Middle School Expenses per week: {middExpenses}\n" +
             $"High School Expenses per week: {highExpenses}\n" +
             "\n" +
 
             "<b>Healthcare Stats</b>\n" +
-            $"Clinic Percent Capacity: {(_hlthSim.SeatCountVector[0] == 0 ? 0 : (float)_hlthSim.SeatsFilled[0] * 100 / _hlthSim.SeatCountVector[0])}%\n" + 
-            $"Hospital Percent Capacity: {(_hlthSim.SeatCountVector[1] == 0 ? 0 : (float)_hlthSim.SeatsFilled[1] * 100 / _hlthSim.SeatCountVector[1])}%\n" + 
+            $"Clinic Percent Capacity: {(_hlthSim.SeatCountVector[0] == 0 ? 0 : Mathf.RoundToInt(_hlthSim.SeatsFilled[0] * 100f / _hlthSim.SeatCountVector[0]))}%\n" + 
+            $"Hospital Percent Capacity: {(_hlthSim.SeatCountVector[1] == 0 ? 0 : Mathf.RoundToInt(_hlthSim.SeatsFilled[1] * 100f / _hlthSim.SeatCountVector[1]))}%\n" + 
             $"Clinic Expenses per week: {clinicExpenses}\n" +
             $"Hospital Facility Expenses per week: {hospitalExpenses}\n" +
             "\n"

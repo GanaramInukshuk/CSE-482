@@ -1,0 +1,86 @@
+{
+  "residentialData": {
+    "buildingVector": [
+      514,
+      0,
+      0,
+      0
+    ],
+    "occupantVector": [
+      74,
+      38,
+      74,
+      112,
+      37,
+      37
+    ]
+  },
+  "commercialData": {
+    "buildingVector": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "occupantVector": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "educationData": {
+    "buildingVector": [
+      1,
+      0,
+      0
+    ],
+    "seatCountVector": [
+      107,
+      0,
+      0
+    ],
+    "seatsNeeded": [
+      106,
+      85,
+      64
+    ],
+    "seatsFilled": [
+      106,
+      0,
+      0
+    ],
+    "seatsLeft": [
+      1,
+      -85,
+      -64
+    ]
+  },
+  "healthcareData": {
+    "buildingVector": [
+      1,
+      0
+    ],
+    "seatCountVector": [
+      55,
+      0
+    ],
+    "seatsNeeded": [
+      58,
+      78
+    ],
+    "seatsFilled": [
+      55,
+      0
+    ],
+    "seatsLeft": [
+      -3,
+      -78
+    ]
+  },
+  "financialData": 22030,
+  "gameTime": 7572,
+  "gameSaved": true
+}

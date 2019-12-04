@@ -100,9 +100,10 @@ public class FundingManager {
     // zoning occupants, then take a die whose side count corresponds to the base revenue and roll it once for every zoning occupant
     // and the resulting score from all of those dice rolls is added to the total revenue (this can be done with the MagicDice
     // function I wrote in the ExtraRandom function)
+    // For simplicity, I reverted revenue calculation so it doesn't use the magic die
     public void GenerateIncome(int zoningOccupants, int eduSeats, int healthSeats) {
-        int revenue = (ConstBaseTaxRevenue / 2) * zoningOccupants + ExtraRandom.MagicDice(ConstBaseTaxRevenue, zoningOccupants);
-        Funds += -(eduSeats * Constants.BaseCivicSeatCost[0]) + (zoningOccupants * Constants.BaseTaxRevenue);
+        //int revenue = (ConstBaseTaxRevenue / 2) * zoningOccupants + ExtraRandom.MagicDice(ConstBaseTaxRevenue, zoningOccupants);
+        Funds += -(eduSeats * Constants.BaseCivicSeatCost[0] + healthSeats * Constants.BaseCivicSeatCost[1]) + (zoningOccupants * Constants.BaseTaxRevenue);
         UpdateText();
     }
 
