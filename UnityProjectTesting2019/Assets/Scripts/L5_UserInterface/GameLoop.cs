@@ -321,9 +321,25 @@ public class GameLoop : MonoBehaviour {
         }
     }
 
-    //public void DeleteSave(string filename = "_autosave") {
+    // This deletes a savefile
+    // Note: if testing this in Unity, this doesn't automatically delete a file's metadata
+    public void DeleteSave(string filename = "_autosave") {
+        // Strings for the save directory and savefile
+        string savePath = Application.dataPath + "/Saves";
+        string saveName = savePath + "/" + filename + ".txt";
 
-    //}
+        // Sanity check: if the filename is "", assume it's "_autosave"
+        if (filename == "") saveName = savePath + "/_autosave.txt";
+
+        // Try to open the file and preview its contents
+        try {
+            File.Delete(saveName);
+            _textSavefilePreview.text = "Save deleted: " + filename.ToString();
+        } catch (FileNotFoundException) {
+            _textSavefilePreview.text = "No data saved in slot to preview.";
+            Debug.Log("[GameLoop]: Failed to find save for previewing.");
+        }
+    }
 
 
 
