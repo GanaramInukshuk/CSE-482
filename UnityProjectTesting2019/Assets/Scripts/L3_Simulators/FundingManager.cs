@@ -9,11 +9,11 @@ public class FundingManager {
 
     // Costs for everything
     // - BaseZoningCost is a base cost for a building of an occupancy of 1
-    // - BaseCivicCeatCost is how much a seat or opening in a civic building costs per week
+    // - BaseCivicSeatCost is how much a seat or opening in a civic building costs per week
     // - BaseCivicMultiplier is used to calculate the cost of building a new civic
     //   structure; that cost is the max number of seats in the new building times the base seat cost
     //   times the multiplier; so an elementary school with 600 seats will have a cost of 2400
-    // - Building sizes greater than 1 incur a discount, incentivizing the construction of high density structures
+    // - Building sizes greater than 1 incur a discount (if less than 1), incentivizing the construction of high density structures
     // - Demolition costs are the construction cost times some demolition multiplier; note that
     //   the multiplier is a float that ideally should be a percentage of the construction cost, and
     //   that percentage may be negative so that the player can recoup construction costs
@@ -23,7 +23,7 @@ public class FundingManager {
         public static int   BaseZoningCost    = 200;
         public static int[] BaseCivicSeatCost     = { 10, 16 };      // Again, so I can make healthcare more of an endgame feature
         public static int[] BaseCivicMultiplier   = {  8, 12 };      // This is an array of multipliers that correspond to education and health; I basically wanna make healthcare cost more for the sake of gameplay
-        public static float HighDensityMultiplier = 0.875f;
+        public static float HighDensityMultiplier = 1f;
         public static float DemolitionMultiplier  = -0.5f;
         public static int   BaseTaxRevenue = 6;
     }
@@ -83,7 +83,7 @@ public class FundingManager {
 
     // Demolition is allowed if the demolition cost recoups construction costs, even if the current funds are negative
     public bool DemolishCivic(int seatsPerBuilding, int civicID) {
-        int demolitionCost = Mathf.RoundToInt(seatsPerBuilding * Constants.BaseCivicSeatCost[civicID] * Constants.BaseCivicMultiplier[civicID] * Constants.DemolitionMultiplier);
+        int demolitionCost = CalculateCivicDemolitionCost(seatsPerBuilding, civicID);
         int newFunds = Funds - demolitionCost;
         if (newFunds >= Funds) {
             Funds = newFunds;

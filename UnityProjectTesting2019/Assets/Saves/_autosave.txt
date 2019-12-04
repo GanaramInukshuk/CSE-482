@@ -80,7 +80,7 @@
       0
     ]
   },
-  "financialData": 200000,
-  "gameTime": 3360,
+  "financialData": 135800,
+  "gameTime": 1680,
   "gameSaved": true
 }

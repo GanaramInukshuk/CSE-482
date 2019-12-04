@@ -6,6 +6,7 @@ using DemandEvaluators;
 using PlayerControls;
 using Newtonsoft.Json;
 using System.IO;
+using TMPro;
 
 // This class is in charge of all of the game's calculations and requires references
 // to every UI object in the game's UI
@@ -49,6 +50,7 @@ public class GameLoop : MonoBehaviour {
     public Text _textCommercialDemand;
     public Text _textFunds;
     public Text _textIncome;
+    public TextMeshProUGUI _tmpStats;
 
     public Text _textSavefilePreview;
 
@@ -106,6 +108,17 @@ public class GameLoop : MonoBehaviour {
 
         // Actions to perform every in-game day (not to be confused with an episodic day)
         if (_timeCtrl.TickCount % Timekeeper._ticksPerDay == 0) {
+            // If generating every in-game is not desired, comment out the six lines before the evaulators' generate functinos
+            _resSim.Generate();
+            _commSim.Generate();
+
+            // Generate K12 education data
+            int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
+            _eduSim.Generate(schoolchildren);
+
+            // Generate data for patients
+            int[] patients = new int[] { _civicEval.ClinicPatientsMax, _civicEval.HospitalPatientsMax };
+            _hlthSim.Generate(patients);
 
             //Debug.Log("[GameLoop]: Performing daily actions.");
 
@@ -125,21 +138,24 @@ public class GameLoop : MonoBehaviour {
             // Demand
             _textResidentialDemand.text = "Residential demand: " + (_resEval.ResidentialMax - _resSim .OccupantCount).ToString();
             _textCommercialDemand .text = "Commercial demand: "  + (_workEval.EmployableMax - _commSim.OccupantCount).ToString();
+
+            // Stats
+            PrintStats();
         }
 
         // Actions to perform every in-game week
         if (_timeCtrl.TickCount % Timekeeper._ticksPerWeek == 0) {
-            //Debug.Log("[GameLoop]: Performing weekly actions.");
-            _resSim.Generate();
-            _commSim.Generate();
+            ////Debug.Log("[GameLoop]: Performing weekly actions.");
+            //_resSim.Generate();
+            //_commSim.Generate();
 
-            // Generate K12 education data
-            int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
-            _eduSim.Generate(schoolchildren);
+            //// Generate K12 education data
+            //int[] schoolchildren = new int[] { _civicEval.ElementarySchoolMax, _civicEval.MiddleShcoolMax, _civicEval.HighSchoolMax };
+            //_eduSim.Generate(schoolchildren);
 
-            // Generate data for patients
-            int[] patients = new int[] { _civicEval.ClinicPatientsMax, _civicEval.HospitalPatientsMax };
-            _hlthSim.Generate(patients);
+            //// Generate data for patients
+            //int[] patients = new int[] { _civicEval.ClinicPatientsMax, _civicEval.HospitalPatientsMax };
+            //_hlthSim.Generate(patients);
 
             // Update text labes on controls
             _resCtrl .UpdateTextLabels();
@@ -164,6 +180,58 @@ public class GameLoop : MonoBehaviour {
         if (_timeCtrl.TickCount % Timekeeper._ticksPerEpisodicDay == 0) {
             SaveGame();
         }
+    }
+
+    // This genreates the stats from each of the simulators and outputs it to a TextMeshPro text object
+    // Yes, there's a systematic way of doing this and that requires having each simulator generate their
+    // own stats and also having each simulator also manage their own expenses/revenues as a string, then
+    // combining all those strings together into one
+    public void PrintStats() {
+        int expectedResidentialTaxRevenue = _resSim.OccupantCount * _fundingMgr.ConstBaseTaxRevenue;
+        int expectedCommercialTaxRevenue = _commSim.OccupantCount * _fundingMgr.ConstBaseTaxRevenue;
+
+        int elemExpenses = _eduSim.SeatCountVector[0] * _fundingMgr.ConstBaseCivicSeatCost[0];
+        int middExpenses = _eduSim.SeatCountVector[1] * _fundingMgr.ConstBaseCivicSeatCost[0];
+        int highExpenses = _eduSim.SeatCountVector[2] * _fundingMgr.ConstBaseCivicSeatCost[0];
+
+        int clinicExpenses = _hlthSim.SeatCountVector[0] * _fundingMgr.ConstBaseCivicSeatCost[1];
+        int hospitalExpenses = _hlthSim.SeatCountVector[1] * _fundingMgr.ConstBaseCivicSeatCost[1];
+
+        int income = expectedCommercialTaxRevenue + expectedResidentialTaxRevenue - elemExpenses - middExpenses - highExpenses - clinicExpenses - hospitalExpenses;
+
+        string outputString = 
+            "<b>Overall City Stats</b>\n" +
+            $"Population: {Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString()}\n" +
+            $"Employment: {Mathf.RoundToInt(_resSim .OccupantCount * 2.50f).ToString()}\n" +
+            $"Weekly income: {income}\n\n" +
+
+            "<b>Residential Stats</b>\n" +
+            $"Residences: {_resSim.OccupantCount}\n" + 
+            $"Expected tax revenue per week: {expectedResidentialTaxRevenue}\n\n" +
+
+            "<b>Commercial Stats</b>\n" +
+            $"Employed residences: {_commSim.OccupantCount}\n" + 
+            $"Expected tax revenue per week: {expectedCommercialTaxRevenue}\n\n" +
+
+            // Note: any would-be division by 0 results in a 0; for our purposes, n / 0 where n is [0, infinity) gets mapped back to 0
+            "<b>Education Stats</b>\n" +
+            $"Elementary School Percent Capacity: {(_eduSim.SeatCountVector[0] == 0 ? 0 : (float)_eduSim.SeatsFilled[0] * 100 / _eduSim.SeatCountVector[0])}%\n" + 
+            $"Middle School Percent Capacity: {(_eduSim.SeatCountVector[1] == 0 ? 0 : (float)_eduSim.SeatsFilled[1] * 100 / _eduSim.SeatCountVector[1])}%\n" + 
+            $"High School Percent Capacity: {(_eduSim.SeatCountVector[2] == 0 ? 0 : (float)_eduSim.SeatsFilled[2] * 100 / _eduSim.SeatCountVector[2])}%\n" + 
+            $"Elementary School Expenses per week: {elemExpenses}\n" +
+            $"Middle School Expenses per week: {middExpenses}\n" +
+            $"High School Expenses per week: {highExpenses}\n" +
+            "\n" +
+
+            "<b>Healthcare Stats</b>\n" +
+            $"Clinic Percent Capacity: {(_hlthSim.SeatCountVector[0] == 0 ? 0 : (float)_hlthSim.SeatsFilled[0] * 100 / _hlthSim.SeatCountVector[0])}%\n" + 
+            $"Hospital Percent Capacity: {(_hlthSim.SeatCountVector[1] == 0 ? 0 : (float)_hlthSim.SeatsFilled[1] * 100 / _hlthSim.SeatCountVector[1])}%\n" + 
+            $"Clinic Expenses per week: {clinicExpenses}\n" +
+            $"Hospital Facility Expenses per week: {hospitalExpenses}\n" +
+            "\n"
+        ;
+
+        _tmpStats.text = outputString;
     }
 
     // Savefile handler
@@ -253,9 +321,11 @@ public class GameLoop : MonoBehaviour {
         }
     }
 
-    public void DeleteSave(string filename = "_autosave") {
+    //public void DeleteSave(string filename = "_autosave") {
 
-    }
+    //}
+
+
 
     // This previews the contents of the savefile
     public void PreviewSave(string filename = "_autosave") {

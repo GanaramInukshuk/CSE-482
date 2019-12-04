@@ -33,12 +33,12 @@
   },
   "educationData": {
     "buildingVector": [
-      0,
+      1,
       0,
       0
     ],
     "seatCountVector": [
-      0,
+      400,
       0,
       0
     ],
@@ -53,18 +53,18 @@
       0
     ],
     "seatsLeft": [
-      0,
+      400,
       0,
       0
     ]
   },
   "healthcareData": {
     "buildingVector": [
-      0,
+      1,
       0
     ],
     "seatCountVector": [
-      0,
+      200,
       0
     ],
     "seatsNeeded": [
@@ -76,11 +76,11 @@
       0
     ],
     "seatsLeft": [
-      0,
+      200,
       0
     ]
   },
-  "financialData": 200000,
-  "gameTime": 205,
+  "financialData": 129600,
+  "gameTime": 405,
   "gameSaved": true
 }

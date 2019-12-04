@@ -240,23 +240,23 @@ public static class ExtraMath {
         // Also overloaded three times; if AVP-ing a float and int vector, the float vector should come first
         public static float[] AlignedVectorProduct(float[] a, float[] b) {
             if (a.Length != b.Length) throw new Exception("[ExtraMath.Linear]: Cannot find aligned vector product of two vectors of unequal size.");
-            float[] avp = a;
-            for (int i = 0; i < a.Length; i++) avp[i] *= b[i];
+            float[] avp = new float[a.Length];
+            for (int i = 0; i < a.Length; i++) avp[i] = a[i] * b[i];
             return avp;
         }
 
         #region AlignedVectorProducOverloads
         public static float[] AlignedVectorProduct(float[] a, int[] b) {
             if (a.Length != b.Length) throw new Exception("[ExtraMath.Linear]: Cannot find aligned vector product of two vectors of unequal size.");
-            float[] avp = a;
-            for (int i = 0; i < a.Length; i++) avp[i] *= b[i];
+            float[] avp = new float[a.Length];
+            for (int i = 0; i < a.Length; i++) avp[i] = a[i] * b[i];
             return avp;
         }
 
         public static int[] AlignedVectorProduct(int[] a, int[] b) {
             if (a.Length != b.Length) throw new Exception("[ExtraMath.Linear]: Cannot find aligned vector product of two vectors of unequal size.");
-            int[] avp = a;
-            for (int i = 0; i < a.Length; i++) avp[i] *= b[i];
+            int[] avp = new int[a.Length];
+            for (int i = 0; i < a.Length; i++) avp[i] = a[i] * b[i];
             return avp;
         }
         #endregion

@@ -124,7 +124,7 @@ namespace PlayerControls {
             int bldgType = (int)_sliderBldgType.value;
             int bldgSeats = _simulator.ConstBuildingSeats[bldgType];
 
-            if (_fundingMgr.ConstructCivic(bldgSeats, _simulator.CivicID) && _simulator.BuildingVector[bldgType] != 0) {
+            if (_fundingMgr.DemolishCivic(bldgSeats, _simulator.CivicID) && _simulator.BuildingVector[bldgType] != 0) {
                 _simulator.IncrementBuildings(-1, bldgType);
                 UpdateTextLabels();
             }

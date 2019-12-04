@@ -33,12 +33,12 @@
   },
   "educationData": {
     "buildingVector": [
-      0,
+      3,
       0,
       0
     ],
     "seatCountVector": [
-      0,
+      1200,
       0,
       0
     ],
@@ -53,7 +53,7 @@
       0
     ],
     "seatsLeft": [
-      0,
+      1200,
       0,
       0
     ]
@@ -80,7 +80,7 @@
       0
     ]
   },
-  "financialData": 200000,
-  "gameTime": 612,
+  "financialData": 104000,
+  "gameTime": 293,
   "gameSaved": true
 }
